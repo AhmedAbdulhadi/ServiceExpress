@@ -22,6 +22,8 @@ class CreateSuppliersTable extends Migration
 	        $table->boolean ('status')->default(true);
 	        $table->double ( 'longitude' );
 	        $table->double ( 'latitude' );
+	        $table->text('bio')->nullable();
+	        $table->integer('exp_year')->nullable();
 	        $table->boolean('type')->default(false);
 	        $table->timestamp ('deleted_at')->nullable();
 //            $table->rememberToken();

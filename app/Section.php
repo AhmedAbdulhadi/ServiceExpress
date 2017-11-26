@@ -13,7 +13,7 @@
 		 * @var array
 		 */
 		protected $fillable = [
-			'name_ar','name_en','desc_ar','desc_en','section_id','services_id'
+			'name_ar','name_en','desc_ar','desc_en','section_id','services_id','image'
 		];
 protected $hidden=[
 	'created_at',"status",

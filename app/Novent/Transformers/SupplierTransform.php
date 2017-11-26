@@ -18,6 +18,8 @@
 				'name' => $user['name'],
 				'email' => $user['email'],
 				'phone' => $user['phone'],
+				'bio' => $user['bio'],
+				'exp_year' => $user['exp_year'],
 				'status' => (boolean)$user['status'],
 				'created_at' =>  date('Y-m-d', strtotime($user['updated_at'])) ,
 				'updated_at' => date('Y-m-d', strtotime($user['updated_at'])) ,

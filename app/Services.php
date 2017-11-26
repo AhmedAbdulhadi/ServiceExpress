@@ -14,7 +14,7 @@ class Services extends Model
 	 * @var array
 	 */
 	protected $fillable = [
-		'name_ar','name_en','desc_ar','desc_en','section_id','services_id'
+		'name_ar','name_en','desc_ar','desc_en','section_id','services_id','image'
 	];
 	protected $hidden=[
 		"deleted_at",

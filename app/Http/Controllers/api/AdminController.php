@@ -5,6 +5,7 @@
 
 	namespace App\Http\Controllers\api;
 
+	use App\Admin;
 	use App\Http\Controllers\AdminServices;
 //	use App\Http\Controllers\UserServices;
 	use Illuminate\Http\Request;
@@ -121,11 +122,26 @@
 			if (Auth::attempt (['email' => request ('email'), 'password' => request ('password')])) {
 				$user = Auth::user ();
 
-				$this->content['token'] = $user->createToken ('Noventapp')->accessToken;
+				if(Auth::user ()->type == 2)
+				{
+					$this->content['token'] = $user->createToken ('Noventapp')->accessToken;
+					$user_i=Admin::all ()->where ('email',request ('email'))->first ()->toArray();
+
+					if($user_i['status'] == 1)
+						$user_i=$this->return_r ($user_i,$this->content);
+					else
+					{
+						return $this->respondWithError ('ACCOUNT IS SUSPENDED', self::fail);
+
+					}
+				}
+
+				else
+					return $this->respondWithError ('the user trying to login is not a Admin ', self::fail);
 
 //dd($user->getRememberToken ('Noventapp')->accessToken);
 				return $this->responedFound200ForOneUser
-				('Admin login success', self::success, $this->content);
+				('Admin login success', self::success, $user_i);
 			} else {
 				return $this->respondWithError ('wrong email or password', self::fail);
 			}
@@ -170,5 +186,15 @@
 		public function get_inactives_users (Request $request)
 		{
 			return $this->get_inactive_users ($request);
+		}
+		private function return_r($x,$y)
+		{
+			//to spacifay and get the needed result
+			//$x for admin $y for token
+			return [
+				'admin_id' => $x['id'] ,
+				'token'=>	 $y['token']
+			];
+
 		}
 	}

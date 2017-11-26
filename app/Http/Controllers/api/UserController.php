@@ -3,6 +3,7 @@
 	namespace App\Http\Controllers\api;
 
 	use App\Http\Controllers\UserServices;
+	use App\User;
 	use Illuminate\Http\Request;
 	use Illuminate\Support\Facades\Auth;
 	use Illuminate\Support\Facades\DB;
@@ -27,7 +28,7 @@
 
 			$this->content = array ();
 
-			$this->middleware ('auth:api')->except ('login', 'logout');
+			$this->middleware ('auth:api')->except ('login', 'logout','store');
 
 
 		}
@@ -115,13 +116,30 @@
 		public function login ()
 		{
 			if (Auth::attempt (['email' => request ('email'), 'password' => request ('password')])) {
+
+//				dd(Auth::user ()->type);
+
 				$user = Auth::user ();
 
 				$this->content['token'] = $user->createToken ('Noventapp')->accessToken;
+				if(Auth::user ()->type == 0)
+				{
+					$user_i=User::all ()->where ('email',request ('email'))->first ()->toArray();
+					if($user_i['status'] == 1)
+					$user_i=$this->return_r ($user_i,$this->content);
+					else
+					{
+						return $this->respondWithError ('ACCOUNT IS SUSPENDED', self::fail);
 
+					}
+//				dd($user_i);
+}
 //dd($user->getRememberToken ('Noventapp')->accessToken);
+else
+				return $this->respondWithError ('the user trying to login is not a user ', self::fail);
+
 				return $this->responedFound200ForOneUser
-				('user login success', self::success, $this->content);
+				('user login success', self::success,$user_i);
 			} else {
 				return $this->respondWithError ('wrong email or password', self::fail);
 			}
@@ -171,4 +189,15 @@
 		{
 			return $this->get_inactive_users ($request);
 		}
+		private function return_r($x,$y)
+		{
+			//to spacifay and get the needed result
+			//$x for user $y for token
+			return [
+				'user_id' => $x['id'] ,
+			'token'=>	 $y['token']
+			];
+
+		}
+
 	}

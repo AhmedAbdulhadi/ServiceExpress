@@ -102,7 +102,7 @@
 		public function respond ($data , $headers = [])
 		{
 //			return Response::json ( $data , $this->getStatusCode () , $headers );
-			return response()->json($data, $this->getStatusCode (),$headers);
+			return response ()->json ( $data , $this->getStatusCode () , $headers );
 		}
 
 		/**
@@ -222,8 +222,9 @@
 				'name_ar' => 'required|min:3|max:50' ,
 				'desc_en' => 'required|min:3|max:140' ,
 				'desc_ar' => 'required|min:3|max:140' ,
+//========================================================== when done uncommint the upper
 //				'number_services' => 'required|integer' ,
-//				'icon' => 'required' ,
+				'image' => 'string' ,
 			);
 			$messages = array (
 				'name.required' => 'The name is really really really important.' ,
@@ -255,17 +256,37 @@
 				return $this->respondwithErrorMessage (
 					self::fail , $errors->first ( 'desc_ar' ) );
 
+			if ( $errors->first ( 'image' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'image' ) );
+
+
 //			if ( $errors->first ( 'name' ) )
 //				return $this->respondwithErrorMessage (
 //					self::fail , $errors->first ( 'name' ) );
 
 			else {
+				$image_path = url ( '/icons/404.png' );
+
+				if ( $request->input ( 'image' ) ) {
+					if ( file_exists ( base_path ( 'icons\\' . $request->input ( 'image' ) ) ) ) {
+//						dd(url   ( '/icons/'.$request->input ( 'image' ) ));
+
+						$image_path = url ( 'icons/' . $request->input ( 'image' ) );
+					} else {
+						$image_path = url ( '/icons/404.png' );
+					}
+//					$image_path=base_path  ( 'icons\\default.png');
+				} elseif ( !$request->input ( 'image' ) )
+//				dd(url ( '/icons/default.png'));
+					$image_path = url ( '/icons/404.png' );
+
 				$section = Section::create ( [
 					'name_en' => $request->input ( 'name_en' ) ,
 					'name_ar' => $request->input ( 'name_ar' ) ,
 					'desc_en' => $request->input ( 'desc_en' ) ,
 					'desc_ar' => $request->input ( 'desc_ar' ) ,
-//					'name' => $request->input ( 'name' ),
+					'image' => $image_path ,
 
 				] )->id;
 
@@ -338,7 +359,7 @@
 				'name_ar' => 'min:3|max:50' ,
 				'desc_en' => 'min:3|max:140' ,
 				'desc_ar' => 'min:3|max:140' ,
-//				'number_services' => 'integer' ,
+				'image' => 'string' ,
 			);
 			$messages = array (
 				'name_en.regex' => 'please Enter Name with only real char' ,
@@ -376,6 +397,9 @@
 			if ( $errors->first ( 'desc_ar' ) )
 				return $this->respondwithErrorMessage (
 					self::fail , $errors->first ( 'desc_ar' ) );
+			if ( $errors->first ( 'image' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'image' ) );
 
 //			if ( $errors->first ( 'password' ) )
 //				return $this->respondwithErrorMessage (
@@ -394,7 +418,7 @@
 			$desc_en = $request->input ( 'desc_en' );
 			$desc_ar = $request->input ( 'desc_ar' );
 			$status = $request->input ( 'status' );
-//			$number_services = $request->input ( 'number_services' );
+			$image = $request->input ( 'image' );
 //			$password = $request->input ( 'password' );
 			$now = Carbon::now ( 'GMT+2' );
 
@@ -424,13 +448,32 @@
 
 				}
 
-
 				if ( $new_name->desc_ar !== $desc_ar and $desc_ar !== null ) {
 					DB::table ( 'sections' )
 						->where ( 'id' , $id )
 						->update ( ['desc_ar' => $request->input ( 'desc_ar' ) , 'updated_at' => $now] );
 
 				}
+
+
+				if ( $image !== null ) {
+					$image_path = url ( '/icons/404.png' );
+
+					if ( $request->input ( 'image' ) ) {
+						if ( file_exists ( base_path ( 'icons\\' . $request->input ( 'image' ) ) ) ) {
+//						dd('File is exists.');
+							$image_path = url ( 'icons/' . $request->input ( 'image' ) );
+						} else {
+							$image_path = url ( '/icons/404.png' );
+						}
+					} elseif ( !$request->input ( 'image' ) )
+						$image_path = url ( '/icons/404.png' );
+
+					DB::table ( 'sections' )
+						->where ( 'id' , $id )
+						->update ( ['image' => $image_path , 'updated_at' => $now] );
+				}
+
 				if ( $new_name->status !== $status and $status !== null )
 					if ( $request->input ( 'status' ) == 0 or $request->input ( 'status' ) == 1 ) {
 						DB::table ( 'sections' )

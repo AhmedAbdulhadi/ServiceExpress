@@ -18,12 +18,12 @@
 
 		public function service ($user_id , $supp_id , $serv)
 		{
-			$ass = section_services::all ()->where ( 'services_id' , $serv )->toArray ();
-//				dd($ass);
+			$sections = section_services::all ()->where ( 'services_id' , $serv )->toArray ();
+//				dd($ass);$sec
 
-			foreach ($ass as $a) {
-				$a['section'] = Section::find
-				( $a['section_id'] )->toArray ();
+			foreach ($sections as $section) {
+				$section['section'] = Section::find
+				( $section['section_id'] )->toArray ();
 			}
 //				dd($a['section']);
 
@@ -37,7 +37,7 @@
 				'service' => Services::find ( $serv )->toArray () ,
 //						'section'=>Section::find($aa)->toArray ()
 //$ass
-				'section' => $a['section']
+				'section' => $section['section']
 			];
 		}
 	}

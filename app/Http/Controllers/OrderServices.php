@@ -167,14 +167,14 @@
 			$description = $request->input ( 'description' );
 			$status = $request->input ( 'status' );
 			$rate = $request->input ( 'rate' );
-			$image = $request->file ( 'image' );
+//			$image = $request->file ( 'image' );
 
 			$rules = array (
 ////
 				"user_id" => "required|integer|exists:users,id" ,
 				"supplier_id" => "required|integer|exists:suppliers,id" ,
 				"service_id" => "required|integer|exists:services,id" ,
-				"status" => "required|integer|min:0|max:3" ,
+				"status" => "integer|min:0|max:3" ,
 				"rate" => "numeric|min:0|max:5" ,
 			);
 			$messages = array (
@@ -238,14 +238,17 @@
 //				Image::make(file_get_contents($data->base64_image))->save($path);
 				$data = Input::all ();
 				if(Input::has('image')) {
-					$png_url = "orders-" . time () . ".png";
-					$path = public_path ( "images\orders\\" ) . $png_url;
+					$png_url = "/orders-" . time () . ".png";
+					$path = base_path ( "images\orders\\" ) . $png_url;
 					$data = $data['image'];
 					list( $type , $data ) = explode ( ';' , $data );
 					list( , $data ) = explode ( ',' , $data );
 					$data = base64_decode ( $data );
 //				dd($data);
+//					dd(url( "/images/orders//" ) . $png_url);
+//					dd($path);
 					$success = file_put_contents ( $path , $data );
+					$path=url('/images/orders'.$png_url);
 				}
 				else
 					$path="";
@@ -381,7 +384,7 @@
 			$rate = $request->input ( 'rate' );
 			$is_rated = $request->input ( 'is_rated' );
 			$now = Carbon::now ( 'GMT+2' );
-//			$image = $request->file ( 'image' );
+			$image = $request->input  ( 'image' );
 //dd($request->input ( 'description' ));
 			if ( !$findid )
 				return $this->respondWithError ( 'order not found ' , self::fail );
@@ -416,6 +419,32 @@
 						->update ( ['desc' => $description , 'updated_at' => $now] );
 
 				}
+
+				if ( $image !== null ) {
+					$data = Input::all ();
+					if(Input::has('image')) {
+						$png_url = "orders-" . time () . ".png";
+						$path = base_path ( "images\orders\\" ) . $png_url;
+						$data = $data['image'];
+						list( $type , $data ) = explode ( ';' , $data );
+						list( , $data ) = explode ( ',' , $data );
+						$data = base64_decode ( $data );
+//				dd($data);
+						$success = file_put_contents ( $path , $data );
+					}
+					else
+						$path="";
+
+
+					DB::table ( 'orders' )
+						->where ( 'id' , $id )
+						->update ( ['path' => $path , 'updated_at' => $now] );
+
+
+
+				}
+
+
 				if ( $new_name->status !== $status and $status !== null )
 					if ( $status == 0 or $status == 1
 						or $status == 2 or $status == 3 ) {

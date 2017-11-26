@@ -19,7 +19,9 @@ class CreateServicesTable extends Migration
 	        $table->string('name_en');
 	        $table->text('desc_en');
 	        $table->text('desc_ar');
-            $table->boolean ('status')->default ( true );
+	        $table->boolean ('status')->default ( true );
+
+	        $table->string('image');
 	        $table->timestamp ( 'deleted_at' )->nullable ();
             $table->timestamps();
         });

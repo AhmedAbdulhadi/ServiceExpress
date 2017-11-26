@@ -258,7 +258,7 @@
 				'name_ar' => 'required|min:3|max:50' ,
 				'desc_en' => 'required|min:3|max:140' ,
 				'desc_ar' => 'required|min:3|max:140' ,
-//				'icon' => 'integer' ,
+				'image' => 'string' ,
 			);
 			$messages = array (
 				'name_en.regex' => 'please Enter Name with only real char' ,
@@ -300,6 +300,10 @@
 				return $this->respondwithErrorMessage (
 					self::fail , $errors->first ( 'desc_ar' ) );
 
+			if ( $errors->first ( 'image' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'image' ) );
+
 
 //			if ( $errors->first ( 'password' ) )
 //				return $this->respondwithErrorMessage (
@@ -307,6 +311,24 @@
 
 
 			else {
+				$image_path=url  ( '/icons/404.png');
+
+				if($request->input ( 'image' ))
+//				if (fileExists ( public_path ( "icons\\" .$request->input ( 'icon' ))))
+				{
+					if(file_exists(base_path  ( 'icons\\'.$request->input ( 'image' ) )))
+					{
+//						dd(url   ( '/icons/'.$request->input ( 'image' ) ));
+						$image_path=url  ( 'icons/'.$request->input ( 'image' ) );
+					}
+					else
+					{
+						$image_path=url ( '/icons/404.png');
+					}
+				}
+				elseif(! $request->input ( 'image' ))
+//				dd(url ( '/icons/default.png'));
+					$image_path=url ( '/icons/404.png');
 
 				$user = Section::find ( $request->input ( 'section_id' ) );
 
@@ -319,6 +341,7 @@
 						'name_ar' => $request->input ( 'name_ar' ) ,
 						'desc_en' => $request->input ( 'desc_en' ) ,
 						'desc_ar' => $request->input ( 'desc_ar' ) ,
+						'image' => $image_path ,
 					] )->id;
 //					dd($Service);
 					$user->services ()->attach ( $Service );
@@ -391,7 +414,7 @@
 				'name_ar' => 'min:3|max:50' ,
 				'desc_en' => 'min:3|max:140' ,
 				'desc_ar' => 'min:3|max:140' ,
-//				'icon' => 'integer' ,
+				'image' => 'string' ,
 			);
 			$messages = array (
 				'name_en.regex' => 'please Enter Name with only real char' ,
@@ -424,6 +447,9 @@
 			if ( $errors->first ( 'desc_ar' ) )
 				return $this->respondwithErrorMessage (
 					self::fail , $errors->first ( 'desc_ar' ) );
+			if ( $errors->first ( 'image' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'image' ) );
 
 
 			$findid = Services::find ( $id );
@@ -434,6 +460,7 @@
 			$desc_en = $request->input ( 'desc_en' );
 			$desc_ar = $request->input ( 'desc_ar' );
 			$status = $request->input ( 'status' );
+			$image = $request->input ( 'image' );
 			$now = Carbon::now ( 'GMT+2' );
 
 			if ( !$findid )
@@ -465,6 +492,29 @@
 						->where ( 'id' , $id )
 						->update ( ['desc_ar' => $request->input ( 'desc_ar' ) , 'updated_at' => $now] );
 
+				}
+				if ( $image !== null )
+				{
+					$image_path=url  ( '/icons/404.png');
+					if($request->input ( 'image' ))
+					{
+						if(file_exists(base_path  ( 'icons\\'.$request->input ( 'image' ) )))
+						{
+
+							$image_path=url  ( 'icons/'.$request->input ( 'image' ) );					}
+						else
+						{
+							$image_path=url ( '/icons/404.png');
+						}
+
+					}
+					elseif(! $request->input ( 'image' ))
+
+						$image_path=url ( '/icons/404.png');
+
+					DB::table ( 'services' )
+						->where ( 'id' , $id )
+						->update ( ['image' => $image_path, 'updated_at' => $now] );
 				}
 				if ( $new_name->status !== $status and $status !== null )
 					if ( $request->input ( 'status' ) == 0 or $request->input ( 'status' ) == 1 ) {

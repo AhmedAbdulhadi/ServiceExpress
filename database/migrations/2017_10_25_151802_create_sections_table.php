@@ -17,9 +17,10 @@ class CreateSectionsTable extends Migration
             $table->increments('id');
             $table->string('name_ar');
             $table->string('name_en');
-            $table->text('desc_en');
-            $table->text('desc_ar');
-            $table->boolean ('status')->default ( true );
+	        $table->text('desc_en');
+	        $table->text('desc_ar');
+	        $table->string('image');
+	        $table->boolean ('status')->default ( true );
 	        $table->timestamp ( 'deleted_at' )->nullable ();
             $table->timestamps();
         });

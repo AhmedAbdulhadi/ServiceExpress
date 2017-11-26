@@ -262,6 +262,7 @@
 				'password' => 'required|min:8|max:30',
 				'longitude' => 'required|numeric' ,
 				'latitude' => 'required|numeric' ,
+
 			);
 			$messages = array (
 				'name.required' => 'The name is really really really important.' ,
@@ -305,6 +306,7 @@
 					self::fail , $errors->first ( 'latitude' ) );
 
 
+
 			else
 
 				//				$email = DB::table ('users')->where ('phone', $request->input ('email'))->first ();
@@ -316,7 +318,8 @@
 					'phone' => $request->input ( 'phone' ) ,
 					'password' => bcrypt ( $request->input ( 'password' ) ) ,
 					'longitude'=>$request->input ( 'longitude' ) ,
-					'latitude'=>$request->input ( 'latitude' )
+					'latitude'=>$request->input ( 'latitude' ),
+
 					//missing long wo lat
 
 				] )->id;
@@ -394,6 +397,7 @@
 				'password' => 'min:8|max:30',
 				'longitude' => 'numeric' ,
 				'latitude' => 'numeric' ,
+				'exp_year'=>'integer'
 			);
 			$messages = array (
 				'name.regex' => 'please Enter Name with only real char' ,
@@ -434,6 +438,9 @@
 			if ( $errors->first ( 'latitude' ) )
 				return $this->respondwithErrorMessage (
 					self::fail , $errors->first ( 'latitude' ) );
+			if ( $errors->first ( 'exp_year' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'exp_year' ) );
 
 			$findid = Supplier::find ( $id );
 			/*	DB::table('users')
@@ -447,6 +454,8 @@
 			$phone = $request->input ( 'phone' );
 			$password = $request->input ( 'password' );
 			$status = $request->input ( 'status' );
+			$bio = $request->input ( 'bio' );
+			$exp_year = $request->input ( 'exp_year' );
 			$now = Carbon::now ('GMT+2');
 
 			if ( !$findid )
@@ -488,13 +497,28 @@
 						->update ( ['phone' => $request->input ( 'phone' )] )
 						->update ( ['updated_at' => $now] );
 				}
-				if($request->input ( 'status' )  == 0 or $request->input ( 'status' )  == 1 ) {
+				if ( $new_name->bio !== $bio and $bio !== null ) {
+					DB::table ( 'suppliers' )
+						->where ( 'id' , $id )
+						->update ( ['bio' => $request->input ( 'bio' ),'updated_at' => $now] );
+//						->update ( [] );
+				}
+				if ( $new_name->exp_year !== $exp_year and $exp_year !== null ) {
+					DB::table ( 'suppliers' )
+						->where ( 'id' , $id )
+						->update ( ['exp_year' => $request->input ( 'exp_year' ),'updated_at' => $now] );
+//						->update ( ['updated_at' => $now] );
+				}
+
+				if(($request->input ( 'status' )  == 0 or $request->input ( 'status' ) ) == 1 and $request->input ( 'status' ) !== null )
+				{
 					DB::table ( 'suppliers' )
 						->where ( 'id' , $id )
 						->update ( ['status' => $request->input ( 'status' ) , 'updated_at' => $now] );
 				}
 				else
-					return $this->respondWithError ('status neeed to be 0 for false and 1 for ture',self::fail);
+					return $this->respondWithError ('status  needed and requierd to be 0 for false and 1 for ture',self::fail);
+
 				if ( $new_name->password !== $password and $password !== null ) {
 
 					//to get email supplier to chane password in logins table

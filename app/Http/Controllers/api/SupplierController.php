@@ -5,6 +5,7 @@
 
 	use App\Http\Controllers\SupplierServices;
 //	use App\Http\Controllers\UserServices;
+	use App\Supplier;
 	use Illuminate\Http\JsonResponse;
 	use Illuminate\Http\Request;
 	use Illuminate\Support\Facades\Auth;
@@ -32,7 +33,7 @@
 
 			$this->content = array ();
 
-			$this->middleware ( 'auth:api' )->except ( 'login' , 'logout' );
+			$this->middleware ( 'auth:api' )->except ( 'login' , 'logout','store' );
 
 
 		}
@@ -122,20 +123,31 @@
 			if ( Auth::attempt ( ['email' => request ( 'email' ) , 'password' => request ( 'password' )] ) ) {
 				$user = Auth::user ();
 
-				$this->content['token'] = $user->createToken ( 'Noventapp' )->accessToken;
+				if(Auth::user ()->type == 1)
+				{
 
-//dd($user->getRememberToken ('Noventapp')->accessToken);
+					$this->content['token'] = $user->createToken ('Noventapp')->accessToken;
+					$user_i=Supplier::all ()->where ('email',request ('email'))->first ()->toArray();
+
+					if($user_i['status'] == 1)
+						$user_i=$this->return_r ($user_i,$this->content);
+					else
+					{
+						return $this->respondWithError ('ACCOUNT IS SUSPENDED', self::fail);
+
+					}
+				}
+
+				else
+					return $this->respondWithError ('the user trying to login is not a Supplier ', self::fail);
+
 				return $this->responedFound200ForOneUser
-				( 'Supplier login success' , self::success , $this->content );
-//				return ($this->content);
-//				return response()->json($this->content, self::HTTP_CREATED);
+				( 'Supplier login success' , self::success , $user_i );
+
 			} else {
 				return $this->respondWithError ( 'wrong email or password' , self::fail );
-//				return response  ('application/json')->json ("ahmad");
-//				response()->json('ahmad')->setStatusCode(Response::HTTP_OK);
-//			return new JsonResponse('hello  ');
-//				return dd('asd');
-//				return response()->json(['wrong email or password' => 'asd'], $this->statusCode);
+
+
 			}
 
 		}
@@ -183,5 +195,15 @@
 		public function suppliers_services_id_s (Request $request)
 		{
 			return $this->suppliers_services_id ( $request );
+		}
+		private function return_r($x,$y)
+		{
+			//to spacifay and get the needed result
+			//$x for supplier $y for token
+			return [
+				'supplier_id' => $x['id'] ,
+				'token'=>	 $y['token']
+			];
+
 		}
 	}

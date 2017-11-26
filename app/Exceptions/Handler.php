@@ -66,9 +66,9 @@ class Handler extends ExceptionHandler
 			}*/
 
 	    if($exception instanceof NotFoundHttpException )
-		    if ($request->expectsJson()) {
+//		    if ($request->expectsJson()) {
 			    return $this->respondWithError('invalid url',UserServices::fail);
-		    }
+//		    }
 //	    return $this->respondWithError ('invalid url',UserServices::fail);
 
 

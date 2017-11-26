@@ -131,5 +131,6 @@
 Route::get ('section', 'SectionController@get_date_one_Query');
 else
 Route::resource ('section', 'SectionController');*/
+//		Route::resource ( 'v1/dashboard' , 'DashboardController' );
 
 	} );
