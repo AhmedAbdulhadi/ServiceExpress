@@ -6,6 +6,7 @@
 	use Illuminate\Http\Request;
 	use App\address;
 	use App\User;
+
 //	use App\Http\Controllers\UserServices;
 //	use App\Http\Controllers\Controller;
 //	use Illuminate\Support\Facades\Response;
@@ -90,7 +91,7 @@
 		public function respond ($data , $headers = [])
 		{
 //			return Response::json ( $data , $this->getStatusCode () , $headers );
-			return response()->json($data, $this->getStatusCode (),$headers);
+			return response ()->json ( $data , $this->getStatusCode () , $headers );
 		}
 
 		/**
@@ -172,84 +173,94 @@
 		{
 
 
-			$type0 =DB::table ( 'address_user' )->where ( 'user_id' , $request->input ( 'user_id' ) )->where ( 'address_type' , '0' )->first ();
-			$type1 =DB::table ( 'address_user' )->where ( 'user_id' , $request->input ( 'user_id' ) )->where ( 'address_type' , '1' )->first ();
+			$type0 = DB::table ( 'address_user' )->where ( 'user_id' , $request->input ( 'user_id' ) )->where ( 'address_type' , '0' )->first ();
+			$type1 = DB::table ( 'address_user' )->where ( 'user_id' , $request->input ( 'user_id' ) )->where ( 'address_type' , '1' )->first ();
 			$type2 = DB::table ( 'address_user' )->where ( 'user_id' , $request->input ( 'user_id' ) )->where ( 'address_type' , '2' )->first ();
 
 
-					if($type0 !==null and $request->input ( 'address_type' )=='0')
-						return $this->respondWithError ('address_type 0 is here',self::fail);
+			if ( $type0 !== null and $request->input ( 'address_type' ) == '0' )
+				return $this->respondWithError ( 'address_type 0 is here' , self::fail );
 
-			else	if($type1 !==null and $request->input ( 'address_type' )=='1')
-				return $this->respondWithError ('address_type 1 is here',self::fail);
+			else if ( $type1 !== null and $request->input ( 'address_type' ) == '1' )
+				return $this->respondWithError ( 'address_type 1 is here' , self::fail );
 
 
-else
+			else
 
 
 				//validtion rule
 				$rules = array (
 					'longitude' => 'required|numeric' ,
 					'latitude' => 'required|numeric' ,
-					'city' => 'string' ,
-					'street' => 'string' ,
-					'country' => 'string' ,
+					'city' => 'required|string' ,
+					'street' => 'required|string' ,
+					'country' => 'required|string' ,
 					'neighborhood' => 'integer' ,
 					'building_number' => 'integer' ,
 					'apartment_number' => 'integer' ,
 					'floor' => 'integer' ,
-					'address_type' => 'required|integer|between:0,2',
+					'address_type' => 'required|integer|between:0,2' ,
 					'user_id' => 'required|exists:users,id'
 				);
-				$messages = array (
-					'longitude.required' => 'longitude is required' ,
-					'longitude.numeric' => 'Enter valid longitude' ,
-					'latitude.required' => 'latitude is required' ,
-					'latitude.numeric' => 'Enter valid latitude' ,
-					'city.string' => 'Enter valid place' ,
-					'street.string' => 'Enter valid place' ,
-					'country.string' => 'Enter valid place' ,
-					'neighborhood.integer' => 'Enter valid number for neighborhood' ,
-					'building_number.integer' => 'Enter valid number for building_number' ,
-					'apartment_number.integer' => 'Enter valid number for apartment_number ' ,
-					'floor.integer' => 'Enter valid number for floor' ,
-				);
+			$messages = array (
+				'longitude.required' => 'longitude is required || يرجى ادخال خط العرض' ,
+				'longitude.numeric' => 'Enter valid longitude ||  يرجى ادخال خط العرض بشكل صحيح' ,
 
-				$validator = Validator::make ( $request->all () , $rules , $messages );
-				//			$errors= $validator;
-				$errors = $validator->errors ();
+				'latitude.required' => 'latitude is required || يرجى ادخال خط الطول ' ,
+				'latitude.numeric' => 'Enter valid latitude || يرجى ادخال خط الطول بشكل الصحيح' ,
+
+				'city.string' => 'Enter valid city || يرجى ادخال اسم المدينة بالشكل الصحيح' ,
+				'city.required' => 'city is required  || يرجى ادخال اسم المدينة' ,
+
+				'street.string' => 'Enter valid street || يرجى ادخال اسم الشارع بشكل الصحيح' ,
+				'street.required' => 'street is required || يرجى ادخال اسم الشارع' ,
+
+				'country.string' => 'Enter valid country || يرجى ادخال اسم الدولة بشكل صحيح ' ,
+				'country.required' => 'country is required || يرجى ادخال اسم الدولة' ,
+
+				'neighborhood.integer' => 'Enter valid number for neighborhood || يرجى ادخال رقم الحي رقم صحيح' ,
+				'building_number.integer' => 'Enter valid number for building_number || يرجى ادخال رقم المبنى بشكل الصحيح' ,
+				'apartment_number.integer' => 'Enter valid number for apartment_number || يرجى ادخال رقم الشقة بشكل الصحيح' ,
+				'floor.integer' => 'Enter valid number for floor || يرجى ادخال رقم الطابق بشكل صحيح' ,
+
+				'address_type.required' => 'Please choose address  || يرجى اختيار نوع العنوان'
+			);
+
+			$validator = Validator::make ( $request->all () , $rules , $messages );
+			//			$errors= $validator;
+			$errors = $validator->errors ();
 
 
-				if ( $validator->fails () )
+			if ( $validator->fails () )
 
 
-					if ( $errors->first ( 'longitude' ) )
-						return $this->respondwithErrorMessage (
-							self::fail , $errors->first ( 'longitude' ) );
-				if ( $errors->first ( 'latitude' ) )
+				if ( $errors->first ( 'longitude' ) )
 					return $this->respondwithErrorMessage (
-						self::fail , $errors->first ( 'latitude' ) );
-				if ( $errors->first ( 'city' ) )
-					return $this->respondwithErrorMessage (
-						self::fail , $errors->first ( 'city' ) );
-				if ( $errors->first ( 'street' ) )
-					return $this->respondwithErrorMessage (
-						self::fail , $errors->first ( 'street' ) );
-				if ( $errors->first ( 'country' ) )
-					return $this->respondwithErrorMessage (
-						self::fail , $errors->first ( 'country' ) );
-				if ( $errors->first ( 'neighborhood' ) )
-					return $this->respondwithErrorMessage (
-						self::fail , $errors->first ( 'neighborhood' ) );
-				if ( $errors->first ( 'building_number' ) )
-					return $this->respondwithErrorMessage (
-						self::fail , $errors->first ( 'building_number' ) );
-				if ( $errors->first ( 'apartment_number' ) )
-					return $this->respondwithErrorMessage (
-						self::fail , $errors->first ( 'apartment_number' ) );
-				if ( $errors->first ( 'floor' ) )
-					return $this->respondwithErrorMessage (
-						self::fail , $errors->first ( 'floor' ) );
+						self::fail , $errors->first ( 'longitude' ) );
+			if ( $errors->first ( 'latitude' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'latitude' ) );
+			if ( $errors->first ( 'city' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'city' ) );
+			if ( $errors->first ( 'street' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'street' ) );
+			if ( $errors->first ( 'country' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'country' ) );
+			if ( $errors->first ( 'neighborhood' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'neighborhood' ) );
+			if ( $errors->first ( 'building_number' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'building_number' ) );
+			if ( $errors->first ( 'apartment_number' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'apartment_number' ) );
+			if ( $errors->first ( 'floor' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'floor' ) );
 			if ( $errors->first ( 'address_type' ) )
 				return $this->respondwithErrorMessage (
 					self::fail , $errors->first ( 'address_type' ) );
@@ -280,24 +291,38 @@ else
 //dd($address_id);
 
 			//user id
-				$user = User::find ( $request->input ( 'user_id' ) );
-				$user->address ()->attach ( $address_id , ['address_type' => $request->input ( 'address_type' )] );
+			$user = User::find ( $request->input ( 'user_id' ) );
+			$user->address ()->attach ( $address_id , ['address_type' => $request->input ( 'address_type' )] );
 
 
-				return $this->responedCreated200 ( ' successfully Created !' , self::success , $address_id );
+			return $this->responedCreated200 ( ' successfully Created !' , self::success , $address_id );
 
-			}
+		}
 
 
 		public function respondwithErrorMessage ($status , $data)
-	{
-		return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
-			'massage' => $data ,
-			'status' => $this->status ( $status ) ,
-			'code' => $this->statusCode ,
+		{
+			$splitName = explode ( '||' , $data , 2 );
 
-		] );
-	}
+			$first = $splitName[0];
+			$last = !empty( $splitName[1] ) ? $splitName[1] : '';
+			if ( $last )
+				return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
+					'massage' => $first ,
+					'massage_ar' => $last ,
+					'status' => $this->status ( $status ) ,
+					'code' => $this->statusCode ,
+
+				] );
+			else
+				return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
+					'massage' => $first ,
+//				'massage_ar'=>$last,
+					'status' => $this->status ( $status ) ,
+					'code' => $this->statusCode ,
+
+				] );
+		}
 
 
 		public function responedCreated200 ($massage , $status , $id = null)
@@ -325,15 +350,27 @@ else
 			);
 			$messages = array (
 
-				'longitude.numeric' => 'Enter valid longitude' ,
-				'latitude.numeric' => 'Enter valid latitude' ,
-				'city.string' => 'Enter valid place' ,
-				'street.string' => 'Enter valid place' ,
-				'country.string' => 'Enter valid place' ,
-				'neighborhood.integer' => 'Enter valid number for neighborhood' ,
-				'building_number.integer' => 'Enter valid number for building_number' ,
-				'apartment_number.integer' => 'Enter valid number for apartment_number ' ,
-				'floor.integer' => 'Enter valid number for floor' ,
+//				'longitude.required' => 'longitude is required || يرجى ادخال خط العرض' ,
+				'longitude.numeric' => 'Enter valid longitude ||  يرجى ادخال خط العرض بشكل صحيح' ,
+
+//				'latitude.required' => 'latitude is required || يرجى ادخال خط الطول ' ,
+				'latitude.numeric' => 'Enter valid latitude || يرجى ادخال خط الطول بشكل الصحيح' ,
+
+				'city.string' => 'Enter valid city || يرجى ادخال اسم المدينة بالشكل الصحيح' ,
+//				'city.required' => 'city is required  || يرجى ادخال اسم المدينة' ,
+
+				'street.string' => 'Enter valid street || يرجى ادخال اسم الشارع بشكل الصحيح' ,
+//				'street.required' => 'street is required || يرجى ادخال اسم الشارع'  ,
+
+				'country.string' => 'Enter valid country || يرجى ادخال اسم الدولة بشكل صحيح ' ,
+//				'country.required' => 'country is required || يرجى ادخال اسم الدولة' ,
+
+				'neighborhood.integer' => 'Enter valid number for neighborhood || يرجى ادخال رقم الحي رقم صحيح' ,
+				'building_number.integer' => 'Enter valid number for building_number || يرجى ادخال رقم المبنى بشكل الصحيح' ,
+				'apartment_number.integer' => 'Enter valid number for apartment_number || يرجى ادخال رقم الشقة بشكل الصحيح' ,
+				'floor.integer' => 'Enter valid number for floor || يرجى ادخال رقم الطابق بشكل صحيح' ,
+
+//				'address_type.required' => 'Please choose address  || يرجى اختيار نوع العنوان'
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
@@ -461,13 +498,12 @@ else
 							'updated_at' => $now] );
 
 				}
-				if($request->input ( 'status' )  == 0 or $request->input ( 'status' )  == 1 ) {
+				if ( $request->input ( 'status' ) == 0 or $request->input ( 'status' ) == 1 ) {
 					DB::table ( 'address' )
 						->where ( 'id' , $id )
 						->update ( ['status' => $request->input ( 'status' ) , 'updated_at' => $now] );
-				}
-				else
-					return $this->respondWithError ('status neeed to be 0 for false and 1 for ture',self::fail);
+				} else
+					return $this->respondWithError ( 'status neeed to be 0 for false and 1 for ture' , self::fail );
 
 				$data = address::find ( $id );
 

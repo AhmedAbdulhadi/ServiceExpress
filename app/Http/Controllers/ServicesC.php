@@ -20,6 +20,7 @@
 	use Novent\Transformers\servicesTransform;
 	use Novent\Transformers\SupplierTransform;
 	use \Validator;
+
 //	use Illuminate\Support\Facades\Auth;
 //	use Illuminate\Support\Facades\Input;
 //	use Novent\Transformers\section_servicesTra;
@@ -102,7 +103,7 @@
 		public function respond ($data , $headers = [])
 		{
 //			return Response::json ( $data , $this->getStatusCode () , $headers );
-			return response()->json($data, $this->getStatusCode (),$headers);
+			return response ()->json ( $data , $this->getStatusCode () , $headers );
 		}
 
 		/**
@@ -112,7 +113,6 @@
 		{
 			return $this->statusCode;
 		}
-
 
 
 		/**
@@ -254,23 +254,33 @@
 //			dd($user);
 			$rules = array (
 				'section_id' => 'required|integer' ,
-				'name_en' => 'required|regex:/^[\p{L}\s\.-]+$/|min:3|max:30' ,
+				'name_en' => 'required|regex:/^(?!.*\d)[a-z\p{Arabic}\s]+$/iu|min:3|max:30' ,
 				'name_ar' => 'required|min:3|max:50' ,
 				'desc_en' => 'required|min:3|max:140' ,
 				'desc_ar' => 'required|min:3|max:140' ,
 				'image' => 'string' ,
 			);
 			$messages = array (
-				'name_en.regex' => 'please Enter Name with only real char' ,
-				'name_en.min' => 'The name min is 3.' ,
-				'name_en.max' => 'The name max is 30' ,
-				'name_ar.regex' => 'name_ar please Enter Name with only real char' ,
-				'name_ar.min' => 'The name min is 3.' ,
-				'name_ar.max' => 'The name max is 30' ,
-				'desc_en.min' => 'The name min is 3.' ,
-				'desc_en.max' => 'The name max is 30' ,
-				'desc_ar.min' => 'The name min is 3.' ,
-				'desc_ar.max' => ' The name max is 30' ,
+				'section_id.required' => 'please Enter section_id || يرجى ادخال رقم section_id' ,
+				'section_id.integer' => 'please Enter section_id real number||  يرجى ادخال رقم عدد صحيح section_id' ,
+				'name_en.regex' => 'please Enter Name with only real char || يرجى ادخال الاسم بالغة الانجليزية او العربية' ,
+
+				'name_en.required' => 'The name min is 3. || يرجى ادخال الاسمو بالغة الانجليزية ' ,
+				'name_en.min' => 'The name min is 3. || اقل عدد احرف للأسم 3 احرف ' ,
+				'name_en.max' => 'The name min is 30 || اكثر عدد احرف مسموح هو 30 حرف' ,
+//				'name_ar.regex' => 'name_ar please Enter Name with only real char' ,
+
+				'name_ar.required' => 'The name min is 3. || يرجى ادخال الاسمو بالغة العربية ' ,
+				'name_ar.min' => 'The name min is 3. || اقل عدد احرف للأسم 3 احرف ' ,
+				'name_ar.max' => 'The name min is 30 || اكثر عدد احرف مسموح هو 30 حرف' ,
+
+				'desc_en.required' => 'The name min is 3. || يرجى ادخال الوصف بالغة الانجليزية' ,
+				'desc_en.min' => 'The name min is 3. || اقل عدد حروف للوصف هو 3 احرف' ,
+				'desc_en.max' => 'The name max is 30 || اكثر عدد احرف للوصف هو 140 حرف' ,
+
+				'desc_ar.required' => 'The name min is 3. || يرجى ادخال الوصف بالغة العربية' ,
+				'desc_ar.min' => 'The name min is 3. || اقل عدد حروف للوصف هو 3 احرف' ,
+				'desc_ar.max' => ' The name max is 30 ||  اكثر عدد احرف للوصف هو 140 حرف' ,
 //				'phone.phone' => ' enter valid phone number' ,
 //				//				'phone.phone:KS' => ' enter phone number with jordan code 966'
 //
@@ -311,24 +321,19 @@
 
 
 			else {
-				$image_path=url  ( '/icons/404.png');
+				$image_path = url ( '/icons/404.png' );
 
-				if($request->input ( 'image' ))
-//				if (fileExists ( public_path ( "icons\\" .$request->input ( 'icon' ))))
+				if ( $request->input ( 'image' ) ) //				if (fileExists ( public_path ( "icons\\" .$request->input ( 'icon' ))))
 				{
-					if(file_exists(base_path  ( 'icons\\'.$request->input ( 'image' ) )))
-					{
+					if ( file_exists ( base_path ( 'icons//' . $request->input ( 'image' ) ) ) ) {
 //						dd(url   ( '/icons/'.$request->input ( 'image' ) ));
-						$image_path=url  ( 'icons/'.$request->input ( 'image' ) );
+						$image_path = url ( 'icons/' . $request->input ( 'image' ) );
+					} else {
+						$image_path = url ( '/icons/404.png' );
 					}
-					else
-					{
-						$image_path=url ( '/icons/404.png');
-					}
-				}
-				elseif(! $request->input ( 'image' ))
+				} elseif ( !$request->input ( 'image' ) )
 //				dd(url ( '/icons/default.png'));
-					$image_path=url ( '/icons/404.png');
+					$image_path = url ( '/icons/404.png' );
 
 				$user = Section::find ( $request->input ( 'section_id' ) );
 
@@ -354,12 +359,26 @@
 
 		public function respondwithErrorMessage ($status , $data)
 		{
-			return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
-				'massage' => $data ,
-				'status' => $this->status ( $status ) ,
-				'code' => $this->statusCode ,
+			$splitName = explode ( '||' , $data , 2 );
 
-			] );
+			$first = $splitName[0];
+			$last = !empty( $splitName[1] ) ? $splitName[1] : '';
+			if ( $last )
+				return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
+					'massage' => $first ,
+					'massage_ar' => $last ,
+					'status' => $this->status ( $status ) ,
+					'code' => $this->statusCode ,
+
+				] );
+			else
+				return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
+					'massage' => $first ,
+//				'massage_ar'=>$last,
+					'status' => $this->status ( $status ) ,
+					'code' => $this->statusCode ,
+
+				] );
 		}
 
 		public function responedCreated200 ($massage , $status , $id = null)
@@ -410,23 +429,28 @@
 		{
 			$rules = array (
 //				'section_id' => 'required|integer' ,
-				'name_en' => 'regex:/^[\p{L}\s\.-]+$/|min:3|max:30' ,
+				'name_en' => 'regex:/^(?!.*\d)[a-z\p{Arabic}\s]+$/iu|min:3|max:30' ,
 				'name_ar' => 'min:3|max:50' ,
 				'desc_en' => 'min:3|max:140' ,
 				'desc_ar' => 'min:3|max:140' ,
 				'image' => 'string' ,
 			);
 			$messages = array (
-				'name_en.regex' => 'please Enter Name with only real char' ,
-				'name_en.min' => 'The name min is 3.' ,
-				'name_en.max' => 'The name max is 30' ,
-				'name_ar.regex' => 'name_ar please Enter Name with only real char' ,
-				'name_ar.min' => 'The name min is 3.' ,
-				'name_ar.max' => 'The name max is 30' ,
-				'desc_en.min' => 'The name min is 3.' ,
-				'desc_en.max' => 'The name max is 30' ,
-				'desc_ar.min' => 'The name min is 3.' ,
-				'desc_ar.max' => ' The name max is 30' ,
+				'name_en.regex' => 'please Enter Name with only real char || يرجى ادخال الاسم بالغة الانجليزية او العربية' ,
+
+				'name_en.min' => 'The name min is 3. || اقل عدد احرف للأسم 3 احرف ' ,
+				'name_en.max' => 'The name min is 30 || اكثر عدد احرف مسموح هو 30 حرف' ,
+//				'name_ar.regex' => 'name_ar please Enter Name with only real char' ,
+
+				'name_ar.min' => 'The name min is 3. || اقل عدد احرف للأسم 3 احرف ' ,
+				'name_ar.max' => 'The name min is 30 || اكثر عدد احرف مسموح هو 30 حرف' ,
+
+				'desc_en.min' => 'The name min is 3. || اقل عدد حروف للوصف هو 3 احرف' ,
+				'desc_en.max' => 'The name max is 30 || اكثر عدد احرف للوصف هو 30 حرف' ,
+
+				'desc_ar.min' => 'The name min is 3. || اقل عدد حروف للوصف هو 3 احرف' ,
+				'desc_ar.max' => ' The name max is 30 ||  اكثر عدد احرف للوصف هو 30 حرف' ,
+//				'phone.phone' => ' enter valid phone number' ,
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
@@ -493,28 +517,23 @@
 						->update ( ['desc_ar' => $request->input ( 'desc_ar' ) , 'updated_at' => $now] );
 
 				}
-				if ( $image !== null )
-				{
-					$image_path=url  ( '/icons/404.png');
-					if($request->input ( 'image' ))
-					{
-						if(file_exists(base_path  ( 'icons\\'.$request->input ( 'image' ) )))
-						{
+				if ( $image !== null ) {
+					$image_path = url ( '/icons/404.png' );
+					if ( $request->input ( 'image' ) ) {
+						if ( file_exists ( base_path ( 'icons//' . $request->input ( 'image' ) ) ) ) {
 
-							$image_path=url  ( 'icons/'.$request->input ( 'image' ) );					}
-						else
-						{
-							$image_path=url ( '/icons/404.png');
+							$image_path = url ( 'icons/' . $request->input ( 'image' ) );
+						} else {
+							$image_path = url ( '/icons/404.png' );
 						}
 
-					}
-					elseif(! $request->input ( 'image' ))
+					} elseif ( !$request->input ( 'image' ) )
 
-						$image_path=url ( '/icons/404.png');
+						$image_path = url ( '/icons/404.png' );
 
 					DB::table ( 'services' )
 						->where ( 'id' , $id )
-						->update ( ['image' => $image_path, 'updated_at' => $now] );
+						->update ( ['image' => $image_path , 'updated_at' => $now] );
 				}
 				if ( $new_name->status !== $status and $status !== null )
 					if ( $request->input ( 'status' ) == 0 or $request->input ( 'status' ) == 1 ) {
@@ -545,8 +564,8 @@
 
 			);
 			$messages = array (
-				'section_id.required' => 'section_id is required ' ,
-				'section_id.integer' => 'section_id must be integer number' ,
+				'section_id.required' => 'section_id is required || يرجى ادخال section_id ' ,
+				'section_id.integer' => 'section_id must be integer number || يرجى ادخال عدد صحيح' ,
 
 			);
 
@@ -675,8 +694,8 @@
 
 			);
 			$messages = array (
-				'section_id.required' => 'section_id is required ' ,
-				'section_id.integer' => 'section_id must be integer number' ,
+				'section_id.required' => 'section_id is required || يرجى ادخال section_id ' ,
+				'section_id.integer' => 'section_id must be integer number || يرجى ادخال عدد صحيح' ,
 
 			);
 
@@ -868,11 +887,11 @@
 
 					$find_service->suppliers ()->detach ( $supplier_id );
 
-					return $this->responed_Destroy200 ( 'supplier  :'.$supplier_id.' and services : '.$service_id
-						.' are deleted' , self::success );
+					return $this->responed_Destroy200 ( 'supplier  :' . $supplier_id . ' and services : ' . $service_id
+						. ' are deleted' , self::success );
 				} else
-					return $this->respondWithError ( 'service : '.$service_id
-						.' and supplier  :'.$supplier_id.' dose not found' , self::fail );
+					return $this->respondWithError ( 'service : ' . $service_id
+						. ' and supplier  :' . $supplier_id . ' dose not found' , self::fail );
 
 			}
 

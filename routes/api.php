@@ -110,7 +110,7 @@
 
 		Route::post ( 'v1/services/assign' , 'ServicesController@assigned_services' );
 
-		Route::post ( 'v1/services/unassigned' , 'ServicesController@unAssigned_services');
+		Route::post ( 'v1/services/unassigned' , 'ServicesController@unAssigned_services' );
 
 
 		//		Route::post ('users/details', 'UserController@details');
@@ -123,14 +123,16 @@
 			Route::get ( 'v1/section' , 'SectionController@section_with_service' );
 
 
-
-
 		Route::resource ( 'v1/orders' , 'OrderController' );
 
 		/*else if (Input::has ('date'))
 Route::get ('section', 'SectionController@get_date_one_Query');
 else
 Route::resource ('section', 'SectionController');*/
-//		Route::resource ( 'v1/dashboard' , 'DashboardController' );
-
+		Route::get ( 'v1/dashboard' , 'DashboardController@index' );
+		if ( Input::has ( 'start_date' ) or Input::has ( 'end_date' ) )
+			Route::get ( 'v1/dashboard' , 'DashboardController@get_date_Query' );
+		else
+			if ( Input::has ( 'all' ) )
+				Route::get ( 'v1/dashboard' , 'DashboardController@all' );
 	} );

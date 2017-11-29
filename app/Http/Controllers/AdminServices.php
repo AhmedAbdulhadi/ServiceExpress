@@ -75,13 +75,27 @@
 		 */
 		public function respondWithError ($massage , $status = null)
 		{
-			return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
 
-				'massage' => $massage ,
-				'code' => $this->statusCode
-				, 'status' => $this->status ( $status )
+			$splitName = explode ( '||' , $massage , 2 );
 
-			] );
+			$first = $splitName[0];
+			$last = !empty( $splitName[1] ) ? $splitName[1] : '';
+			if ( $last )
+				return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
+					'massage' => $first ,
+					'massage_ar' => $last ,
+					'status' => $this->status ( $status ) ,
+					'code' => $this->statusCode ,
+
+				] );
+			else
+				return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
+					'massage' => $first ,
+//				'massage_ar'=>$last,
+					'status' => $this->status ( $status ) ,
+					'code' => $this->statusCode ,
+
+				] );
 		}
 
 		/**
@@ -94,7 +108,7 @@
 		public function respond ($data , $headers = [])
 		{
 //			return Response::json ( $data , $this->getStatusCode () , $headers );
-			return response()->json($data, $this->getStatusCode (),$headers);
+			return response ()->json ( $data , $this->getStatusCode () , $headers );
 		}
 
 		/**
@@ -248,22 +262,30 @@
 			$type = '2';
 
 			$rules = array (
-				'name' => 'required|regex:/^[\p{L}\s\.-]+$/|min:3|max:30' ,
+				'name' => 'required|regex:/^(?!.*\d)[a-z\p{Arabic}\s]+$/iu|min:3|max:30' ,
 				'email' => 'required|email|unique:users|unique:suppliers|unique:logins|unique:admins' ,
 				'phone' => 'required|phone:JO|unique:users|unique:suppliers|unique:admins' ,
 				//				'phonefield' => 'phone:JO,BE,mobile',
 				'password' => 'required|min:8|max:30'
 			);
 			$messages = array (
-				'name.required' => 'The name is really really really important.' ,
-				'name.min' => 'The name min is 3.' ,
-				'name.max' => 'The name min is 30' ,
-				'email.required' => 'The email is important for my life ' ,
-				'email.email' => 'take your time and add Real email' ,
-				'email.unique' => 'this email is already exiting' ,
-				'phone.unique' => 'this phone number is already exiting' ,
-				'phone.phone:JO' => ' enter phone number with jordan code 962' ,
-				'phone.phone' => ' enter valid phone number such as 962785555555' ,
+				'name.regex' => 'The name is invalid. || يرجى ادخال الاسم بالغة الانجليزية او العربية' ,
+				'name.required' => 'The name is required. ||  يرجى ادخال الاسم بالغة الانجليزية او العربية' ,
+				'name.min' => 'The name min is 3. || اقل عدد احرف للأسم 3' ,
+				'name.max' => 'The name min is 30 || اكثر عدد احرف مسموح هو 30' ,
+
+				'email.required' => 'The email is important for my life || البريد الالكتروني مهم جداً ' ,
+				'email.email' => 'take your time and add Real email || الرجاء ادخال بريد الالكتروني فعال ' ,
+				'email.unique' => 'this email is already exiting || البريد الالكتروني مستخدم بالفعل' ,
+
+				'phone.required' => 'The phone is important for my life || يرجى ادخال رقم الهاتف' ,
+				'phone.unique' => 'this phone number is already exiting || رقم الهاتف مستخدم بالفعل' ,
+				'phone.phone:JO' => ' enter phone number with jordan code 962 || الرجاء ادخال رقم يبدأ 962 الاردن' ,
+				'phone.phone' => ' enter valid phone number such as 962785555555 || الرجاء ا دخال رقم صحيح مثل 962785555555 ' ,
+
+				'password.required' => 'the password is required . || يرجى ادخال كلمة السر' ,
+				'password.min' => 'the password min is 8 . || يرجى ادخال ما يزيد عن 8 احرف لكلمة السر' ,
+				'password.max' => 'the password max is 30 . || يرجى ادخال ما لا يزيد عن 30 حرف لكلمة السر' ,
 				//				'phone.phone:KS' => ' enter phone number with jordan code 966'
 			);
 
@@ -317,12 +339,26 @@
 
 		public function respondwithErrorMessage ($status , $data)
 		{
-			return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
-				'massage' => $data ,
-				'status' => $this->status ( $status ) ,
-				'code' => $this->statusCode ,
+			$splitName = explode ( '||' , $data , 2 );
 
-			] );
+			$first = $splitName[0];
+			$last = !empty( $splitName[1] ) ? $splitName[1] : '';
+			if ( $last )
+				return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
+					'massage' => $first ,
+					'massage_ar' => $last ,
+					'status' => $this->status ( $status ) ,
+					'code' => $this->statusCode ,
+
+				] );
+			else
+				return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
+					'massage' => $first ,
+//				'massage_ar'=>$last,
+					'status' => $this->status ( $status ) ,
+					'code' => $this->statusCode ,
+
+				] );
 		}
 
 		public function responedCreated200 ($massage , $status , $id = null)
@@ -337,14 +373,14 @@
 
 		public function delete_user ($id)
 		{
-			$now=Carbon::now ( 'GMT+2' );
+			$now = Carbon::now ( 'GMT+2' );
 			$user = admin::find ( $id );
 			if ( !$user ) {
 				return $this->respondWithError ( 'Supplier for id:' . $id . ' is not Exiting' , self::fail );
 			} else {
 				DB::table ( 'admins' )
 					->where ( 'id' , $id )
-					->update ( ['status' => false , 'deleted_at' =>$now ] );
+					->update ( ['status' => false , 'deleted_at' => $now] );
 				$email = DB::table ( 'admins' )
 					->where ( 'id' , $id )->first ();
 				DB::table ( 'logins' )->where ( 'email' , $email->email )
@@ -370,25 +406,26 @@
 		public function update_user (Request $request , $id)
 		{
 			$rules = array (
-				'name' => 'regex:/^[\p{L}\s\.-]+$/|min:3|max:30' ,
+				'name' => 'regex:/^(?!.*\d)[a-z\p{Arabic}\s]+$/iu|min:3|max:30' ,
 				'email' => 'email|unique:users|unique:suppliers|unique:logins|unique:admins' ,
 				'phone' => 'phone:JO|unique:users|unique:admins' ,
 				//				'phonefield' => 'phone:JO,BE,mobile',
 				'password' => 'min:8|max:30'
 			);
 			$messages = array (
-				'name.regex' => 'please Enter Name with only real char' ,
-				'name.min' => 'The name min is 3.' ,
-				'name.max' => 'The name min is 30' ,
-				'email.email' => 'take your time and add Real email' ,
-				'email.unique' => 'this email is already exiting' ,
-				'phone.unique' => 'this phone is already exiting' ,
-				'phone.phone:JO' => ' enter phone number with jordan code 962' ,
-				'phone.phone' => ' enter valid phone number' ,
-				//				'phone.phone:KS' => ' enter phone number with jordan code 966'
-
-				'password.min' => 'the min of password 8 ' ,
-				'password.max' => 'the max of password 30 '
+				'name.regex' => 'The name is invalid. || يرجى ادخال الاسم بالغة الانجليزية او العربية' ,
+				'name.min' => 'The name min is 3. || اقل عدد احرف للأسم 3' ,
+				'name.max' => 'The name min is 30 || اكثر عدد احرف مسموح هو 30' ,
+//				'email.required' => 'The email is important for my life || البريد الالكتروني مهم جداً ' ,
+				'email.email' => 'take your time and add Real email || الرجاء ادخال بريد الالكتروني فعال ' ,
+				'email.unique' => 'this email is already exiting || البريد الالكتروني مستخدم بالفعل' ,
+//				'phone.required' => 'The phone is important for my life || يرجى ادخال رقم الهاتف' ,
+				'phone.unique' => 'this phone number is already exiting || رقم الهاتف مستخدم بالفعل' ,
+				'phone.phone:JO' => ' enter phone number with jordan code 962 || الرجاء ادخال رقم يبدأ 962 الاردن' ,
+				'phone.phone' => ' enter valid phone number such as 962785555555 || الرجاء ا دخال رقم صحيح مثل 962785555555 ' ,
+//				'password.required'=>'the password is required . || يرجى ادخال كلمة السر',
+				'password.min' => 'the password min is 8 . || يرجى ادخال ما يزيد عن 8 احرف لكلمة المرور' ,
+				'password.max' => 'the password max is 30 . || يرجى ادخال ما لا يزيد عن 30 حرف لكلمة المرور' ,
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
@@ -422,7 +459,7 @@
 			$email = $request->input ( 'email' );
 			$phone = $request->input ( 'phone' );
 			$password = $request->input ( 'password' );
-			$now = Carbon::now ('GMT+2');
+			$now = Carbon::now ( 'GMT+2' );
 
 			if ( !$findid )
 				return $this->respondWithError ( 'admin not found ' , self::fail );
@@ -472,22 +509,21 @@
 					DB::table ( 'admins' )
 						->where ( 'id' , $id )
 						->update ( ['password' => bcrypt ( $request->input ( 'password' ) ) ,
-							'updated_at' => $now]);
+							'updated_at' => $now] );
 
 					//to edit supplier password in logins table
 					DB::table ( 'logins' )->where ( 'email' , $email->email )
-						->update ( ['password' =>  bcrypt ( $request->input ( 'password' )),
+						->update ( ['password' => bcrypt ( $request->input ( 'password' ) ) ,
 							'updated_at' => $now] );
 
 
 				}
-				if($request->input ( 'status' )  == 0 or $request->input ( 'status' )  == 1 ) {
+				if ( $request->input ( 'status' ) == 0 or $request->input ( 'status' ) == 1 ) {
 					DB::table ( 'admins' )
 						->where ( 'id' , $id )
 						->update ( ['status' => $request->input ( 'status' ) , 'updated_at' => $now] );
-				}
-				else
-					return $this->respondWithError ('status neeed to be 0 for false and 1 for ture',self::fail);
+				} else
+					return $this->respondWithError ( 'status neeed to be 0 for false and 1 for ture' , self::fail );
 
 
 				$data = admin::find ( $id );

@@ -18,6 +18,8 @@
 				'name' => $user['name'],
 				'email' => $user['email'],
 				'phone' => $user['phone'],
+				'longitude' =>$user['longitude'],
+				'latitude' =>$user['latitude'],
 				'bio' => $user['bio'],
 				'exp_year' => $user['exp_year'],
 				'status' => (boolean)$user['status'],

@@ -12,6 +12,8 @@
 
 	class ServicesController extends ServicesC
 	{
+
+
 		public function index ()
 		{
 			return $this->getAllServices ();
@@ -65,12 +67,13 @@
 		public function assigned_services (Request $request)
 		{
 
-			return $this->assign_services ($request);
+			return $this->assign_services ( $request );
 		}
+
 		public function unAssigned_services (Request $request)
 		{
 
-			return $this->unAssign_services ($request);
+			return $this->unAssign_services ( $request );
 		}
 //
 //

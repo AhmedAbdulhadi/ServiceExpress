@@ -22,7 +22,7 @@
 			$this->userTrans = $userTrans;
 
 			$this->content = array ();
-
+			$this->middleware ( 'auth:api' );
 //			$this->middleware ('auth:api')->except ('login', 'logout');
 
 
@@ -57,8 +57,6 @@
 		public function show ($id , Request $request)
 		{
 			return $this->get_one_user ( $id , $request );
-
-
 
 
 		}

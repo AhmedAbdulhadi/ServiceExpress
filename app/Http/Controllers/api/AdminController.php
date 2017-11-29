@@ -1,8 +1,6 @@
 <?php
 
 
-
-
 	namespace App\Http\Controllers\api;
 
 	use App\Admin;
@@ -32,7 +30,7 @@
 
 			$this->content = array ();
 
-			$this->middleware ('auth:api')->except ('login', 'logout');
+			$this->middleware ( 'auth:api' )->except ( 'login' , 'logout' );
 
 
 		}
@@ -52,14 +50,14 @@
 		public function show ($id = null)
 		{
 
-			return $this->get_one_user ($id);
+			return $this->get_one_user ( $id );
 
 		}
 
 		public function store (Request $request)
 		{
 
-			return $this->create_user ($request);
+			return $this->create_user ( $request );
 
 		}
 
@@ -71,7 +69,7 @@
 		public function destroy ($id)
 		{
 
-			return $this->delete_user ($id);
+			return $this->delete_user ( $id );
 
 		}
 
@@ -80,9 +78,9 @@
 		 * @param $id
 		 * @return mixed
 		 */
-		public function update (Request $request, $id)
+		public function update (Request $request , $id)
 		{
-			return $this->update_user ($request, $id);
+			return $this->update_user ( $request , $id );
 
 		}
 
@@ -92,7 +90,7 @@
 		public function get_phone (Request $request)
 		{
 //				if($request->has ('phone'))
-			return $this->get_phone_Query ($request);
+			return $this->get_phone_Query ( $request );
 
 		}
 
@@ -103,7 +101,7 @@
 		public function get_date (Request $request)
 		{
 
-			return $this->get_date_Query ($request);
+			return $this->get_date_Query ( $request );
 
 		}
 
@@ -114,37 +112,46 @@
 
 		public function get_user_by_date (Request $request)
 		{
-			return $this->get_one_user_date ($request);
+			return $this->get_one_user_date ( $request );
 		}
 
 		public function login ()
 		{
-			if (Auth::attempt (['email' => request ('email'), 'password' => request ('password')])) {
+			if ( Auth::attempt ( ['email' => request ( 'email' ) , 'password' => request ( 'password' )] ) ) {
 				$user = Auth::user ();
 
-				if(Auth::user ()->type == 2)
-				{
-					$this->content['token'] = $user->createToken ('Noventapp')->accessToken;
-					$user_i=Admin::all ()->where ('email',request ('email'))->first ()->toArray();
+				if ( Auth::user ()->type == 2 ) {
+					$this->content['token'] = $user->createToken ( 'Noventapp' )->accessToken;
+					$user_i = Admin::all ()->where ( 'email' , request ( 'email' ) )->first ()->toArray ();
 
-					if($user_i['status'] == 1)
-						$user_i=$this->return_r ($user_i,$this->content);
-					else
-					{
-						return $this->respondWithError ('ACCOUNT IS SUSPENDED', self::fail);
+					if ( $user_i['status'] == 1 )
+						$user_i = $this->return_r ( $user_i , $this->content );
+					else {
+						return $this->respondWithError ( 'ACCOUNT IS SUSPENDED || الحساب مقفل ' , self::fail );
 
 					}
-				}
-
-				else
-					return $this->respondWithError ('the user trying to login is not a Admin ', self::fail);
+				} else
+					return $this->respondWithError
+					( 'the user trying to login is not a Admin || المستخدم الذي يحاول تسجيل الدخول ليس من نوع مسؤول' , self::fail );
 
 //dd($user->getRememberToken ('Noventapp')->accessToken);
 				return $this->responedFound200ForOneUser
-				('Admin login success', self::success, $user_i);
+				( 'Admin login success' , self::success , $user_i );
 			} else {
-				return $this->respondWithError ('wrong email or password', self::fail);
+				return $this->respondWithError
+				( 'wrong email or password || البريد الالكتروني او كلمة المرور غير صحيحة' , self::fail );
 			}
+
+		}
+
+		private function return_r ($x , $y)
+		{
+			//to spacifay and get the needed result
+			//$x for admin $y for token
+			return [
+				'admin_id' => $x['id'] ,
+				'token' => $y['token']
+			];
 
 		}
 
@@ -152,49 +159,35 @@
 		{
 //			dd('asd');
 			$value = $request->bearerToken ();
-			$id = (new Parser())->parse ($value)->getHeader ('jti');
+			$id = (new Parser())->parse ( $value )->getHeader ( 'jti' );
 
-			$token = DB::table ('oauth_access_tokens')
-				->where ('id', '=', $id)
-				->update (['revoked' => true]);
+			$token = DB::table ( 'oauth_access_tokens' )
+				->where ( 'id' , '=' , $id )
+				->update ( ['revoked' => true] );
 
 
 //			Auth::guard ()->logout();
 
-			if (Auth::check ())
-				return $this->respondWithError ('logout fail', self::fail);
+			if ( Auth::check () )
+				return $this->respondWithError ( 'logout fail' , self::fail );
 			else
-				return $this->responedCreated200 ('logout success', self::success);
+				return $this->responedCreated200 ( 'logout success' , self::success );
 		}
-
-
-
 
 		public function get_user_email (Request $request)
 		{
 
-			return $this->get_user_by_email ($request);
+			return $this->get_user_by_email ( $request );
 
 		}
 
-
 		public function get_email_phone (Request $request)
 		{
-			return $this->get_user_email_phonenum ($request);
+			return $this->get_user_email_phonenum ( $request );
 		}
 
 		public function get_inactives_users (Request $request)
 		{
-			return $this->get_inactive_users ($request);
-		}
-		private function return_r($x,$y)
-		{
-			//to spacifay and get the needed result
-			//$x for admin $y for token
-			return [
-				'admin_id' => $x['id'] ,
-				'token'=>	 $y['token']
-			];
-
+			return $this->get_inactive_users ( $request );
 		}
 	}

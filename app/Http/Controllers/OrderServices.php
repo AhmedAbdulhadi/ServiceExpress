@@ -64,12 +64,12 @@
 		protected $userTransOneC;
 
 
-		public function __construct (OrderTrans $userTrans , orderTransOne $userTransOne,orderTransOneC $orderTransOneC)
+		public function __construct (OrderTrans $userTrans , orderTransOne $userTransOne , orderTransOneC $orderTransOneC)
 		{
 			$this->userTrans = $userTrans;
 			$this->userTransOne = $userTransOne;
 			$this->userTransOneC = $orderTransOneC;
-
+			$this->middleware ( 'auth:api' );
 			//$this->middleware('auth.basic', ['only' => 'store']);
 
 		}
@@ -178,12 +178,19 @@
 				"rate" => "numeric|min:0|max:5" ,
 			);
 			$messages = array (
-				"user_id.required" => "user_id is required " ,
-				"user_id.integer" => " user_id must be of type integer" ,
-				"supplier_id.required" => "supplier_id is required" ,
-				"supplier_id.integer" => "supplier_id must be integer" ,
-				"service_id.required" => "service_id is required" ,
-				"service_id.integer" => "service_id must be integer" ,
+				"user_id.required" => "user_id is required || يرجى ادخال user_id" ,
+				"user_id.integer" => " user_id must be of type integer || رقم المستخدم يجب ان يكون عدد صحيح" ,
+				"user_id.exists" => " user_id dose not exists || رقم المستخدم غير موجود " ,
+
+				"supplier_id.required" => "supplier_id is required || يرجى ادخال رقم الموزع" ,
+				"supplier_id.integer" => "supplier_id must be integer || رقم الموزع يجب ان يكون عدد صحيح" ,
+				"supplier_id.exists" => "supplier_id dose not exists || رقم الموزع غير موجود" ,
+
+				"service_id.required" => "service_id is required || يرجى ادخال رقم الخدمة" ,
+				"service_id.integer" => "service_id must be integer || رقم الخدمة يجب ان يكون عدد صحيح " ,
+				"service_id.exists" => "service_id dose not exists || رقم الخدمة غير موجود " ,
+
+
 				"description.required" => "desc is required" ,
 //			"description"=>"required|"
 			);
@@ -237,7 +244,7 @@
 //
 //				Image::make(file_get_contents($data->base64_image))->save($path);
 				$data = Input::all ();
-				if(Input::has('image')) {
+				if ( Input::has ( 'image' ) ) {
 					$png_url = "/orders-" . time () . ".png";
 					$path = base_path ( "images\orders\\" ) . $png_url;
 					$data = $data['image'];
@@ -248,15 +255,14 @@
 //					dd(url( "/images/orders//" ) . $png_url);
 //					dd($path);
 					$success = file_put_contents ( $path , $data );
-					$path=url('/images/orders'.$png_url);
-				}
-				else
-					$path="";
+					$path = url ( '/images/orders' . $png_url );
+				} else
+					$path = "";
 //dd($path);
 //				$success = file_put_contents ( $path , $data );
 				$success = null;
 
-				if ( $success or ! $success ) {
+				if ( $success or !$success ) {
 					$order = DB::table ( 'orders' )->insertGetId (
 						[
 							'user_id' => $user_id ,
@@ -275,7 +281,7 @@
 
 //				$user=
 					return $this->responedFound200ForOneorder ( ' successfully Created !' , self::success
-						, $this->userTransOneC->transform ($oneOrder->toArray ()) );
+						, $this->userTransOneC->transform ( $oneOrder->toArray () ) );
 				} else
 					return $this->respondWithError ( 'image did not saved ' , self::fail );
 			}
@@ -283,12 +289,26 @@
 
 		public function respondwithErrorMessage ($status , $data)
 		{
-			return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
-				'massage' => $data ,
-				'status' => $this->status ( $status ) ,
-				'code' => $this->statusCode ,
+			$splitName = explode ( '||' , $data , 2 );
 
-			] );
+			$first = $splitName[0];
+			$last = !empty( $splitName[1] ) ? $splitName[1] : '';
+			if ( $last )
+				return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
+					'massage' => $first ,
+					'massage_ar' => $last ,
+					'status' => $this->status ( $status ) ,
+					'code' => $this->statusCode ,
+
+				] );
+			else
+				return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
+					'massage' => $first ,
+//				'massage_ar'=>$last,
+					'status' => $this->status ( $status ) ,
+					'code' => $this->statusCode ,
+
+				] );
 		}
 
 		public function responedFound200ForOneorder ($massage , $status , $data)
@@ -329,14 +349,17 @@
 				"rate" => "numeric|min:0|max:5" ,
 			);
 			$messages = array (
-//				"user_id.required" => "user_id is required " ,
-				"user_id.integer" => " user_id must be of type integer" ,
-//				"supplier_id.required" => "supplier_id is required" ,
-				"supplier_id.integer" => "supplier_id must be integer" ,
-//				"service_id.required" => "services_id is required" ,
-				"service_id.integer" => "service_id must be integer" ,
-				"is_rated.min" => "is rated must be 1 for true 0 for false" ,
-				"is_rated.max" => "is rated must be 1 for true 0 for false"
+//				"user_id.required" => "user_id is required || يرجى ادخال user_id" ,
+				"user_id.integer" => " user_id must be of type integer || رقم المستخدم يجب ان يكون عدد صحيح" ,
+				"user_id.exists" => " user_id dose not exists || رقم المستخدم غير موجود " ,
+
+//				"supplier_id.required" => "supplier_id is required || يرجى ادخال رقم الموزع" ,
+				"supplier_id.integer" => "supplier_id must be integer || رقم الموزع يجب ان يكون عدد صحيح" ,
+				"supplier_id.exists" => "supplier_id dose not exists || رقم الموزع غير موجود" ,
+
+//				"service_id.required" => "service_id is required || يرجى ادخال رقم الخدمة" ,
+				"service_id.integer" => "service_id must be integer || رقم الخدمة يجب ان يكون عدد صحيح " ,
+				"service_id.exists" => "service_id dose not exists || رقم الخدمة غير موجود " ,
 			);
 
 
@@ -384,7 +407,7 @@
 			$rate = $request->input ( 'rate' );
 			$is_rated = $request->input ( 'is_rated' );
 			$now = Carbon::now ( 'GMT+2' );
-			$image = $request->input  ( 'image' );
+			$image = $request->input ( 'image' );
 //dd($request->input ( 'description' ));
 			if ( !$findid )
 				return $this->respondWithError ( 'order not found ' , self::fail );
@@ -422,7 +445,7 @@
 
 				if ( $image !== null ) {
 					$data = Input::all ();
-					if(Input::has('image')) {
+					if ( Input::has ( 'image' ) ) {
 						$png_url = "orders-" . time () . ".png";
 						$path = base_path ( "images\orders\\" ) . $png_url;
 						$data = $data['image'];
@@ -431,15 +454,13 @@
 						$data = base64_decode ( $data );
 //				dd($data);
 						$success = file_put_contents ( $path , $data );
-					}
-					else
-						$path="";
+					} else
+						$path = "";
 
 
 					DB::table ( 'orders' )
 						->where ( 'id' , $id )
 						->update ( ['path' => $path , 'updated_at' => $now] );
-
 
 
 				}
@@ -581,16 +602,15 @@
 //			foreach ($orders as $key => $order)
 
 //dd();
-			if($orders) {
+			if ( $orders ) {
 				$arr = $orders->service ( $orders["user_id"] , $orders["supplier_id"] , $orders["service_id"] );
 				$countOrder = count ( $orders );
 
 				return $this->responedFound200SectionSupplierId
 				( 'Order found' , self::success ,
 					$this->userTransOne->transform ( array_merge ( $orders->toArray () , $arr ) ) , $countOrder );
-			}
-			else
-				return $this->respondWithError ('order not found',self::fail);
+			} else
+				return $this->respondWithError ( 'order not found' , self::fail );
 
 //		return $this->respondWithError ('order not found',self::fail);
 

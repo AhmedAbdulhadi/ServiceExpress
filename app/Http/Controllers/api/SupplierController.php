@@ -33,7 +33,7 @@
 
 			$this->content = array ();
 
-			$this->middleware ( 'auth:api' )->except ( 'login' , 'logout','store' );
+			$this->middleware ( 'auth:api' )->except ( 'login' , 'logout' , 'store' );
 
 
 		}
@@ -123,32 +123,41 @@
 			if ( Auth::attempt ( ['email' => request ( 'email' ) , 'password' => request ( 'password' )] ) ) {
 				$user = Auth::user ();
 
-				if(Auth::user ()->type == 1)
-				{
+				if ( Auth::user ()->type == 1 ) {
 
-					$this->content['token'] = $user->createToken ('Noventapp')->accessToken;
-					$user_i=Supplier::all ()->where ('email',request ('email'))->first ()->toArray();
+					$this->content['token'] = $user->createToken ( 'Noventapp' )->accessToken;
+					$user_i = Supplier::all ()->where ( 'email' , request ( 'email' ) )->first ()->toArray ();
 
-					if($user_i['status'] == 1)
-						$user_i=$this->return_r ($user_i,$this->content);
-					else
-					{
-						return $this->respondWithError ('ACCOUNT IS SUSPENDED', self::fail);
+					if ( $user_i['status'] == 1 )
+						$user_i = $this->return_r ( $user_i , $this->content );
+					else {
+						return $this->respondWithError ( 'ACCOUNT IS SUSPENDED || الحساب مقفل' , self::fail );
 
 					}
-				}
-
-				else
-					return $this->respondWithError ('the user trying to login is not a Supplier ', self::fail);
+				} else
+					return $this->respondWithError
+					( 'the user trying to login is not a Supplier || المستخدم الذي يحاول تسجيل الدخول ليس من نوع موزع' , self::fail );
 
 				return $this->responedFound200ForOneUser
-				( 'Supplier login success' , self::success , $user_i );
+				( 'Supplier login success ' , self::success , $user_i );
 
 			} else {
-				return $this->respondWithError ( 'wrong email or password' , self::fail );
+				return $this->respondWithError
+				( 'wrong email or password || البريد الالكتروني او كلمة المرور غير صحيحة' , self::fail );
 
 
 			}
+
+		}
+
+		private function return_r ($x , $y)
+		{
+			//to spacifay and get the needed result
+			//$x for supplier $y for token
+			return [
+				'supplier_id' => $x['id'] ,
+				'token' => $y['token']
+			];
 
 		}
 
@@ -172,14 +181,12 @@
 //				return dd ( 'logout success' );
 		}
 
-
 		public function get_user_email (Request $request)
 		{
 
 			return $this->get_user_by_email ( $request );
 
 		}
-
 
 		public function get_email_phone (Request $request)
 		{
@@ -191,19 +198,8 @@
 			return $this->get_inactive_users ( $request );
 		}
 
-
 		public function suppliers_services_id_s (Request $request)
 		{
 			return $this->suppliers_services_id ( $request );
-		}
-		private function return_r($x,$y)
-		{
-			//to spacifay and get the needed result
-			//$x for supplier $y for token
-			return [
-				'supplier_id' => $x['id'] ,
-				'token'=>	 $y['token']
-			];
-
 		}
 	}

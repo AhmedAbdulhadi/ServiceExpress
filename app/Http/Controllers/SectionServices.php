@@ -60,6 +60,7 @@
 
 		public function __construct (sectionTransform $userTrans , section_servicesTra $use)
 		{
+			$this->middleware ( 'auth:api' );
 			$this->userTrans = $userTrans;
 			$this->use = $use;
 //			$this->services_Trans=$services_Trans;
@@ -219,7 +220,7 @@
 			$rules = array (
 				'admin_id' => 'required|integer|exists:admins,id' ,
 				'name_en' => 'required|regex:/^[\p{L}\s\.-]+$/|min:3|max:30' ,
-				'name_ar' => 'required|min:3|max:50' ,
+				'name_ar' => 'required|regex:/^(?!.*\d)[a-z\p{Arabic}\s]+$/iu|min:3|max:50' ,
 				'desc_en' => 'required|min:3|max:140' ,
 				'desc_ar' => 'required|min:3|max:140' ,
 //========================================================== when done uncommint the upper
@@ -227,10 +228,25 @@
 				'image' => 'string' ,
 			);
 			$messages = array (
-				'name.required' => 'The name is really really really important.' ,
-				'name.min' => 'The name min is 3.' ,
-				'name.max' => 'The name min is 30' ,
-				'admin_id' => ' the admin id is important'
+				'name_en.regex' => 'please Enter valid Name || يرجى ادخال الاسم بالغة الانجليزية' ,
+
+				'name_en.required' => 'Enter name. || يرجى ادخال الاسم بالغة الانجليزية ' ,
+				'name_en.min' => 'The name_en min is 3. || اقل عدد احرف للأسم 3 احرف ' ,
+				'name_en.max' => 'The name_en min is 30 || اكثر عدد احرف مسموح هو 30 حرف' ,
+//				'name_ar.regex' => 'name_ar please Enter Name with only real char' ,
+
+				'name_ar.required' => 'Enter Name . || يرجى ادخال الاسم بالغة العربية ' ,
+				'name_ar.regex' => 'Enter valid name. || يرجى ادخال الاسم بالغة العربية ' ,
+				'name_ar.min' => 'The name_ar min is 3. || اقل عدد احرف للأسم 3 احرف ' ,
+				'name_ar.max' => 'The name_ar min is 30 || اكثر عدد احرف مسموح هو 30 حرف' ,
+
+				'desc_en.required' => 'Enter description_en . || يرجى ادخال الوصف بالغة الانجليزية' ,
+				'desc_en.min' => 'The description_en  min is 3. || اقل عدد حروف للوصف هو 3 احرف' ,
+				'desc_en.max' => 'The description_en  max is 140|| اكثر عدد احرف للوصف هو 140 حرف' ,
+
+				'desc_ar.required' => 'Enter description_ar. || يرجى ادخال الوصف بالغة العربية' ,
+				'desc_ar.min' => 'The Enter description_ar min is 3. || اقل عدد حروف للوصف هو 3 احرف' ,
+				'desc_ar.max' => ' The Enter description_ar max is 140 ||  اكثر عدد احرف للوصف هو 140 حرف' ,
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
@@ -269,7 +285,7 @@
 				$image_path = url ( '/icons/404.png' );
 
 				if ( $request->input ( 'image' ) ) {
-					if ( file_exists ( base_path ( 'icons\\' . $request->input ( 'image' ) ) ) ) {
+					if ( file_exists ( base_path ( 'icons//' . $request->input ( 'image' ) ) ) ) {
 //						dd(url   ( '/icons/'.$request->input ( 'image' ) ));
 
 						$image_path = url ( 'icons/' . $request->input ( 'image' ) );
@@ -303,12 +319,26 @@
 
 		public function respondwithErrorMessage ($status , $data)
 		{
-			return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
-				'massage' => $data ,
-				'status' => $this->status ( $status ) ,
-				'code' => $this->statusCode ,
+			$splitName = explode ( '||' , $data , 2 );
 
-			] );
+			$first = $splitName[0];
+			$last = !empty( $splitName[1] ) ? $splitName[1] : '';
+			if ( $last )
+				return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
+					'massage' => $first ,
+					'massage_ar' => $last ,
+					'status' => $this->status ( $status ) ,
+					'code' => $this->statusCode ,
+
+				] );
+			else
+				return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
+					'massage' => $first ,
+//				'massage_ar'=>$last,
+					'status' => $this->status ( $status ) ,
+					'code' => $this->statusCode ,
+
+				] );
 		}
 
 		public function responedCreated200 ($massage , $status , $id = null)
@@ -356,27 +386,32 @@
 			$rules = array (
 //				'id'=>'required',
 				'name_en' => 'regex:/^[\p{L}\s\.-]+$/|min:3|max:30' ,
-				'name_ar' => 'min:3|max:50' ,
+				'name_ar' => 'regex:/^(?!.*\d)[a-z\p{Arabic}\s]+$/iu|min:3|max:50' ,
 				'desc_en' => 'min:3|max:140' ,
 				'desc_ar' => 'min:3|max:140' ,
 				'image' => 'string' ,
 			);
+
 			$messages = array (
-				'name_en.regex' => 'please Enter Name with only real char' ,
-				'name_en.min' => 'The name min is 3.' ,
-				'name_en.max' => 'The name min is 30' ,
-				'name_ar.regex' => 'please Enter Name with only real char' ,
-				'name_ar.min' => 'The name min is 3.' ,
-				'name_ar.max' => 'The name min is 30' ,
-//				'email.email' => 'take your time and add Real email' ,
-//				'email.unique' => 'this email is already exiting' ,
-//				'phone.unique' => 'this phone is already exiting' ,
-//				'phone.phone:JO' => ' enter phone number with jordan code 962' ,
-//				'phone.phone' => ' enter valid phone number' ,
-//				//				'phone.phone:KS' => ' enter phone number with jordan code 966'
-//
-//				'password.min' => 'the min of password 8 ' ,
-//				'password.max' => 'the max of password 30 '
+				'name_en.regex' => 'please Enter valid Name || يرجى ادخال الاسم بالغة الانجليزية' ,
+
+//				'name_en.required' => 'Enter name. || يرجى ادخال الاسم بالغة الانجليزية ' ,
+				'name_en.min' => 'The name_en min is 3. || اقل عدد احرف للأسم 3 احرف ' ,
+				'name_en.max' => 'The name_en min is 30 || اكثر عدد احرف مسموح هو 30 حرف' ,
+//				'name_ar.regex' => 'name_ar please Enter Name with only real char' ,
+
+//				'name_ar.required' => 'Enter Name . || يرجى ادخال الاسم بالغة العربية '  ,
+				'name_ar.regex' => 'Enter valid name. || يرجى ادخال الاسم بالغة العربية ' ,
+				'name_ar.min' => 'The name_ar min is 3. || اقل عدد احرف للأسم 3 احرف ' ,
+				'name_ar.max' => 'The name_ar min is 30 || اكثر عدد احرف مسموح هو 30 حرف' ,
+
+//				'desc_en.required' => 'Enter description_en . || يرجى ادخال الوصف بالغة الانجليزية' ,
+				'desc_en.min' => 'The description_en  min is 3. || اقل عدد حروف للوصف هو 3 احرف' ,
+				'desc_en.max' => 'The description_en  max is 140|| اكثر عدد احرف للوصف هو 140 حرف' ,
+
+//				'desc_ar.required' => 'Enter description_ar. || يرجى ادخال الوصف بالغة العربية' ,
+				'desc_ar.min' => 'The Enter description_ar min is 3. || اقل عدد حروف للوصف هو 3 احرف' ,
+				'desc_ar.max' => ' The Enter description_ar max is 140 ||  اكثر عدد احرف للوصف هو 140 حرف' ,
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
@@ -460,7 +495,7 @@
 					$image_path = url ( '/icons/404.png' );
 
 					if ( $request->input ( 'image' ) ) {
-						if ( file_exists ( base_path ( 'icons\\' . $request->input ( 'image' ) ) ) ) {
+						if ( file_exists ( base_path ( 'icons//' . $request->input ( 'image' ) ) ) ) {
 //						dd('File is exists.');
 							$image_path = url ( 'icons/' . $request->input ( 'image' ) );
 						} else {
@@ -523,8 +558,8 @@
 			);
 			$messages = array (
 
-				'section_id.required' => 'section_id required for me' ,
-				'section_id.integer' => 'section_id must be integer' ,
+				'section_id.required' => 'section_id required for me || يرجى ادخال section_id' ,
+				'section_id.integer' => 'section_id must be integer || يرجى ادخال عدد صحيح' ,
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
@@ -566,7 +601,6 @@
 
 //			$s = Section::find(1)->first ();
 //			dd($s->services ->toArray());
-
 //			$sa = Services::find();
 //			dd($sa->sections );
 
@@ -585,9 +619,9 @@
 
 //		return $this->responedFound200ServicesCC ('Sections Found',self::success,$this->services_Trans->transformCollection ($section->toArray ()));
 			return $this->responedFound200ServicesCC ( 'Sections Found' , self::success , $section->toArray () );
-//		return $this->responedFound200ServicesCC ('Sections Found',self::success,
-//			$this->services_Trans->transformCollection  ( $section->all  ()));
 
+			//		return $this->responedFound200ServicesCC ('Sections Found',self::success,
+//			$this->services_Trans->transformCollection  ( $section->all  ()));
 //foreach ($section)
 
 		}
