@@ -7,12 +7,11 @@
 	 */
 	//namespace Novent\Transfroers;
 	namespace Novent\Transformers;
-	class SupplierTransform extends Transfomer
+	class supplier_servicesTrans extends Transfomer
 	{
 
 		public function transform ($user)
 		{
-//			dd($user['created_at']);
 
 			if( !$user['updated_at'] )
 				$up="";
@@ -29,8 +28,10 @@
 				'exp_year' => $user['exp_year'],
 				'status' => (boolean)$user['status'],
 				'created_at' =>  date('Y-m-d', strtotime($user['updated_at'])) ,
-				'updated_at' => $up ,
-				//	'active' => (boolean)$user['is_active'],
+				'updated_at' => $up,
+				'services'=>$user['services']
+
+
 			];
 
 		}

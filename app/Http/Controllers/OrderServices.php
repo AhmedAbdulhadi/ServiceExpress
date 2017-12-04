@@ -270,7 +270,7 @@
 							'service_id' => $service_id ,
 							'desc' => $description ,
 							'path' => $path ,
-							'delivered_at' => Carbon::now ( 'GMT+3' ) ,
+							'delivered_at' => null ,
 							'status' => $status ,
 							'rate' => $rate ,
 							'is_rated' => $rated ,
@@ -472,6 +472,14 @@
 						DB::table ( 'orders' )
 							->where ( 'id' , $id )
 							->update ( ['status' => $status , 'updated_at' => $now] );
+						if ( $status == 2 )
+							DB::table ( 'orders' )
+								->where ( 'id' , $id )
+								->update ( ['delivered_at' => $now] );
+						if ( $status == 0 or $status == 1 )
+							DB::table ( 'orders' )
+								->where ( 'id' , $id )
+								->update ( ['delivered_at' => ""] );
 					}
 				if ( $new_name->rate !== $rate and $rate !== null )
 					if ( $rate ) {
@@ -565,7 +573,8 @@
 			$countOrders = count ( $orders );
 
 			return $this->responedFound200SectionSupplierId
-			( 'Order found' , self::success , $this->userTrans->transformCollection ( $orders->all () ) , $countOrders );
+			( 'Order found' , self::success , $this->userTrans->transformCollection ( $orders->all () )
+				, $countOrders );
 		}
 
 		public function responedFound200SectionSupplierId ($massage , $status , $data , $countOrders)
@@ -614,6 +623,95 @@
 
 //		return $this->respondWithError ('order not found',self::fail);
 
+		}
+
+		public function get_order_Supplier (Request $request)
+		{
+			$supplier_id = $request->input ( 'supplier_id' );
+			$active = $request->input ( 'active' );
+			$activeorder = [];
+			$ord = Order::where ( 'supplier_id' , $supplier_id )->get ();
+//			dd($ord->toArray ()toArray);
+			$activeList = [];
+			$nonactive = [];
+
+			if ( $active == 1 ) {
+
+				foreach ($ord as $actOrders) {
+					if ( $actOrders['status'] == 1 or $actOrders['status'] == 0 ) {
+						$activeList[] = $actOrders;
+					}
+				}
+				if ( $activeList ) {
+					return $this->responedFound200SectionSupplierId ( ' 1 Order for supplier_id found  active' ,
+						self::success , $this->userTransOneC->transformCollection  ($activeList) , count ( $activeList ) );
+				} else if ( !$activeList and $active == 1 )
+//					dd ( 'asdas' );
+				return $this->respondWithError ( '  order for supplier not found' , self::fail );
+			}
+				if ( $active == 0 )
+					foreach ($ord as $actOrders) {
+						if ( $actOrders['status'] == 2 )
+							$nonactive[] = $actOrders;
+					}
+					if($nonactive)
+					return $this->responedFound200SectionSupplierId ( '  cancel Order for supplier_id found ' ,
+						self::success , $this->userTransOneC->transformCollection  ($nonactive) , count ( $nonactive ) );
+				 else if(!$nonactive and $active == 0)
+
+					return $this->respondWithError ( ' 0 order for supplier not found' , self::fail );
+
+//			 else
+//				return $this->respondWithError ( '1 active order for this supplier not found' , self::fail );
+
+
+//dd($active);
+//	dd($ord->toArray ());
+		}
+
+
+		public function get_order_User (Request $request)
+		{
+			$user_id = $request->input ( 'user_id' );
+			$active = $request->input ( 'active' );
+//			$activeorder = [];
+			$ord = Order::where ( 'user_id' , $user_id )->get ();
+//			dd($ord->toArray ()toArray);
+			$activeList = [];
+			$nonactive = [];
+
+			if ( $active == 1 ) {
+
+				foreach ($ord as $actOrders) {
+					if ( $actOrders['status'] == 1 or $actOrders['status'] == 0 ) {
+						$activeList[] = $actOrders;
+					}
+				}
+				if ( $activeList ) {
+					return $this->responedFound200SectionSupplierId ( '  Order for user_id found  active' ,
+						self::success , $this->userTransOneC->transformCollection  ($activeList) , count ( $activeList ) );
+				} else if ( !$activeList and $active == 1 )
+//					dd ( 'asdas' );
+				return $this->respondWithError ( '  order for user not found' , self::fail );
+			}
+				if ( $active == 0 )
+					foreach ($ord as $actOrders) {
+						if ( $actOrders['status'] == 2 )
+							$nonactive[] = $actOrders;
+					}
+					if($nonactive)
+					return $this->responedFound200SectionSupplierId ( '  canceled Order for user_id found ' ,
+						self::success , $this->userTransOneC->transformCollection  ($nonactive) , count ( $nonactive ) );
+				 else if(!$nonactive and $active == 0)
+
+					return $this->respondWithError ( '  order for user not found' , self::fail );
+
+//			 else
+//				return $this->respondWithError ( '1 active order for this supplier not found' , self::fail );
+
+
+//dd($active);
+//	dd($ord->toArray ());
 		}
 
 

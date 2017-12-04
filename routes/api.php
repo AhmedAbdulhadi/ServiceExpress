@@ -124,7 +124,10 @@
 
 
 		Route::resource ( 'v1/orders' , 'OrderController' );
-
+		if( Input::has ( 'supplier_id' ) and Input::has ( 'active' ))
+			Route::get ( 'v1/orders' , 'OrderController@get_orderSupplier' );
+		else if( Input::has ( 'user_id' ) and Input::has ( 'active' ))
+			Route::get ( 'v1/orders' , 'OrderController@get_order_Users' );
 		/*else if (Input::has ('date'))
 Route::get ('section', 'SectionController@get_date_one_Query');
 else
@@ -135,4 +138,5 @@ Route::resource ('section', 'SectionController');*/
 		else
 			if ( Input::has ( 'all' ) )
 				Route::get ( 'v1/dashboard' , 'DashboardController@all' );
+
 	} );

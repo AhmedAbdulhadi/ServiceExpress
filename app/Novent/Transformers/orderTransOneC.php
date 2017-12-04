@@ -30,17 +30,25 @@
 			if ( !$user['desc'] )
 				$user['desc'] = "";
 
+			if( !$user['delivered_at'] )
+				$del="";
+			else
+				$del=	date ( 'Y-m-d' , strtotime ( $user['delivered_at'] ) );
+
+			if( !$user['updated_at'] )
+				$up="";
+			else
+				$up=	date ( 'Y-m-d' , strtotime ( $user['updated_at'] ) );
 			return [
 				'id' => $user['id'] ,
 				'desc' => $user['desc'] ,
 				'path' => $user['path'] ,
 				'rate' => $user['rate'] ,
 				'status' => $user['status'] ,
-
 				'is_rated' => (boolean)$user['is_rated'] ,
-				'delivered_at' => date ( 'Y-m-d' , strtotime ( $user['delivered_at'] ) ) ,
+				'delivered_at' => $del ,
 				'created_at' => date ( 'Y-m-d' , strtotime ( $user['created_at'] ) ) ,
-				'updated_at' => date ( 'Y-m-d' , strtotime ( $user['updated_at'] ) ) ,
+				'updated_at' => $up ,
 
 
 

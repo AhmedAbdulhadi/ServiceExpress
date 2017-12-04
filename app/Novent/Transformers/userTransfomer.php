@@ -13,6 +13,14 @@
 
 		public function transform ($user)
 		{
+			if( !$user['deleted_at'] )
+				$del="";
+			else
+				$del=	date ( 'Y-m-d' , strtotime ( $user['deleted_at'] ) );
+			if( !$user['updated_at'] )
+				$up="";
+			else
+				$up=	date ( 'Y-m-d' , strtotime ( $user['updated_at'] ) );
 
 			return [
 				'id' => $user['id'] ,
@@ -21,6 +29,8 @@
 				'phone' => $user['phone'] ,
 				'status' => (boolean)$user['status'] ,
 				'created_at' => date ( 'Y-m-d' , strtotime ( $user['created_at'] ) ) ,
+				'updated_at' => $up ,
+				'deleted_at' => $del,
 //				'add'=>$user['address']['country']
 //				'active' => (boolean)$user['is_active'] ,
 			];

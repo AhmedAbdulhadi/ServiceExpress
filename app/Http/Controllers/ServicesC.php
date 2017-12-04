@@ -18,6 +18,7 @@
 	use Illuminate\Support\Facades\DB;
 	use Illuminate\Support\Facades\Response;
 	use Novent\Transformers\servicesTransform;
+	use Novent\Transformers\supplier_servicesTrans;
 	use Novent\Transformers\SupplierTransform;
 	use \Validator;
 
@@ -53,17 +54,19 @@
 		const fail = 'fail';
 
 		protected $userTrans;
+		protected $supplier_servicesT;
 		/**
 		 * @var int
 		 */
 		protected $statusCode = 200;
 		protected $use;
 
-		public function __construct (servicesTransform $userTrans , SupplierTransform $use)
+		public function __construct (servicesTransform $userTrans , SupplierTransform $use,supplier_servicesTrans $supplier_servicesT)
 		{
 			$this->userTrans = $userTrans;
 			//$this->middleware('auth.basic', ['only' => 'store']);
 			$this->use = $use;
+			$this->supplier_servicesT=$supplier_servicesT;
 			$this->middleware ( 'auth:api' );
 
 		}
@@ -615,7 +618,9 @@
 			if ( !$services->first () )
 				return $this->respondWithError ( 'services for suppliers id ' . $supp_id . '  not found' , self::fail );
 			else
-				return $this->responedFound200Services_withSuppliers_id ( 'found services with suppliers' , self::success , $services->all () );
+				return $this->responedFound200Services_withSuppliers_id
+				( 'found services with suppliers' , self::success
+					, $this->supplier_servicesT->transformCollection ($services->all ()) );
 
 		}
 

@@ -29,6 +29,14 @@
 		{
 			if ( !$user['desc'] )
 				$user['desc'] = "";
+			if( !$user['delivered_at'] )
+				$del="";
+			else
+			$del=	date ( 'Y-m-d' , strtotime ( $user['delivered_at'] ) );
+			if( !$user['updated_at'] )
+				$up="";
+			else
+				$up=	date ( 'Y-m-d' , strtotime ( $user['updated_at'] ) );
 
 			return [
 				'id' => $user['id'] ,
@@ -38,9 +46,9 @@
 				'status' => $user['status'] ,
 //$user['order_info']['user']
 				'is_rated' => (boolean)$user['is_rated'] ,
-				'delivered_at' => date ( 'Y-m-d' , strtotime ( $user['delivered_at'] ) ) ,
+				'delivered_at' =>$del ,
 				'created_at' => date ( 'Y-m-d' , strtotime ( $user['created_at'] ) ) ,
-				'updated_at' => date ( 'Y-m-d' , strtotime ( $user['updated_at'] ) ) ,
+				'updated_at' =>$up ,
 				//	'active' => (boolean)$user['is_active'],
 				'user' => [
 					'id' => $user['order_info']['user']['id'] ,

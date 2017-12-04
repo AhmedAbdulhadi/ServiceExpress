@@ -76,7 +76,7 @@ class Handler extends ExceptionHandler
 
 
 	    if($exception instanceof AuthenticationException  )
-		    return $this->respondWithError ('Unauthorized',UserServices::fail);
+		    return $this->respondWithErrorUn('Unauthorized',UserServices::fail);
 
 
 
@@ -97,15 +97,25 @@ class Handler extends ExceptionHandler
     {
 	    if ($request->expectsJson()) {
 //            return response()->json(['error' => 'Unautheasdasdasdasdanticated.'], 401);
-		    return $this->respondWithError ('Unauthrized',UserServices::fail);
+		    return $this->respondWithErrorUn  ('Unauthrized',UserServices::fail);
 	    }
 
-        return $this->respondWithError ('Unauthrized',UserServices::fail);
+        return $this->respondWithErrorUn  ('Unauthrized',UserServices::fail);
 //        return dd('Unauthrized');
     }
 	public function respondWithError ($massage , $status = null)
 	{
 		return $this->setStatusCode ( UserServices::HTTP_BAD_REQUEST )->respond ( [
+
+			'massage' => $massage ,
+			'code' => $this->statusCode
+			, 'status' => $this->status ( $status )
+
+		] );
+	}
+	public function respondWithErrorUn ($massage , $status = null)
+	{
+		return $this->setStatusCode ( UserServices::HTTP_FORBIDDEN )->respond ( [
 
 			'massage' => $massage ,
 			'code' => $this->statusCode

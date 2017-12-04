@@ -174,7 +174,7 @@
 		public function getAllUser ()
 		{
 
-
+//dd('supplier');
 			$users = Supplier::where ( 'status' , true )->get ();
 
 			/*return	IlluResponse::json([
