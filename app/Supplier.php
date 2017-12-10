@@ -7,7 +7,7 @@
 	use Laravel\Passport\HasApiTokens;
 	use Illuminate\Foundation\Auth\User as Authenticatable;
 
-	class Supplier extends Authenticatable
+	class Supplier extends Model
 	{
 		use Notifiable , HasApiTokens;
 

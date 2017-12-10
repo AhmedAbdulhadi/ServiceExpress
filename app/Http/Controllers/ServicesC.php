@@ -8,7 +8,7 @@
 
 	namespace App\Http\Controllers;
 
-//	use App\login;
+
 	use App\Section;
 	use App\Services;
 	use App\Supplier;
@@ -16,15 +16,10 @@
 	use Illuminate\Contracts\Pagination\Paginator;
 	use Illuminate\Http\Request;
 	use Illuminate\Support\Facades\DB;
-	use Illuminate\Support\Facades\Response;
 	use Novent\Transformers\servicesTransform;
 	use Novent\Transformers\supplier_servicesTrans;
 	use Novent\Transformers\SupplierTransform;
-	use \Validator;
-
-//	use Illuminate\Support\Facades\Auth;
-//	use Illuminate\Support\Facades\Input;
-//	use Novent\Transformers\section_servicesTra;
+	use Validator;
 
 
 	class ServicesC extends Controller
@@ -61,12 +56,11 @@
 		protected $statusCode = 200;
 		protected $use;
 
-		public function __construct (servicesTransform $userTrans , SupplierTransform $use,supplier_servicesTrans $supplier_servicesT)
+		public function __construct (servicesTransform $userTrans , SupplierTransform $use , supplier_servicesTrans $supplier_servicesT)
 		{
 			$this->userTrans = $userTrans;
-			//$this->middleware('auth.basic', ['only' => 'store']);
 			$this->use = $use;
-			$this->supplier_servicesT=$supplier_servicesT;
+			$this->supplier_servicesT = $supplier_servicesT;
 			$this->middleware ( 'auth:api' );
 
 		}
@@ -172,13 +166,11 @@
 
 		public function getAllServices ()
 		{
-//			dd('asdas   ');
-//dd(Auth::id ());
-//dd('ahmad');
+//get all services
 			$Service = Services::where ( 'status' , true )->get ();
-//			$section = Services::has  ('sections')->get ();
-			$section = Services::with ( 'sections' )->where ( 'status' , '=' , '1' )->get ();
-			$services = Section::with ( 'services' )->where ( 'status' , '=' , '1' )->get ();
+
+//			$section = Services::with ( 'sections' )->where ( 'status' , '=' , '1' )->get ();
+//			$services = Section::with ( 'services' )->where ( 'status' , '=' , '1' )->get ();
 
 			return $this->responedFound200
 			( 'Service found' , self::success , $this->userTrans->transformCollection ( $Service->all () ) );
@@ -198,7 +190,7 @@
 
 		public function get_one_services ($id = null)
 		{
-
+			// get one services
 			$Service = Services::where ( 'id' , $id )->where ( 'status' , true )->first ();
 
 
@@ -207,10 +199,8 @@
 
 			}
 
-
 			return $this->responedFound200ForOneUser ( 'Service found' , self::success , $this->userTrans->transform ( $Service ) );
 
-			//				]);
 		}
 
 		/**
@@ -230,13 +220,13 @@
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
 				'code' => $this->statusCode ,
-//						'size'=>count($data),
 				'data' => $data
 			] );
 		}
 
 		public function respondDeactivate ($massage , $status = null)
 		{
+			// for deactivate services
 			return $this->setStatusCode ( self::HTTP_FORBIDDEN )->respond ( [
 
 				'massage' => $massage ,
@@ -253,8 +243,7 @@
 		public function create_Service (Request $request)
 		{
 
-//			$user=Auth::user();
-//			dd($user);
+//create services
 			$rules = array (
 				'section_id' => 'required|integer' ,
 				'name_en' => 'required|regex:/^(?!.*\d)[a-z\p{Arabic}\s]+$/iu|min:3|max:30' ,
@@ -271,7 +260,7 @@
 				'name_en.required' => 'The name min is 3. || يرجى ادخال الاسمو بالغة الانجليزية ' ,
 				'name_en.min' => 'The name min is 3. || اقل عدد احرف للأسم 3 احرف ' ,
 				'name_en.max' => 'The name min is 30 || اكثر عدد احرف مسموح هو 30 حرف' ,
-//				'name_ar.regex' => 'name_ar please Enter Name with only real char' ,
+
 
 				'name_ar.required' => 'The name min is 3. || يرجى ادخال الاسمو بالغة العربية ' ,
 				'name_ar.min' => 'The name min is 3. || اقل عدد احرف للأسم 3 احرف ' ,
@@ -284,15 +273,10 @@
 				'desc_ar.required' => 'The name min is 3. || يرجى ادخال الوصف بالغة العربية' ,
 				'desc_ar.min' => 'The name min is 3. || اقل عدد حروف للوصف هو 3 احرف' ,
 				'desc_ar.max' => ' The name max is 30 ||  اكثر عدد احرف للوصف هو 140 حرف' ,
-//				'phone.phone' => ' enter valid phone number' ,
-//				//				'phone.phone:KS' => ' enter phone number with jordan code 966'
-//
-//				'password.min' => 'the min of password 8 ' ,
-//				'password.max' => 'the max of password 30 '
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
-			//			$errors= $validator;
+
 			$errors = $validator->errors ();
 
 
@@ -317,32 +301,23 @@
 				return $this->respondwithErrorMessage (
 					self::fail , $errors->first ( 'image' ) );
 
-
-//			if ( $errors->first ( 'password' ) )
-//				return $this->respondwithErrorMessage (
-//					self::fail , $errors->first ( 'password' ) );
-
-
 			else {
 				$image_path = url ( '/icons/404.png' );
 
 				if ( $request->input ( 'image' ) ) //				if (fileExists ( public_path ( "icons\\" .$request->input ( 'icon' ))))
 				{
 					if ( file_exists ( base_path ( 'icons//' . $request->input ( 'image' ) ) ) ) {
-//						dd(url   ( '/icons/'.$request->input ( 'image' ) ));
+
 						$image_path = url ( 'icons/' . $request->input ( 'image' ) );
 					} else {
 						$image_path = url ( '/icons/404.png' );
 					}
 				} elseif ( !$request->input ( 'image' ) )
-//				dd(url ( '/icons/default.png'));
+
 					$image_path = url ( '/icons/404.png' );
 
 				$user = Section::find ( $request->input ( 'section_id' ) );
 
-//					dd ( $Service );
-//					$user = Section::find (1 );
-//					$user->services ()->attach ( 1 );
 				if ( $user ) {
 					$Service = Services::create ( [
 						'name_en' => $request->input ( 'name_en' ) ,
@@ -351,7 +326,7 @@
 						'desc_ar' => $request->input ( 'desc_ar' ) ,
 						'image' => $image_path ,
 					] )->id;
-//					dd($Service);
+
 					$user->services ()->attach ( $Service );
 
 					return $this->responedCreated200 ( ' successfully Created !' , self::success , $Service );
@@ -377,7 +352,6 @@
 			else
 				return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
 					'massage' => $first ,
-//				'massage_ar'=>$last,
 					'status' => $this->status ( $status ) ,
 					'code' => $this->statusCode ,
 
@@ -396,6 +370,7 @@
 
 		public function delete_services ($id)
 		{
+			// delete services
 			$now = Carbon::now ( 'GMT+2' );
 			$Service = Services::find ( $id );
 			if ( !$Service ) {
@@ -405,13 +380,6 @@
 					->where ( 'id' , $id )
 					->update ( ['status' => false , 'deleted_at' => $now] );
 
-//				$email = DB::table ( 'admins' )
-//					->where ( 'id' , $id )->first ();
-//
-//				DB::table ( 'logins' )->where ( 'email' , $email->email )
-//					->update ( ['status' => false , 'deleted_at' => Carbon::now ( 'GMT+3' )] );
-
-//					->update(['deleted_at'=>Carbon::now('GMT+3')]);
 				return $this->responed_Destroy200 ( 'Services was deleted ' , self::success );
 
 			}
@@ -431,7 +399,6 @@
 		public function update_services (Request $request , $id)
 		{
 			$rules = array (
-//				'section_id' => 'required|integer' ,
 				'name_en' => 'regex:/^(?!.*\d)[a-z\p{Arabic}\s]+$/iu|min:3|max:30' ,
 				'name_ar' => 'min:3|max:50' ,
 				'desc_en' => 'min:3|max:140' ,
@@ -443,7 +410,7 @@
 
 				'name_en.min' => 'The name min is 3. || اقل عدد احرف للأسم 3 احرف ' ,
 				'name_en.max' => 'The name min is 30 || اكثر عدد احرف مسموح هو 30 حرف' ,
-//				'name_ar.regex' => 'name_ar please Enter Name with only real char' ,
+
 
 				'name_ar.min' => 'The name min is 3. || اقل عدد احرف للأسم 3 احرف ' ,
 				'name_ar.max' => 'The name min is 30 || اكثر عدد احرف مسموح هو 30 حرف' ,
@@ -453,11 +420,11 @@
 
 				'desc_ar.min' => 'The name min is 3. || اقل عدد حروف للوصف هو 3 احرف' ,
 				'desc_ar.max' => ' The name max is 30 ||  اكثر عدد احرف للوصف هو 30 حرف' ,
-//				'phone.phone' => ' enter valid phone number' ,
+
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
-			//			$errors= $validator;
+
 			$errors = $validator->errors ();
 
 
@@ -558,9 +525,7 @@
 
 		public function get_one_services_by_section_id (Request $request)
 		{
-//dd('asd1');
-			//				$date = Input::get ('date');
-
+			//get services by section id
 
 			$rules = array (
 				'section_id' => 'required|integer' ,
@@ -585,15 +550,21 @@
 					self::fail , $errors->first ( 'section_id' ) );
 
 
-//			$user = Services::whereDate ( 'created_at' , '=' , date ( "Y-m-d" , strtotime ( Input::get ( 'date' ) ) ) )->first ();
-
 			$s = Section::find ( $request->input ( 'section_id' ) );
+
+			$serv_t = [];
+			foreach ($s->services as $key => $item) {
+				if ( $item['status'] == 0 )
+					unset( $item[$key] );
+				else
+					$serv_t[] = $item;
+			}
 
 			if ( !is_object ( $s ) and !is_array ( $s ) )
 				return $this->respondWithError ( 'section services not found' , self::fail );
 			else
 				return $this->responedFound200ServicesC ( 'Services Found' , self::success ,
-					$this->userTrans->transformCollection ( $s->services->toArray () ) );
+					$this->userTrans->transformCollection ( $serv_t ) );
 
 		}
 
@@ -603,29 +574,31 @@
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
 				'code' => $this->statusCode ,
-				'services_count' => count ( $data ) ,
+				'size' => count ( $data ) ,
 				'data' => $data
 			] );
 		}
 
 		public function services_supplier_id_s (Request $request)
 		{
+			// get services with supplier id
 			$supp_id = $request->input ( 'supplier_id' );
-//	dd('asdasd');
+
 			$services = Supplier::with ( 'services' )->where ( 'id' , $supp_id )
 				->where ( 'status' , 1 )->get ();
-//	dd($services);
+
 			if ( !$services->first () )
 				return $this->respondWithError ( 'services for suppliers id ' . $supp_id . '  not found' , self::fail );
 			else
 				return $this->responedFound200Services_withSuppliers_id
 				( 'found services with suppliers' , self::success
-					, $this->supplier_servicesT->transformCollection ($services->all ()) );
+					, $this->supplier_servicesT->transformCollection ( $services->all () ) );
 
 		}
 
 		public function responedFound200Services_withSuppliers_id ($massage , $status , $data)
 		{
+			// response for services _ supplier
 			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
@@ -638,30 +611,12 @@
 
 		public function services_suppilers (Request $request)
 		{
+			// get services  with supppliers = true
 			if ( $request->input ( 'suppliers' ) == 1 or $request->input ( 'suppliers' ) == 'true' ) {
-//			$service = $request->input ( 'suppliers' );{
+
 				$service = Services::with ( 'suppliers' )->where ( 'status' , 1 )->get ();
-//			dd($service->toArray ());
-//			$services = Services::where('status',1)->get();
-
-//			dd($services->toArray ());
-
-//dd($service[0]['suppliers']['name']);
-//			foreach($services as $serve)
-//			{
-//				$a=$serve;
-//				foreach($serve->suppliers  as $user)
-//				{
-//					$b=$user;
-//				}
-//			}
-////dd($b->toArray());
-//			$a=$a->toArray ();
-//			return (string) $service;
 
 
-//			return $this->responedFound200ServicesCCC ('sucsess',self::success,$this->userTrans->transform($a),
-//				$this->use->transform ($b));
 				return $this->responedFound200ServicesCCC ( 'sucsess' , self::success , $service->all () );
 			} else
 				return $this->respondWithError ( 'must enter status 1 od true found ' , self::fail );
@@ -675,7 +630,7 @@
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
 				'code' => $this->statusCode ,
-				'services_count' => count ( $data ) ,
+				'size' => count ( $data ) ,
 				'data' => $data
 
 			] );
@@ -688,7 +643,7 @@
 		 */
 		public function services_section_supplier_id (Request $request)
 		{
-//dd('services_supp');
+			//get services  with section_id and supplier_id
 			$section_id = $request->input ( 'section_id' );
 			$supplier_id = $request->input ( 'supplier_id' );
 
@@ -716,77 +671,51 @@
 				return $this->respondwithErrorMessage (
 					self::fail , $errors->first ( 'supplier_id' ) );
 
-			$users = DB::table ( 'section_services' )
-				->select ( 'section_services.services_id' , 'services_suppliers.supplier_id' , 'section_services.section_id' )
-				->leftJoin ( 'services_suppliers' , 'section_services.services_id' , '=' , 'services_suppliers.services_id' )
-				->where ( 'section_services.section_id' , $section_id )
-				->where ( 'services_suppliers.supplier_id' , $supplier_id )
-				->get ();
 
-//here
-//			$ar= [];
-//			$a = json_decode($users, true);
-//			foreach($a as   $v )
-//			{
+			$active_services = [];
+			$nonactive_services_for_supp = [];
+			$active_services_for_suppp = [];
+			$section = SectionServices::get_one_sections ( $section_id );
 
-//		echo		$i['services_id'];
+			$suppler = SupplierServices::get_one_suppliers ( $supplier_id );
+			$get_services = Services::all ();
 
-			$section_services = DB::table ( 'section_services' )
-				->select ( 'section_services.services_id' , 'services_suppliers.supplier_id' , 'section_services.section_id' )
-				->leftJoin ( 'services_suppliers' , 'section_services.services_id' , '=' , 'services_suppliers.services_id' )
-				->where ( 'section_services.section_id' , '=' , $section_id )
-//				->whereRaw ( 'section_services.services_id' , '!=' , $se)
-				->get ();
+			if ( !$section->first () )
+				return $this->respondwithErrorMessage ( self::fail , 'section not found' );
 
-//			}
+			foreach ($section as $key => $section_key)
+				foreach ($suppler as $key2 => $sp) {
+					if ( $section_key['services_id'] == $sp['services_id'] ) {
 
-			foreach ($users as $u) {
-
-				foreach ($section_services as $key => $s) {
-
-					if ( $u->services_id == $s->services_id )
-						if ( $u->supplier_id == $s->supplier_id )
-							$section_services->forget ( $key );
-
+						$active_services[] = $section_key;
+						unset( $section[$key] );
+					}
 				}
+			foreach ($section as $sections)
+				$nonactive_services_for_supp[] = $get_services->find ( $sections['services_id'] );
 
-			}
+			foreach ($active_services as $active)
+				$active_services_for_suppp[] = $get_services->find ( $active['services_id'] );
 
-			if ( !$users->first () )
-				return $this->respondWithError ( 'section and supplier for section '
-					. $section_id
-					. '   and supplier id     ' .
-					$supplier_id
-					. '  Not Found' , self::fail );
-			else
-				return $this->responedFound200SectionSupplierId ( 'section with services found ' ,
-					self::success , $users , $section_services );
+			return $this->responedFound200SectionSupplierId ( 'services for supplier and section found' ,
+				self::success , $active_services_for_suppp , $nonactive_services_for_supp );
+
 		}
-
-
-		/*SELECT section_services.services_id ,
-		section_services.section_id, services_suppliers.supplier_id from section_services
-		left JOIN services_suppliers ON section_services.services_id=services_suppliers.services_id
-		WHERE section_services.section_id=1 AND services_suppliers.supplier_id=1
-		*/
 
 		public function responedFound200SectionSupplierId ($massage , $status , $data , $data2)
 		{
-//			$data->toArray();
-//			$data2->toArray();
-			$array3 = array_merge ( $data->toArray () , $data2->toArray () );
-
-//			$array3 = array ('assigned_services'=>$data,'unassigned_services'=>$data2);
-
+			// section_id and supplier_id spacifc return
 
 			foreach ($data as $user) {
-				$user->is_added = 'true';
+				$user['is_added'] = true;
 			}
-			foreach ($data2 as $user)
-				$user->is_added = 'false';
-//			dd($data2);
-//			$is_added= array ('is_added'=>true);
-////			$array3 = a($is_added,$data);
+			foreach ($data2 as $user) {
+				$user['is_added'] = false;
+			}
+
+			$array3 = array_merge ( $data
+				, $data2 );
+
 			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
@@ -797,9 +726,10 @@
 			] );
 		}
 
+
 		public function assign_services (Request $request)
 		{
-//dd('ass');
+			//assign services to supplier
 			$service_id = $request->input ( 'services_id' );
 			$supplier_id = $request->input ( 'supplier_id' );
 
@@ -817,7 +747,7 @@
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
-			//			$errors= $validator;
+
 			$errors = $validator->errors ();
 
 			if ( $validator->fails () )
@@ -829,7 +759,7 @@
 					self::fail , $errors->first ( 'supplier_id' ) );
 
 			if ( $service_id != null and $supplier_id != null ) {
-//				dd('qwe');
+
 				$find_service = Services::find ( $service_id );
 				$find_supplier = Supplier::find ( $supplier_id );
 				$db = DB:: table ( 'services_suppliers' )
@@ -854,7 +784,7 @@
 
 		public function unAssign_services (Request $request)
 		{
-//			dd('ana assigned');
+			//			unAssign_services
 			$service_id = $request->input ( 'service_id' );
 			$supplier_id = $request->input ( 'supplier_id' );
 
@@ -886,8 +816,8 @@
 			if ( $service_id != null and $supplier_id != null ) {
 				$find_supplier = Supplier::find ( $supplier_id );
 				$find_service = Services::find ( $service_id );
-				$db = DB:: table ( 'services_suppliers' )->where ( 'service_id' , $service_id )->where ( 'supplier_id' , $supplier_id );
-//				dd('asdaqax');
+				$db = DB:: table ( 'services_suppliers' )->where ( 'services_id' , $service_id )->where ( 'supplier_id' , $supplier_id );
+
 				if ( $db->first () !== null ) {
 
 					$find_service->suppliers ()->detach ( $supplier_id );
@@ -903,26 +833,4 @@
 		}
 
 
-		/**
-		 * @param Paginator $lessons
-		 * @param $data
-		 * @return mixed
-		 */
-		protected function respondWithPagnation (Paginator $lessons , $data)
-		{
-			$d = $data;
-			//$d=array_count_values  ($data);
-			$data = array_merge ( $data ,
-				[
-					'paginator' => [
-						'total_count' => $lessons->Total () ,
-						'total_page' => ceil ( $lessons->Total () / $lessons->perPage () ) ,
-						'Curant_page' => $lessons->currentPage () ,
-						'limit' => $lessons->perPage () ,
-						//		'object_array'=>$d
-					]
-				] );
-
-			return $this->respond ( $data );
-		}
 	}

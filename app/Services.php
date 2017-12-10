@@ -2,8 +2,11 @@
 
 namespace App;
 
+use App\Http\Controllers\UserServices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
+
 class Services extends Model
 {
 	use Notifiable;
@@ -22,6 +25,7 @@ class Services extends Model
                     "updated_at",
                     "pivot"
 	];
+
 	public function sections ()
 	{
 		return $this->belongsTo  (Section::class);
@@ -30,7 +34,11 @@ class Services extends Model
 
 	public function suppliers()
 	{
+
 		return $this->belongsToMany (Supplier::class,'services_suppliers')->withTimestamps ();
+
 	}
 	//
+
+
 }

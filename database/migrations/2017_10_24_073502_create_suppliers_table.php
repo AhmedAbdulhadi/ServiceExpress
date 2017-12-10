@@ -20,8 +20,8 @@ class CreateSuppliersTable extends Migration
 	        $table->string('password');
 	        $table->string  ('phone',12)->unique();
 	        $table->boolean ('status')->default(true);
-	        $table->double ( 'longitude' );
-	        $table->double ( 'latitude' );
+	        $table->double ( 'longitude' )->default(0.0);
+	        $table->double ( 'latitude' )->default(0.0);
 	        $table->text('bio')->nullable();
 	        $table->integer('exp_year')->nullable();
 	        $table->boolean('type')->default(false);

@@ -49,9 +49,9 @@
 			return $this->delete_Section ( $id );
 		}
 
-		public function get_section_id (Request $request)
+		public function get_section_id (Request $request , $id)
 		{
-			return $this->get_sectionid ( $request );
+			return $this->get_sectionid ( $request , $id );
 		}
 
 		public function show ($id , Request $request)

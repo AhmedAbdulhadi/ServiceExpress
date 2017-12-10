@@ -33,7 +33,7 @@
 		 * @var array
 		 */
 		protected $hidden = [
-			'password'
+			'password','pivot'
 		];
 
 		public function users ()

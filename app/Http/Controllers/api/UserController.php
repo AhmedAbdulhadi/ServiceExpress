@@ -2,12 +2,13 @@
 
 	namespace App\Http\Controllers\api;
 
+	use App\address;
 	use App\Http\Controllers\UserServices;
 	use App\User;
 	use Illuminate\Http\Request;
 	use Illuminate\Support\Facades\Auth;
-	use Illuminate\Support\Facades\DB;
 	use Lcobucci\JWT\Parser;
+	use Illuminate\Support\Facades\DB;
 	use Novent\Transformers\userTransfomer;
 	use Response;
 	use Validator;
@@ -124,8 +125,16 @@
 				$this->content['token'] = $user->createToken ( 'Noventapp' )->accessToken;
 				if ( Auth::user ()->type == 0 ) {
 					$user_i = User::all ()->where ( 'email' , request ( 'email' ) )->first ()->toArray ();
+					$address= User::find ( $user_i['id'] )->address ()->get ()->first ();
+
+
+					if($address)
+						$path='userCategoryFragment.java';
+					elseif (!$address)
+						$path='userProfileFragment.java';
+
 					if ( $user_i['status'] == 1 )
-						$user_i = $this->return_r ( $user_i , $this->content );
+						$user_i = $this->return_r ( $user_i , $this->content,$path );
 					else {
 						return $this->respondWithError ( 'ACCOUNT IS SUSPENDED || الحساب مقفل' , self::fail );
 
@@ -145,13 +154,14 @@
 
 		}
 
-		private function return_r ($x , $y)
+		private function return_r ($x , $y,$z)
 		{
 			//to spacifay and get the needed result
 			//$x for user $y for token
 			return [
 				'user_id' => $x['id'] ,
-				'token' => $y['token']
+				'token' => $y['token'],
+				'path'=>$z
 			];
 
 		}

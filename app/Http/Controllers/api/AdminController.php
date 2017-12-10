@@ -30,7 +30,7 @@
 
 			$this->content = array ();
 
-			$this->middleware ( 'auth:api' )->except ( 'login' , 'logout' );
+			$this->middleware ( 'auth:api' )->except ( 'login' , 'logout' ,'store');
 
 
 		}

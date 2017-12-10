@@ -7,6 +7,7 @@
 //	use App\Supplier;
 	use App\Services;
 	use App\Supplier;
+	use App\supplier_Services;
 	use Carbon\Carbon;
 	use Illuminate\Contracts\Pagination\Paginator;
 	use Illuminate\Http\Request;
@@ -16,6 +17,7 @@
 	use Novent\Transformers\SupplierTransform;
 
 	use \Validator;
+	use Illuminate\Support\Facades\Auth;
 
 	class SupplierServices extends Controller
 	{
@@ -173,15 +175,11 @@
 
 		public function getAllUser ()
 		{
+			// to get all supplier users
 
-//dd('supplier');
+
 			$users = Supplier::where ( 'status' , true )->get ();
 
-			/*return	IlluResponse::json([
-				'data'=>$this->userTrans->transformCollection  ($users->all ())
-			],200);*/
-//return $users->all ();
-//					dd($users->count ());
 			return $this->responedFound200
 			( 'Supplier found' , self::success , $this->userTrans->transformCollection ( $users->all () ) );
 
@@ -200,7 +198,7 @@
 
 		public function get_one_user ($id = null)
 		{
-
+			// to get one supplier user
 			$users = Supplier::where ( 'id' , $id )->where ( 'status' , true )->first ();
 
 
@@ -208,32 +206,21 @@
 				return $this->respondNotFound ( 'Supplier dose not found' );
 
 			}
-			//	if($id == $users->id or $pnum==$users->phone)
 
-			/*	if(! $users)
-				{
-					$userarray = array(
-					'id'=>$usernumber->id,
-					'name'=>$usernumber->name,
-					'email'=>$usernumber->email,
-					'phone'=>$usernumber->phone,
-					'created_at'=>$usernumber->created_at,
-				//	'phone'=>$usernumber->phone,
-					);
-					/*return IlluResponse::json([
-						'data'=>$this->userTrans->transform ($userarray)
-					],200);*/
-			//		return	`UserServices:: responedFound200('user found','Passed',$this->userTrans->transform ($userarray));
-			//	}*/
-			//	else
-			//		if(!$usernumber)
-			//				return IlluResponse::json([
-			/*'data'=>$this->userTrans->transform ($users)*/
 
 			return $this->responedFound200ForOneUser ( 'Supplier found' , self::success
 				, $this->userTrans->transform ( $users ) );
 
-			//				]);
+		}
+
+		public static function get_one_suppliers ($id = null)
+		{
+			// to get one supplier for services class
+
+			$suppliers = supplier_Services::where ( 'supplier_id' , $id )->where ( 'status' , true )->get ();
+
+			return ($suppliers);
+
 		}
 
 		/**
@@ -260,15 +247,9 @@
 
 		public function create_user (Request $request)
 		{
+			// create supplier
 			$type = '1';
-			/*$this->validate ($request,[
-							'name'=>'required|max:3'
-						]);*/
 
-			//				$request= $this->checkRequestType();
-//			if (\Request::is('api/suppliers')) {
-
-//			}
 			$rules = array (
 				'name' => 'required|regex:/^(?!.*\d)[a-z\p{Arabic}\s]+$/iu|min:3|max:30' ,
 				'email' => 'required|email|unique:users|unique:suppliers|unique:logins' ,
@@ -304,13 +285,11 @@
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
-			//			$errors= $validator;
+
 			$errors = $validator->errors ();
 
 
 			if ( $validator->fails () )
-				//				return $this->setStatusCode (404)->respondwithErrorMessage (
-				//					'some thing wrong', 'fail', $errors->first('name'));
 
 				if ( $errors->first ( 'name' ) )
 					return $this->respondwithErrorMessage (
@@ -333,10 +312,6 @@
 
 
 			else
-
-				//				$email = DB::table ('users')->where ('phone', $request->input ('email'))->first ();
-				//				$phone = DB::table ('users')->where ('phone', $request->input ('phone'))->first ();
-
 				$user = Supplier::create ( [
 					'name' => $request->input ( 'name' ) ,
 					'email' => $request->input ( 'email' ) ,
@@ -344,9 +319,6 @@
 					'password' => bcrypt ( $request->input ( 'password' ) ) ,
 					'longitude' => $request->input ( 'longitude' ) ,
 					'latitude' => $request->input ( 'latitude' ) ,
-
-					//missing long wo lat
-
 				] )->id;
 
 			login::create ( [
@@ -355,9 +327,40 @@
 				'type' => $type
 			] );
 
-			//return $this->responedCreated ('Lesson successfully Created !');
-			return $this->responedCreated200 ( ' successfully Created !' , self::success , $user );
+			if ( Auth::attempt ( ['email' => request ( 'email' ) , 'password' => request ( 'password' )] ) ) {
 
+				$users = Auth::user ();
+
+				$this->content['token'] = $users->createToken ( 'Noventapp' )->accessToken;
+			}
+
+			$user_i = $this->return_r ( $user , $this->content );
+
+
+			return $this->responedCreated200S ( ' successfully Created !' , self::success , $user_i );
+
+		}
+
+		private function return_r ($x , $y)
+		{
+
+			//to spacifay and get the needed result
+			//$x for user $y for token
+			return [
+				'user_id' => $x ,
+				'token' => $y['token']
+			];
+
+		}
+
+		public function responedCreated200S ($massage , $status , $data)
+		{
+			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
+				'massage' => $massage ,
+				'status' => $this->status ( $status )
+				, 'code' => $this->statusCode ,
+				'data' => $data ,
+			] );
 		}
 
 		public function respondwithErrorMessage ($status , $data)
@@ -396,6 +399,7 @@
 
 		public function delete_user ($id)
 		{
+			// delete supplier
 			$now = Carbon::now ( 'GMT+2' );
 			$user = Supplier::find ( $id );
 			if ( !$user ) {
@@ -430,28 +434,28 @@
 		{
 			$rules = array (
 				'name' => 'regex:/^(?!.*\d)[a-z\p{Arabic}\s]+$/iu|min:3|max:30' ,
-				'email' => 'email|unique:users|unique:suppliers|unique:logins' ,
+				'email' => 'email|unique:users|unique:admins' ,
 				'phone' => 'phone:JO|unique:users' ,
 				//				'phonefield' => 'phone:JO,BE,mobile',
 				'password' => 'min:8|max:30' ,
 				'longitude' => 'numeric' ,
 				'latitude' => 'numeric' ,
-				'exp_year' => 'integer',
-				'status' => 'integer|min:0|max:1',
+				'exp_year' => 'integer' ,
+				'status' => 'integer|min:0|max:1' ,
 			);
 			$messages = array (
 				'name.regex' => 'please valid name || يرجى ادخال الاسم بالغة الانجليزية او العربية' ,
-//				'name.required' => 'The name is required. || يرجى ادخال الاسم بالغة الانجليزية' ,
+
 				'name.min' => 'The name min is 3. || اقل عدد احرف للأسم 3' ,
 				'name.max' => 'The name min is 30 || اكثر عدد احرف مسموح هو 30' ,
-//				'email.required' => 'The email is important for my life || البريد الالكتروني مهم جداً ' ,
+
 				'email.email' => 'take your time and add Real email || الرجاء ادخال بريد الالكتروني فعال ' ,
 				'email.unique' => 'this email is already exiting || البريد الالكتروني مستخدم بالفعل' ,
-//				'phone.required' => 'The phone is important for my life || يرجى ادخال رقم الهاتف' ,
+
 				'phone.unique' => 'this phone number is already exiting || رقم الهاتف مستخدم بالفعل' ,
 				'phone.phone:JO' => ' enter phone number with jordan code 962 || الرجاء ادخال رقم يبدأ 962 الاردن' ,
 				'phone.phone' => ' enter valid phone number such as 962785555555 || الرجاء ا دخال رقم صحيح مثل 962785555555 ' ,
-//				'password.required'=>'the password is required . || يرجى ادخال كلمة السر',
+
 				'password.min' => 'the password min is 8 . || يرجى ادخال ما يزيد عن 8 احرف لكلمة المرور' ,
 				'password.max' => 'the password max is 30 . || يرجى ادخال ما لا يزيد عن 30 حرف لكلمة المرور' ,
 
@@ -461,7 +465,7 @@
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
-			//			$errors= $validator;
+
 			$errors = $validator->errors ();
 
 
@@ -492,21 +496,19 @@
 					self::fail , $errors->first ( 'status' ) );
 
 			$findid = Supplier::find ( $id );
-			/*	DB::table('users')
-							->where('id', $id)
-							->update(['name' => $request->input('name'),
-								'email' => $request->input('email'),
-								'phone' => $request->input('phone')]);*/
 
 			$name = $request->input ( 'name' );
 			$email = $request->input ( 'email' );
 			$phone = $request->input ( 'phone' );
 			$password = $request->input ( 'password' );
-			$status = $request->input ( 'status' );
+
 			$bio = $request->input ( 'bio' );
 			$exp_year = $request->input ( 'exp_year' );
 			$now = Carbon::now ( 'GMT+2' );
 
+			$supp = Supplier::where ( 'email' , $email );
+			$email_exists = $supp->first ();// !== null
+			$email_for_supp = $supp->where ( 'id' , $id )->first ();
 			if ( !$findid )
 				return $this->respondWithError ( 'supplier not found ' , self::fail );
 			else {
@@ -519,46 +521,38 @@
 						->update ( ['name' => $request->input ( 'name' ) , 'updated_at' => $now] );
 
 				}
+				if ( !$email_exists or $email_for_supp ) {
+					if ( ($email !== null) ) {
+						DB::table ( 'suppliers' )
+							->where ( 'id' , $id )
+							->update ( ['email' => $request->input ( 'email' ) , 'updated_at' => $now] );
 
-				if ( $new_name->email !== $email and $email !== null ) {
-					//to get email address for supplier with the id
-
-					$e = DB::table ( 'logins' )->where ( 'email' , $new_name->email )->first ();
-					$ee = DB::table ( 'suppliers' )->where ( 'email' , $email )->first ();
+						//to edit supplier email in logins table
+						DB::table ( 'logins' )->where ( 'email' , $new_name->email )
+							->update ( ['email' => $request->input ( 'email' ) , 'updated_at' => $now] );
 
 
-					//to find id in supplier and edit email
+					}
+				} else return $this->respondwithErrorMessage ( self::fail , 'this email is exists || هذا البريد الالكتروني موجود ' );
+
+				if ( $request->input ( 'longitude' ) ) {
 					DB::table ( 'suppliers' )
 						->where ( 'id' , $id )
-						->update ( ['email' => $request->input ( 'email' ) , 'updated_at' => $now] );
-					//to edit supplier email in logins table
-					DB::table ( 'logins' )->where ( 'email' , $new_name->email )
-						->update ( ['email' => $request->input ( 'email' ) , 'updated_at' => $now] );
-
-//					else return $this->respondWithError ('email already exists',self::fail);
+						->update ( ['longitude' => $request->input ( 'longitude' ) , 'updated_at' => $now] );
 
 				}
-
-				if($request->input ('longitude'))
-				{
+				if ( $request->input ( 'longitude' ) ) {
 					DB::table ( 'suppliers' )
 						->where ( 'id' , $id )
-						->update ( ['longitude' => $request->input ( 'longitude' ),'updated_at' => $now] );
-
-}
-				if($request->input ('longitude'))
-				{
-					DB::table ( 'suppliers' )
-						->where ( 'id' , $id )
-						->update ( ['latitude' => $request->input ( 'latitude' ),'updated_at' => $now] );
+						->update ( ['latitude' => $request->input ( 'latitude' ) , 'updated_at' => $now] );
 
 				}
 
 				if ( $new_name->phone !== $phone and $phone !== null ) {
 					DB::table ( 'suppliers' )
 						->where ( 'id' , $id )
-						->update ( ['phone' => $request->input ( 'phone' )] )
-						->update ( ['updated_at' => $now] );
+						->update ( ['phone' => $request->input ( 'phone' ) , 'updated_at' => $now] );
+//						->update ( ['updated_at' => $now] );
 				}
 				if ( $new_name->bio !== $bio and $bio !== null ) {
 					DB::table ( 'suppliers' )
@@ -610,11 +604,7 @@
 
 		public function get_phone_Query (Request $request)
 		{
-//					dd($request->input ('phone'));
-//					$s= substr($request->input ('phone'), 0, 1);
-////					dd($s);
-//					if($s ==9)
-//					return	$this ->respondWithError  ('please don\'t use + in phone ',self::fail);
+			// get supplier with phone number
 			$rules = array (
 
 				'phone' => 'required|phone:JO' ,
@@ -632,9 +622,6 @@
 
 
 			if ( $validator->fails () )
-				//				return $this->setStatusCode (404)->respondwithErrorMessage (
-				//					'some thing wrong', 'fail', $errors->first('name'));
-
 				if ( $errors->first ( 'phone' ) )
 					return $this->respondwithErrorMessage (
 						self::fail , $errors->first ( 'phone' ) );
@@ -667,7 +654,7 @@
 		public function get_one_user_date (Request $request)
 		{
 
-//				$date = Input::get ('date');
+			// get supplier with date
 
 
 			$rules = array (
@@ -688,9 +675,7 @@
 				if ( $errors->first ( 'date' ) )
 					return $this->respondwithErrorMessage (
 						self::fail , $errors->first ( 'date' ) );
-//				$date_after_formate= date("Y-m-d",strtotime(Input::get ('datee')));
-//				$user= User::where('created_at',date("Y-m-d",strtotime(Input::get ('datee'))))->first ();
-//			User::
+
 			$user = Supplier::whereDate ( 'created_at' , '=' , date ( "Y-m-d" , strtotime ( Input::get ( 'date' ) ) ) )->first ();
 
 			if ( !$user )
@@ -702,6 +687,7 @@
 
 		public function get_date_Query (Request $request)
 		{
+			// get supplier with flight date
 			$rules = array (
 				'start_date' => 'required|date_format:Y-m-d' ,
 				'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date' ,
@@ -748,6 +734,7 @@
 
 		public function get_user_by_email (Request $request)
 		{
+			// get supplier by email address
 			$rules = array (
 
 				'email' => 'required|email' ,
@@ -756,7 +743,7 @@
 			$messages = array (
 				'email.required' => ' must enter a email ' ,
 				'email.email' => ' enter valid email' ,
-				//				'phone.phone:KS' => ' enter phone number with jordan code 966'
+
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
@@ -765,8 +752,7 @@
 
 
 			if ( $validator->fails () )
-				//				return $this->setStatusCode (404)->respondwithErrorMessage (
-				//					'some thing wrong', 'fail', $errors->first('name'));
+
 
 				if ( $errors->first ( 'email' ) )
 					return $this->respondwithErrorMessage (
@@ -788,6 +774,7 @@
 
 		public function get_user_email_phonenum (Request $request)
 		{
+			//get supplier with phone and email address
 			$rules = array (
 				'email' => 'required|email' ,
 				'phone' => 'required|phone:JO' ,
@@ -797,10 +784,10 @@
 				'email.email' => ' enter valid email' ,
 				'phone.phone:JO' => ' enter phone number with jordan code 962' ,
 				'phone.phone' => ' enter valid phone number such as 962785555555' ,
-				//				'phone.phone:KS' => ' enter phone number with jordan code 966'
+
 			);
 			$validator = Validator::make ( $request->all () , $rules , $messages );
-			//			$errors= $validator;
+
 			$errors = $validator->errors ();
 
 
@@ -821,7 +808,7 @@
 
 			$user_deactive = suppliers::where ( 'email' , $user_email )->where ( 'phone' , $user_phone )
 				->where ( 'status' , false )->first ();
-//						dd($user_deactive);
+
 			if ( $user_compare_email_phone == null and $user_deactive == null )
 				return $this->respondWithError ( 'supplier Not Found' , self::fail );
 			elseif ( $user_deactive )
@@ -835,23 +822,21 @@
 
 		public function get_inactive_users (Request $request)
 		{
+			//get inactive supplier
 			$status = $request->input ( 'status' );
 			$users = Supplier::where ( 'status' , $status )->get ();
 
-			/*return	IlluResponse::json([
-				'data'=>$this->userTrans->transformCollection  ($users->all ())
-			],200);*/
 
-//					dd($users->count ());
 			return $this->responedFound200
 			( 'supplier found' , self::success , $this->userTrans->transformCollection ( $users->all () ) );
 		}
 
 		public function suppliers_services_id (Request $request)
 		{
-
+			// to get services with supplier info
 			$service_id = $request->input ( 'service_id' );
-			if ( 1 == 1 ) {
+			if ( $service_id ) {
+//check it
 				$service = Services::with ( 'suppliers' )->where ( 'id' , $service_id )->where ( 'status' , 1 )->get ();
 
 				return $this->responedFound200SupplierWithService_id ( 'sucsess' , self::success , $service->all () );
@@ -866,32 +851,10 @@
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
 				'code' => $this->statusCode ,
-				'services_count' => count ( $data ) ,
+				'size' => count ( $data ) ,
 				'data' => $data
 
 			] );
 		}
 
-		/**
-		 * @param Paginator $lessons
-		 * @param $data
-		 * @return mixed
-		 */
-		protected function respondWithPagnation (Paginator $lessons , $data)
-		{
-			$d = $data;
-			//$d=array_count_values  ($data);
-			$data = array_merge ( $data ,
-				[
-					'paginator' => [
-						'total_count' => $lessons->Total () ,
-						'total_page' => ceil ( $lessons->Total () / $lessons->perPage () ) ,
-						'Curant_page' => $lessons->currentPage () ,
-						'limit' => $lessons->perPage () ,
-						//		'object_array'=>$d
-					]
-				] );
-
-			return $this->respond ( $data );
-		}
 	}

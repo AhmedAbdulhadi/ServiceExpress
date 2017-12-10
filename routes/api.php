@@ -13,6 +13,10 @@
 	| is assigned the "api" middleware group. Enjoy building your API!
 	|
 	*/
+
+
+
+
 	/*	Route::middleware ('auth:api')->get ('/supplier', function (Request $request) {
 			return $request->user ();
 		});*/
@@ -116,17 +120,17 @@
 		//		Route::post ('users/details', 'UserController@details');
 		Route::resource ( 'v1/section' , 'SectionController' );
 
-		if ( Input::has ( 'section_id' ) )
-			Route::get ( 'v1/section' , 'SectionController@get_section_id' );
+		if ( Input::has ( 'services' ) )
+			Route::get ( 'v1/section/' , 'SectionController@get_section_id' );
 
 		else if ( Input::has ( 'service' ) )
 			Route::get ( 'v1/section' , 'SectionController@section_with_service' );
 
 
 		Route::resource ( 'v1/orders' , 'OrderController' );
-		if( Input::has ( 'supplier_id' ) and Input::has ( 'active' ))
+		if ( Input::has ( 'supplier_id' ) and Input::has ( 'active' ) )
 			Route::get ( 'v1/orders' , 'OrderController@get_orderSupplier' );
-		else if( Input::has ( 'user_id' ) and Input::has ( 'active' ))
+		else if ( Input::has ( 'user_id' ) and Input::has ( 'active' ) )
 			Route::get ( 'v1/orders' , 'OrderController@get_order_Users' );
 		/*else if (Input::has ('date'))
 Route::get ('section', 'SectionController@get_date_one_Query');

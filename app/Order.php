@@ -40,4 +40,47 @@
 				'section' => $section['section']
 			];
 		}
+
+//		public static getOrdersBySupplierId($supplier_id, $status){
+
+
+		public static function get_user_id ($user_id)
+		{
+
+			$arr['address'] = User::find ( $user_id )->address ()->get ()->toArray ();
+//			dd($arr['address']);
+			$user = User::find ( $user_id )->toArray ();
+			$arr3 = array_merge ($user,$arr);
+
+			return $arr3;
+
+		}
+
+		public static function get_supplier_id ($supp_id)
+		{
+
+			$supplier = Supplier::find ( $supp_id )->toArray ();
+
+
+			return $supplier;
+
+
+
+
+
+		}
+		public static function get_service_id ($service_id)
+		{
+
+			$services = Services::find ($service_id )->toArray ();
+//				dd($services);
+
+			return $services;
+
+
+
+
+
+		}
+
 	}

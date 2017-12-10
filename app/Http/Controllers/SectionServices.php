@@ -63,11 +63,17 @@
 			$this->middleware ( 'auth:api' );
 			$this->userTrans = $userTrans;
 			$this->use = $use;
-//			$this->services_Trans=$services_Trans;
-			//$this->middleware('auth.basic', ['only' => 'store']);
 
 		}
 
+		public static function get_one_sections ($id = null)
+		{
+			//get section with id to apply on services class
+			$section = section_services::where ( 'section_id' , $id )->where ( 'status' , 1 )->get ();
+
+			return ($section);
+
+		}
 
 		/**
 		 * @param string $massage
@@ -145,18 +151,11 @@
 			] );
 		}
 
-
 		public function getAllSection ()
 		{
-
-
+			//get all section with status true
 			$Section = Section::where ( 'status' , true )->get ();
 
-			/*return	IlluResponse::json([
-				'data'=>$this->userTrans->transformCollection  ($users->all ())
-			],200);*/
-
-//					dd($users->count ());
 			return $this->responedFound200
 			( 'Section found' , self::success , $this->userTrans->transformCollection ( $Section->all () ) );
 
@@ -164,6 +163,7 @@
 
 		public function responedFound200 ($massage , $status , $data)
 		{
+			// response for found
 			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
@@ -172,59 +172,35 @@
 				'data' => $data
 			] );
 		}
-
-		public function get_one_services ($id = null)
-		{
-			dd ( 'hi' );
-			$Section = Section::where ( 'id' , $id )->where ( 'status' , true )->first ();
-
-
-			if ( !$Section ) {
-				return $this->respondNotFound ( 'Section dose not found' );
-
-			}
-
-
-			return $this->responedFound200ForOneUser ( 'Service found' , self::success , $this->userTrans->transform ( $Section ) );
-
-			//				]);
-		}
-
-		/**
-		 * @param string $massage
-		 * @return mixed
-		 */
-
-		public function respondNotFound ($massage = 'Not Found !')
-		{
-			//return $this->setStatusCode (self::HTTP_NOT_FOUND)->respondWithError($massage);
-			return $this->setStatusCode ( self::HTTP_NOT_FOUND )->respondWithError ( $massage , 'fail' );
-		}
-
-		public function responedFound200ForOneUser ($massage , $status , $data)
-		{
-			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
-				'massage' => $massage ,
-				'status' => $this->status ( $status ) ,
-				'code' => $this->statusCode ,
-//						'size'=>count($data),
-				'data' => $data
-			] );
-		}
+// cheack it if project crushed
+//		public function get_one_services ($id = null)
+//		{
+////
+//			$Section = Section::where ( 'id' , $id )->where ( 'status' , true )->first ();
+//
+//
+//			if ( !$Section ) {
+//				return $this->respondNotFound ( 'Section dose not found' );
+//
+//			}
+//
+//
+//			return $this->responedFound200ForOneUser ( 'Service found' , self::success , $this->userTrans->transform ( $Section ) );
+//
+//			//				]);
+//		}
 
 		public function create_Section (Request $request)
 		{
 			$admin_id = $request->input ( 'admin_id' );
 			$find = Admin::find ( $admin_id );
-//			dd($find);
 			$rules = array (
 				'admin_id' => 'required|integer|exists:admins,id' ,
 				'name_en' => 'required|regex:/^[\p{L}\s\.-]+$/|min:3|max:30' ,
 				'name_ar' => 'required|regex:/^(?!.*\d)[a-z\p{Arabic}\s]+$/iu|min:3|max:50' ,
 				'desc_en' => 'required|min:3|max:140' ,
 				'desc_ar' => 'required|min:3|max:140' ,
-//========================================================== when done uncommint the upper
-//				'number_services' => 'required|integer' ,
+
 				'image' => 'string' ,
 			);
 			$messages = array (
@@ -250,7 +226,6 @@
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
-			//			$errors= $validator;
 			$errors = $validator->errors ();
 
 
@@ -276,25 +251,18 @@
 				return $this->respondwithErrorMessage (
 					self::fail , $errors->first ( 'image' ) );
 
-
-//			if ( $errors->first ( 'name' ) )
-//				return $this->respondwithErrorMessage (
-//					self::fail , $errors->first ( 'name' ) );
-
 			else {
 				$image_path = url ( '/icons/404.png' );
 
 				if ( $request->input ( 'image' ) ) {
 					if ( file_exists ( base_path ( 'icons//' . $request->input ( 'image' ) ) ) ) {
-//						dd(url   ( '/icons/'.$request->input ( 'image' ) ));
-
 						$image_path = url ( 'icons/' . $request->input ( 'image' ) );
 					} else {
 						$image_path = url ( '/icons/404.png' );
 					}
-//					$image_path=base_path  ( 'icons\\default.png');
+
 				} elseif ( !$request->input ( 'image' ) )
-//				dd(url ( '/icons/default.png'));
+
 					$image_path = url ( '/icons/404.png' );
 
 				$section = Section::create ( [
@@ -303,18 +271,10 @@
 					'desc_en' => $request->input ( 'desc_en' ) ,
 					'desc_ar' => $request->input ( 'desc_ar' ) ,
 					'image' => $image_path ,
-
 				] )->id;
 
-
-//			$sectionServices = DB::table('section_services')->where('section_id',$request->input ('section_id'))->get();
-//			dd($sectionServices);
-				//return $this->responedCreated ('Lesson successfully Created !');
 				return $this->responedCreated200 ( ' successfully Created !' , self::success , $section );
 			}
-//			}
-//			else
-//				return $this->respondWithError ('your not admin',self::fail);
 		}
 
 		public function respondwithErrorMessage ($status , $data)
@@ -353,6 +313,7 @@
 
 		public function delete_Section ($id)
 		{
+			// delete section with response
 			$now = Carbon::now ( 'GMT+2' );
 			$Section = Section::find ( $id );
 			if ( !$Section ) {
@@ -381,10 +342,10 @@
 
 		public function update_section (Request $request , $id)
 		{
+			// update section info
 
-//			dd('asdasdawqe12');
 			$rules = array (
-//				'id'=>'required',
+
 				'name_en' => 'regex:/^[\p{L}\s\.-]+$/|min:3|max:30' ,
 				'name_ar' => 'regex:/^(?!.*\d)[a-z\p{Arabic}\s]+$/iu|min:3|max:50' ,
 				'desc_en' => 'min:3|max:140' ,
@@ -395,27 +356,24 @@
 			$messages = array (
 				'name_en.regex' => 'please Enter valid Name || يرجى ادخال الاسم بالغة الانجليزية' ,
 
-//				'name_en.required' => 'Enter name. || يرجى ادخال الاسم بالغة الانجليزية ' ,
 				'name_en.min' => 'The name_en min is 3. || اقل عدد احرف للأسم 3 احرف ' ,
 				'name_en.max' => 'The name_en min is 30 || اكثر عدد احرف مسموح هو 30 حرف' ,
-//				'name_ar.regex' => 'name_ar please Enter Name with only real char' ,
 
-//				'name_ar.required' => 'Enter Name . || يرجى ادخال الاسم بالغة العربية '  ,
 				'name_ar.regex' => 'Enter valid name. || يرجى ادخال الاسم بالغة العربية ' ,
 				'name_ar.min' => 'The name_ar min is 3. || اقل عدد احرف للأسم 3 احرف ' ,
 				'name_ar.max' => 'The name_ar min is 30 || اكثر عدد احرف مسموح هو 30 حرف' ,
 
-//				'desc_en.required' => 'Enter description_en . || يرجى ادخال الوصف بالغة الانجليزية' ,
+
 				'desc_en.min' => 'The description_en  min is 3. || اقل عدد حروف للوصف هو 3 احرف' ,
 				'desc_en.max' => 'The description_en  max is 140|| اكثر عدد احرف للوصف هو 140 حرف' ,
 
-//				'desc_ar.required' => 'Enter description_ar. || يرجى ادخال الوصف بالغة العربية' ,
+
 				'desc_ar.min' => 'The Enter description_ar min is 3. || اقل عدد حروف للوصف هو 3 احرف' ,
 				'desc_ar.max' => ' The Enter description_ar max is 140 ||  اكثر عدد احرف للوصف هو 140 حرف' ,
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
-			//			$errors= $validator;
+
 			$errors = $validator->errors ();
 
 
@@ -436,17 +394,8 @@
 				return $this->respondwithErrorMessage (
 					self::fail , $errors->first ( 'image' ) );
 
-//			if ( $errors->first ( 'password' ) )
-//				return $this->respondwithErrorMessage (
-//					self::fail , $errors->first ( 'password' ) );
-
 
 			$findid = Section::find ( $id );
-			/*	DB::table('users')
-							->where('id', $id)
-							->update(['name' => $request->input('name'),
-								'email' => $request->input('email'),
-								'phone' => $request->input('phone')]);*/
 
 			$name_en = $request->input ( 'name_en' );
 			$name_ar = $request->input ( 'name_ar' );
@@ -454,7 +403,7 @@
 			$desc_ar = $request->input ( 'desc_ar' );
 			$status = $request->input ( 'status' );
 			$image = $request->input ( 'image' );
-//			$password = $request->input ( 'password' );
+
 			$now = Carbon::now ( 'GMT+2' );
 
 			if ( !$findid )
@@ -462,7 +411,7 @@
 			else {
 
 				$new_name = DB::table ( 'sections' )->where ( 'id' , $id )->first ();
-				//			var_dump($new_name->email);
+
 				if ( $new_name->name_en !== $name_en and $name_en !== null ) {
 					DB::table ( 'sections' )
 						->where ( 'id' , $id )
@@ -525,9 +474,20 @@
 
 		}
 
+		public function responedFound200ForOneUser ($massage , $status , $data)
+		{
+			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
+				'massage' => $massage ,
+				'status' => $this->status ( $status ) ,
+				'code' => $this->statusCode ,
+//						'size'=>count($data),
+				'data' => $data
+			] );
+		}
+
 		public function get_one_user ($id = null , Request $request)
 		{
-
+			//to get section with services
 			$section = Section::where ( 'id' , $id )->where ( 'status' , true )->first ();
 			if ( !$section ) {
 				return $this->respondNotFound ( 'Section dose not found' );
@@ -535,8 +495,8 @@
 			} elseif ( $section and !Input::has ( 'service' ) )
 				return $this->responedFound200ForOneUser ( 'Section found' , self::success ,
 					$this->userTrans->transform ( $section ) );
-//			$a = Section::find ($id)->services ->toArray ();
-//			dd($a);
+
+
 			elseif ( $section and ($request->input ( 'service' ) == 1 or $request->input ( 'service' ) == true) )
 				$sectionWithServices = Section::with ( 'services' )->where ( 'id' , $id )->where ( 'status' ,
 					$request->input ( 'service' ) )->get ();
@@ -544,121 +504,94 @@
 			return $this->responedFound200ForOneUser ( 'Section found' , self::success , $sectionWithServices->toArray () );
 
 
-//			return $this->responedFound200ForOneUserwithServices ( 'Section found' , self::succes   s ,
-//				$this->userTrans->transform ( $users ) );
-
-			//				]);
 		}
 
-		public function get_sectionid (Request $request)
+		/**
+		 * @param string $massage
+		 * @return mixed
+		 */
+
+		public function respondNotFound ($massage = 'Not Found !')
 		{
+			//return $this->setStatusCode (self::HTTP_NOT_FOUND)->respondWithError($massage);
+			return $this->setStatusCode ( self::HTTP_NOT_FOUND )->respondWithError ( $massage , 'fail' );
+		}
+
+		public function get_sectionid (Request $request , $id)
+		{
+			// get sections services
 			$rules = array (
-				'section_id' => 'required|integer' ,
+				'services' => 'required|min:0|max:1' ,
 
 			);
 			$messages = array (
 
-				'section_id.required' => 'section_id required for me || يرجى ادخال section_id' ,
-				'section_id.integer' => 'section_id must be integer || يرجى ادخال عدد صحيح' ,
+				'services.required' => 'services required for me || يرجى ادخال services' ,
+				'services.min' => 'services must be 0 or 1 || يرجى ادخال 0 او 1' ,
+				'services.max' => 'services must be 0 or 1 || يرجى ادخال 0 او 1' ,
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
-			//			$errors= $validator;
+
 			$errors = $validator->errors ();
 
 			if ( $validator->fails () )
-				if ( $errors->first ( 'section_id' ) )
+				if ( $errors->first ( 'services' ) )
 					return $this->respondwithErrorMessage (
-						self::fail , $errors->first ( 'section_id' ) );
-			if ( $errors->first ( 'section_id' ) )
+						self::fail , $errors->first ( 'services' ) );
+			if ( $errors->first ( 'services' ) )
 				return $this->respondwithErrorMessage (
-					self::fail , $errors->first ( 'section_id' ) );
+					self::fail , $errors->first ( 'services' ) );
 
-			$section_services = Section::find ( $request->input ( 'section_id' ) );
+			$section_services = Section::find ( $request->input ( $id ) );
 
 			if ( !is_object ( $section_services ) and !is_array ( $section_services ) )
 				return $this->respondWithError ( 'section services not found' , self::fail );
 			else
-				return $this->responedFound200ServicesC ( 'Services Found' , self::success , $this->userTrans->transformCollection ( $section_services->services->toArray () ) );
+				return $this->responedFound200ServicesC ( 'Services Found' , self::success ,
+					$this->userTrans->transformCollection ( $section_services->services->toArray () ) );
 
 
 		}
 
 		public function responedFound200ServicesC ($massage , $status , $data)
 		{
+			// created with spacifc data and massage and status code
 			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
 				'code' => $this->statusCode ,
-				'services_count' => count ( $data ) ,
+				'size' => count ( $data ) ,
 				'data' => $data
 			] );
 		}
 
 		public function section_with_services (Request $request)
 		{
+			//get all sections with services
 			$service = $request->input ( 'service' );
-
-//			$s = Section::find(1)->first ();
-//			dd($s->services ->toArray());
-//			$sa = Services::find();
-//			dd($sa->sections );
-
-//			$users = DB::table('sections')
-//			->leftjoin('section_services','sections.id','=','section_id')
-//					->join('services', 'sections.id', '=', 'section_services.id')
-//
-////				->select('sections.*',  'services.*')
-//				->get();
-
-//				$users=Section::with ('services')->find (1)->get ();
 
 
 			$section = Section::with ( 'services' )->where ( 'status' , $service )->get ();
-//dd($user->toArray ());
 
-//		return $this->responedFound200ServicesCC ('Sections Found',self::success,$this->services_Trans->transformCollection ($section->toArray ()));
+
 			return $this->responedFound200ServicesCC ( 'Sections Found' , self::success , $section->toArray () );
 
-			//		return $this->responedFound200ServicesCC ('Sections Found',self::success,
-//			$this->services_Trans->transformCollection  ( $section->all  ()));
-//foreach ($section)
 
 		}
 
 		public function responedFound200ServicesCC ($massage , $status , $data)
 		{
+			// diffrant response
 			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
 				'code' => $this->statusCode ,
-				'section_count' => count ( $data ) ,
+				'size' => count ( $data ) ,
 				'data' => $data
 
 			] );
 		}
 
-		/**
-		 * @param Paginator $lessons
-		 * @param $data
-		 * @return mixed
-		 */
-		protected function respondWithPagnation (Paginator $lessons , $data)
-		{
-			$d = $data;
-			//$d=array_count_values  ($data);
-			$data = array_merge ( $data ,
-				[
-					'paginator' => [
-						'total_count' => $lessons->Total () ,
-						'total_page' => ceil ( $lessons->Total () / $lessons->perPage () ) ,
-						'Curant_page' => $lessons->currentPage () ,
-						'limit' => $lessons->perPage () ,
-						//		'object_array'=>$d
-					]
-				] );
-
-			return $this->respond ( $data );
-		}
 
 	}

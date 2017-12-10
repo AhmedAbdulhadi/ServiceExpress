@@ -8,22 +8,20 @@
 
 	//namespace Novent\Transfroers;
 	namespace Novent\Transformers;
-	class userTransfomer extends Transfomer
+	class userAddress extends Transfomer
 	{
 
 		public function transform ($user)
 		{
+			dd('asd');
 			if( !$user['deleted_at'] )
 				$del="";
-
 			else
 				$del=	date ( 'Y-m-d' , strtotime ( $user['deleted_at'] ) );
 			if( !$user['updated_at'] )
 				$up="";
 			else
 				$up=	date ( 'Y-m-d' , strtotime ( $user['updated_at'] ) );
-			if ( !$user['address'] )
-				$addrs= [];
 
 			return [
 				'id' => $user['id'] ,
@@ -34,8 +32,7 @@
 				'created_at' => date ( 'Y-m-d' , strtotime ( $user['created_at'] ) ) ,
 				'updated_at' => $up ,
 				'deleted_at' => $del,
-				'address'=>$user['address']
-//				'active' => (boolean)$user['is_active'] ,
+//				'address'=>$user[0]['address']
 			];
 
 		}

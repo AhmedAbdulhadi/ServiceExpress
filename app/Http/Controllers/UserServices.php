@@ -16,8 +16,13 @@
 	use Illuminate\Support\Facades\DB;
 	use Illuminate\Support\Facades\Input;
 	use Illuminate\Support\Facades\Response;
+	use Novent\Transformers\addressTrans;
+	use Novent\Transformers\AddressTransfomer;
+	use Novent\Transformers\userAddress;
 	use Novent\Transformers\userTransfomer;
 	use \Validator;
+	use Illuminate\Support\Facades\Auth;
+
 
 	class UserServices extends Controller
 	{
@@ -48,14 +53,16 @@
 		 * @var  Novent\Transformers\userTransfomer
 		 */
 		protected $userTrans;
+		protected $userAddres;
 		/**
 		 * @var int
 		 */
 		protected $statusCode = 400;
 
-		public function __construct (userTransfomer $userTrans)
+		public function __construct (userTransfomer $userTrans , addressTrans $userAddress)
 		{
 			$this->userTrans = $userTrans;
+			$this->userAddres = $userAddress;
 			//$this->middleware('auth.basic', ['only' => 'store']);
 
 		}
@@ -175,16 +182,14 @@
 		public function getAllUser ()
 		{
 
-
+			// get all users with status true
 			$users = User::where ( 'status' , true )->get ();
 
-			/*return	IlluResponse::json([
-				'data'=>$this->userTrans->transformCollection  ($users->all ())
-			],200);*/
 
-//					dd($users->count ());
+			$address = User::with ( 'address' )->get ()->toArray ();
+
 			return $this->responedFound200
-			( 'users found' , self::success , $this->userTrans->transformCollection ( $users->all () ) );
+			( 'users found' , self::success , $this->userTrans->transformCollection ( $address ) );
 
 		}
 
@@ -201,6 +206,7 @@
 
 		public function get_one_user ($id = null)
 		{
+			// get 1 user with address
 
 			$users = User::where ( 'id' , $id )->where ( 'status' , true )->first ();
 
@@ -209,31 +215,14 @@
 				return $this->respondNotFound ( 'user dose not found' );
 
 			}
-			//	if($id == $users->id or $pnum==$users->phone)
 
-			/*	if(! $users)
-				{
-					$userarray = array(
-					'id'=>$usernumber->id,
-					'name'=>$usernumber->name,
-					'email'=>$usernumber->email,
-					'phone'=>$usernumber->phone,
-					'created_at'=>$usernumber->created_at,
-				//	'phone'=>$usernumber->phone,
-					);
-					/*return IlluResponse::json([
-						'data'=>$this->userTrans->transform ($userarray)
-					],200);*/
-			//		return	`UserServices:: responedFound200('user found','Passed',$this->userTrans->transform ($userarray));
-			//	}*/
-			//	else
-			//		if(!$usernumber)
-			//				return IlluResponse::json([
-			/*'data'=>$this->userTrans->transform ($users)*/
+			$address = User::with ( 'address' )->where ( 'id' , $id )->get ()->first ();
 
-			return $this->responedFound200ForOneUser ( 'user found' , self::success , $this->userTrans->transform ( $users ) );
+			$x = $address->toArray ();
 
-			//				]);
+			return $this->responedFound200ForOneUser ( 'user found' , self::success , $x );
+
+
 		}
 
 		/**
@@ -260,11 +249,7 @@
 
 		public function create_user (Request $request)
 		{
-			/*$this->validate ($request,[
-							'name'=>'required|max:3'
-						]);*/
-
-			//				$request= $this->checkRequestType();
+			//create user
 
 			$type = '0';
 
@@ -302,11 +287,8 @@
 
 
 			if ( $validator->fails () )
-				//				return $this->setStatusCode (404)->respondwithErrorMessage (
-				//					'some thing wrong', 'fail', $errors->first('name'));
 
 				if ( $errors->first ( 'name' ) )
-//					dd($errors->first('name'));
 					return $this->respondwithErrorMessage (
 						self::fail , $errors->first ( 'name' ) );
 			if ( $errors->first ( 'email' ) )
@@ -320,13 +302,7 @@
 					self::fail , $errors->first ( 'password' ) );
 
 
-			else
-
-				//				$email = DB::table ('users')->where ('phone', $request->input ('email'))->first ();
-				//				$phone = DB::table ('users')->where ('phone', $request->input ('phone'))->first ();
-				//				$phone = DB::table ('users')->where ('phone', $request->input ('phone'))->first ();
-
-			{
+			else {
 				$user = User::create ( [
 					'name' => $request->input ( 'name' ) ,
 					'email' => $request->input ( 'email' ) ,
@@ -341,10 +317,29 @@
 					'type' => $type
 				] );
 
+				if ( Auth::attempt ( ['email' => request ( 'email' ) , 'password' => request ( 'password' )] ) ) {
 
-				//return $this->responedCreated ('Lesson successfully Created !');
-				return $this->responedCreated200 ( ' successfully Created !' , self::success , $user );
+					$users = Auth::user ();
+
+					$this->content['token'] = $users->createToken ( 'Noventapp' )->accessToken;
+				}
+
+				$user_i = $this->return_r ( $user , $this->content );
+
+				return $this->responedCreated200S ( ' successfully Created !' , self::success , $user_i );
 			}
+		}
+
+		private function return_r ($x , $y)
+		{
+
+			//to spacifay and get the needed result
+			//$x for user $y for token
+			return [
+				'user_id' => $x ,
+				'token' => $y['token']
+			];
+
 		}
 
 		public function respondwithErrorMessage ($status , $data)
@@ -381,8 +376,19 @@
 			] );
 		}
 
+		public function responedCreated200S ($massage , $status , $data)
+		{
+			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
+				'massage' => $massage ,
+				'status' => $this->status ( $status )
+				, 'code' => $this->statusCode ,
+				'data' => $data ,
+			] );
+		}
+
 		public function delete_user ($id)
 		{
+			//delete users and status will be 0
 			$now = Carbon::now ( 'GMT+2' );
 			$user = User::find ( $id );
 			if ( !$user ) {
@@ -415,32 +421,30 @@
 
 		public function update_user (Request $request , $id)
 		{
+			// update user
 			$rules = array (
 				'name' => 'regex:/^(?!.*\d)[a-z\p{Arabic}\s]+$/iu|min:3|max:30' ,
-				'email' => 'email|unique:users|unique:suppliers|unique:logins' ,
+				'email' => 'email|unique:admins|unique:suppliers' ,
 				'phone' => 'phone:JO|unique:users|unique:suppliers' ,
-				//				'phonefield' => 'phone:JO,BE,mobile',
 				'password' => 'min:8|max:30' ,
-//				'status' =>''
+
 			);
 			$messages = array (
 				'name.regex' => 'The name is invalid. || يرجى ادخال الاسم بالغة الانجليزية او العربية' ,
 				'name.min' => 'The name min is 3. || اقل عدد احرف للأسم 3' ,
 				'name.max' => 'The name min is 30 || اكثر عدد احرف مسموح هو 30' ,
-//				'email.required' => 'The email is important for my life || البريد الالكتروني مهم جداً ' ,
+
 				'email.email' => 'take your time and add Real email || الرجاء ادخال بريد الالكتروني فعال ' ,
 				'email.unique' => 'this email is already exiting || البريد الالكتروني مستخدم بالفعل' ,
-//				'phone.required' => 'The phone is important for my life || يرجى ادخال رقم الهاتف' ,
+
 				'phone.unique' => 'this phone number is already exiting || رقم الهاتف مستخدم بالفعل' ,
 				'phone.phone:JO' => ' enter phone number with jordan code 962 || الرجاء ادخال رقم يبدأ 962 الاردن' ,
 				'phone.phone' => ' enter valid phone number such as 962785555555 || الرجاء ا دخال رقم صحيح مثل 962785555555 ' ,
-//				'password.required'=>'the password is required . || يرجى ادخال كلمة السر',
+
 				'password.min' => 'the password min is 8 . || يرجى ادخال ما يزيد عن 8 احرف لكلمة المرور' ,
 				'password.max' => 'the password max is 30 . || يرجى ادخال ما لا يزيد عن 30 حرف لكلمة المرور' ,
-				//				'phone.phone:KS' => ' enter phone number with jordan code 966'
 
-//				'password.min' => 'the min of password 8 ' ,
-//				'password.max' => 'the max of password 30 '
+
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
@@ -464,11 +468,6 @@
 
 
 			$findid = User::find ( $id );
-			/*	DB::table('users')
-							->where('id', $id)
-							->update(['name' => $request->input('name'),
-								'email' => $request->input('email'),
-								'phone' => $request->input('phone')]);*/
 
 			$name = $request->input ( 'name' );
 			$email = $request->input ( 'email' );
@@ -477,6 +476,9 @@
 			$status = $request->input ( 'status' );
 			$now = Carbon::now ( 'GMT+2' );
 
+			$user = User::where ( 'email' , $email );
+			$email_exists = $user->first ();// !== null
+			$email_for_user = $user->where ( 'id' , $id )->first ();
 			if ( !$findid )
 				return $this->respondWithError ( 'User not found ' , self::fail );
 			else {
@@ -489,26 +491,21 @@
 						->update ( ['name' => $request->input ( 'name' ) , 'updated_at' => $now] );
 				}
 
-				if ( $new_name->email !== $email and $email !== null ) {
-					//to get email address for supplier with the id
-					$email = DB::table ( 'users' )
-						->where ( 'id' , $id )->first ();
+				if ( !$email_exists or $email_for_user ) {
+					if ( ($email !== null) ) {
+						//to get email address for supplier with the id
 
 
-					$e = DB::table ( 'logins' )->where ( 'email' , $email->email )->first ();
-
-
-					if ( $email and $e !== null ) {
+						//to find id in supplier and edit email
 						DB::table ( 'users' )
 							->where ( 'id' , $id )
 							->update ( ['email' => $request->input ( 'email' ) , 'updated_at' => $now] );
 
 						//to edit supplier email in logins table
-						DB::table ( 'logins' )->where ( 'email' , $email->email )
+						DB::table ( 'logins' )->where ( 'email' , $new_name->email )
 							->update ( ['email' => $request->input ( 'email' ) , 'updated_at' => $now] );
-					} else
-						return $this->respondWithError ( 'email exists || ' , self::fail );
-				}
+					}
+				} else return $this->respondwithErrorMessage ( self::fail , 'this email is exists || هذا البريد الالكتروني موجود ' );
 
 				if ( $new_name->phone !== $phone and $phone !== null ) {
 					DB::table ( 'users' )
@@ -517,9 +514,6 @@
 				}
 
 
-//				$statuscheck= DB::table('users')->where('id',$id)->where('status',false);
-//				dd($statuscheck);
-//				dd($status);if ( $new_name->status !== $status and $status !== null )
 				if ( $new_name->status !== $status and $status !== null )
 					if ( $request->input ( 'status' ) == 0 or $request->input ( 'status' ) == 1 ) {
 						DB::table ( 'users' )
@@ -532,8 +526,9 @@
 					//to get email user to change password in logins table
 					$email = DB::table ( 'users' )
 						->where ( 'id' , $id )->first ();
+
 					$e = DB::table ( 'logins' )->where ( 'email' , $email->email )->first ();
-					if ( $email and $e == null ) {
+					if ( $email and $e !== null ) {
 						DB::table ( 'users' )
 							->where ( 'id' , $id )
 							->update ( ['password' => bcrypt ( $request->input ( 'password' ) ) ,
@@ -559,11 +554,7 @@
 
 		public function get_phone_Query (Request $request)
 		{
-//					dd($request->input ('phone'));
-//					$s= substr($request->input ('phone'), 0, 1);
-////					dd($s);
-//					if($s ==9)
-//					return	$this ->respondWithError  ('please don\'t use + in phone ',self::fail);
+			// get user by phone number
 			$rules = array (
 
 				'phone' => 'required|phone:JO' ,
@@ -581,9 +572,6 @@
 
 
 			if ( $validator->fails () )
-				//				return $this->setStatusCode (404)->respondwithErrorMessage (
-				//					'some thing wrong', 'fail', $errors->first('name'));
-
 				if ( $errors->first ( 'phone' ) )
 					return $this->respondwithErrorMessage (
 						self::fail , $errors->first ( 'phone' ) );
@@ -615,8 +603,7 @@
 
 		public function get_one_user_date (Request $request)
 		{
-
-//				$date = Input::get ('date');
+			// get user with date
 
 
 			$rules = array (
@@ -637,9 +624,7 @@
 				if ( $errors->first ( 'date' ) )
 					return $this->respondwithErrorMessage (
 						self::fail , $errors->first ( 'date' ) );
-//				$date_after_formate= date("Y-m-d",strtotime(Input::get ('datee')));
-//				$user= User::where('created_at',date("Y-m-d",strtotime(Input::get ('datee'))))->first ();
-//			User::
+
 			$user = User::whereDate ( 'created_at' , '=' , date ( "Y-m-d" , strtotime ( Input::get ( 'date' ) ) ) )->first ();
 
 			if ( !$user )
@@ -651,6 +636,7 @@
 
 		public function get_date_Query (Request $request)
 		{
+			// get user with flight date
 			$rules = array (
 				'start_date' => 'required|date_format:Y-m-d' ,
 				'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date' ,
@@ -697,6 +683,7 @@
 
 		public function get_user_by_email (Request $request)
 		{
+			// get user by email
 			$rules = array (
 
 				'email' => 'required|email' ,
@@ -705,17 +692,15 @@
 			$messages = array (
 				'email.required' => ' must enter a email ' ,
 				'email.email' => ' enter valid email' ,
-				//				'phone.phone:KS' => ' enter phone number with jordan code 966'
+
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
-			//			$errors= $validator;
+
 			$errors = $validator->errors ();
 
 
 			if ( $validator->fails () )
-				//				return $this->setStatusCode (404)->respondwithErrorMessage (
-				//					'some thing wrong', 'fail', $errors->first('name'));
 
 				if ( $errors->first ( 'email' ) )
 					return $this->respondwithErrorMessage (
@@ -737,6 +722,7 @@
 
 		public function get_user_email_phonenum (Request $request)
 		{
+			// get user by phone and email
 			$rules = array (
 				'email' => 'required|email' ,
 				'phone' => 'required|phone:JO' ,
@@ -784,59 +770,13 @@
 
 		public function get_inactive_users (Request $request)
 		{
+			// get inactive user
 			$status = $request->input ( 'status' );
 			$users = User::where ( 'status' , $status )->get ();
 
-			/*return	IlluResponse::json([
-				'data'=>$this->userTrans->transformCollection  ($users->all ())
-			],200);*/
-
-//					dd($users->count ());
 			return $this->responedFound200
 			( 'users found' , self::success , $this->userTrans->transformCollection ( $users->all () ) );
 		}
 
-		/**
-		 * @param Paginator $lessons
-		 * @param $data
-		 * @return mixed
-		 */
-		protected function respondWithPagnation (Paginator $lessons , $data)
-		{
-			$d = $data;
-			//$d=array_count_values  ($data);
-			$data = array_merge ( $data ,
-				[
-					'paginator' => [
-						'total_count' => $lessons->Total () ,
-						'total_page' => ceil ( $lessons->Total () / $lessons->perPage () ) ,
-						'Curant_page' => $lessons->currentPage () ,
-						'limit' => $lessons->perPage () ,
-						//		'object_array'=>$d
-					]
-				] );
-
-			return $this->respond ( $data );
-		}
-
-
-		/*public function getdate()
-		{
-			$start_data = Input::get ('startData');
-			$end_data = Input::get ('endData');
-//			$user = User:: whereBetween ('created_at', [$start_data, $end_data])-get();
-			$user = User::whereBetween('created_at', [$start_data->format('Y-m-d'), $end_data->format('Y-m-d')])->get();
-//			$user = User::whereBetween('created_at', [$start_data->format('Y-m-d')." 00:00:00", $dateE->format('Y-m-d')." 23:59:59"])->get();
-//				dd($user)
-			var_dump($user);
-			if ($user != null)
-			return $this->setStatusCode (200)->responedFound200 ('user found','pass',
-				$this->userTrans->transformCollection($user->all()));
-//			dd($user_phone['id']);
-
-
-				else
-				return $this->setStatusCode (400)->respondWithError ('user not found','fail');
-		}*/
 
 	}

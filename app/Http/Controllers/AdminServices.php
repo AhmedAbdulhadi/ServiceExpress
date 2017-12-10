@@ -66,6 +66,7 @@
 		 */
 		public function respondInternalError ($massage = 'Internal Error')
 		{
+			// to show 500 error
 			return $this->setStatusCode ( self::HTTP_INTERNAL_SERVER_ERROR )->respondWithError ( $massage );
 		}
 
@@ -75,7 +76,7 @@
 		 */
 		public function respondWithError ($massage , $status = null)
 		{
-
+			//response without data
 			$splitName = explode ( '||' , $massage , 2 );
 
 			$first = $splitName[0];
@@ -142,6 +143,7 @@
 		 */
 		public function responedCreated ($massage , $status , $id)
 		{
+			//response created with returned id
 			return $this->setStatusCode ( self::HTTP_CREATED )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status )
@@ -152,6 +154,7 @@
 
 		public function responedFound200ForOneUserToken ($massage , $status , $data , $token)
 		{
+			// with token
 			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
@@ -163,6 +166,7 @@
 
 		public function respondwithdata ($massage , $status , $data)
 		{
+			//error with massage with data
 			return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
@@ -173,15 +177,10 @@
 
 		public function getAllUser ()
 		{
-
+// to get all admins with status true
 
 			$users = Admin::where ( 'status' , true )->get ();
 
-			/*return	IlluResponse::json([
-				'data'=>$this->userTrans->transformCollection  ($users->all ())
-			],200);*/
-
-//					dd($users->count ());
 			return $this->responedFound200
 			( 'Admin found' , self::success , $this->userTrans->transformCollection ( $users->all () ) );
 
@@ -189,6 +188,7 @@
 
 		public function responedFound200 ($massage , $status , $data)
 		{
+			//created
 			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
@@ -200,6 +200,7 @@
 
 		public function get_one_user ($id = null)
 		{
+			// to get one admin
 
 			$users = Admin::where ( 'id' , $id )->where ( 'status' , true )->first ();
 
@@ -208,31 +209,10 @@
 				return $this->respondNotFound ( 'Admin dose not found' );
 
 			}
-			//	if($id == $users->id or $pnum==$users->phone)
 
-			/*	if(! $users)
-				{
-					$userarray = array(
-					'id'=>$usernumber->id,
-					'name'=>$usernumber->name,
-					'email'=>$usernumber->email,
-					'phone'=>$usernumber->phone,
-					'created_at'=>$usernumber->created_at,
-				//	'phone'=>$usernumber->phone,
-					);
-					/*return IlluResponse::json([
-						'data'=>$this->userTrans->transform ($userarray)
-					],200);*/
-			//		return	`UserServices:: responedFound200('user found','Passed',$this->userTrans->transform ($userarray));
-			//	}*/
-			//	else
-			//		if(!$usernumber)
-			//				return IlluResponse::json([
-			/*'data'=>$this->userTrans->transform ($users)*/
 
 			return $this->responedFound200ForOneUser ( 'Admin found' , self::success , $this->userTrans->transform ( $users ) );
 
-			//				]);
 		}
 
 		/**
@@ -242,12 +222,14 @@
 
 		public function respondNotFound ($massage = 'Not Found !')
 		{
+			//to response with not  found error
 			//return $this->setStatusCode (self::HTTP_NOT_FOUND)->respondWithError($massage);
 			return $this->setStatusCode ( self::HTTP_NOT_FOUND )->respondWithError ( $massage , 'fail' );
 		}
 
 		public function responedFound200ForOneUser ($massage , $status , $data)
 		{
+			// with one user response
 			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
@@ -259,6 +241,7 @@
 
 		public function create_user (Request $request)
 		{
+			//to create admin
 			$type = '2';
 
 			$rules = array (
@@ -314,8 +297,8 @@
 
 			else
 
-				//				$email = DB::table ('users')->where ('phone', $request->input ('email'))->first ();
-				//				$phone = DB::table ('users')->where ('phone', $request->input ('phone'))->first ();
+
+
 
 				$user = Admin::create ( [
 					'name' => $request->input ( 'name' ) ,
@@ -332,13 +315,14 @@
 				'type' => $type
 			] );
 
-			//return $this->responedCreated ('Lesson successfully Created !');
+
 			return $this->responedCreated200 ( ' successfully Created !' , self::success , $user );
 
 		}
 
 		public function respondwithErrorMessage ($status , $data)
 		{
+			// with error massage
 			$splitName = explode ( '||' , $data , 2 );
 
 			$first = $splitName[0];
@@ -354,7 +338,7 @@
 			else
 				return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
 					'massage' => $first ,
-//				'massage_ar'=>$last,
+
 					'status' => $this->status ( $status ) ,
 					'code' => $this->statusCode ,
 
@@ -363,6 +347,7 @@
 
 		public function responedCreated200 ($massage , $status , $id = null)
 		{
+			//created response
 			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
 				'massage' => $massage ,
 				'id' => $id ,
@@ -373,6 +358,7 @@
 
 		public function delete_user ($id)
 		{
+			// to delete admin
 			$now = Carbon::now ( 'GMT+2' );
 			$user = admin::find ( $id );
 			if ( !$user ) {
@@ -386,7 +372,6 @@
 				DB::table ( 'logins' )->where ( 'email' , $email->email )
 					->update ( ['status' => false , 'deleted_at' => $now] );
 
-//					->update(['deleted_at'=>Carbon::now('GMT+3')]);
 				return $this->responed_Destroy200 ( 'admin was deleted ' , self::success );
 
 			}
@@ -396,6 +381,7 @@
 
 		public function responed_Destroy200 ($massage , $status)
 		{
+			// to response for delete admin
 			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status )
@@ -405,31 +391,31 @@
 
 		public function update_user (Request $request , $id)
 		{
+			// to update admin
 			$rules = array (
 				'name' => 'regex:/^(?!.*\d)[a-z\p{Arabic}\s]+$/iu|min:3|max:30' ,
-				'email' => 'email|unique:users|unique:suppliers|unique:logins|unique:admins' ,
+				'email' => 'email|unique:users|unique:suppliers' ,
 				'phone' => 'phone:JO|unique:users|unique:admins' ,
-				//				'phonefield' => 'phone:JO,BE,mobile',
+
 				'password' => 'min:8|max:30'
 			);
 			$messages = array (
 				'name.regex' => 'The name is invalid. || يرجى ادخال الاسم بالغة الانجليزية او العربية' ,
 				'name.min' => 'The name min is 3. || اقل عدد احرف للأسم 3' ,
 				'name.max' => 'The name min is 30 || اكثر عدد احرف مسموح هو 30' ,
-//				'email.required' => 'The email is important for my life || البريد الالكتروني مهم جداً ' ,
+
 				'email.email' => 'take your time and add Real email || الرجاء ادخال بريد الالكتروني فعال ' ,
 				'email.unique' => 'this email is already exiting || البريد الالكتروني مستخدم بالفعل' ,
-//				'phone.required' => 'The phone is important for my life || يرجى ادخال رقم الهاتف' ,
+
 				'phone.unique' => 'this phone number is already exiting || رقم الهاتف مستخدم بالفعل' ,
 				'phone.phone:JO' => ' enter phone number with jordan code 962 || الرجاء ادخال رقم يبدأ 962 الاردن' ,
 				'phone.phone' => ' enter valid phone number such as 962785555555 || الرجاء ا دخال رقم صحيح مثل 962785555555 ' ,
-//				'password.required'=>'the password is required . || يرجى ادخال كلمة السر',
+
 				'password.min' => 'the password min is 8 . || يرجى ادخال ما يزيد عن 8 احرف لكلمة المرور' ,
 				'password.max' => 'the password max is 30 . || يرجى ادخال ما لا يزيد عن 30 حرف لكلمة المرور' ,
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
-			//			$errors= $validator;
 			$errors = $validator->errors ();
 
 
@@ -449,11 +435,6 @@
 
 
 			$findid = admin::find ( $id );
-			/*	DB::table('users')
-							->where('id', $id)
-							->update(['name' => $request->input('name'),
-								'email' => $request->input('email'),
-								'phone' => $request->input('phone')]);*/
 
 			$name = $request->input ( 'name' );
 			$email = $request->input ( 'email' );
@@ -461,12 +442,16 @@
 			$password = $request->input ( 'password' );
 			$now = Carbon::now ( 'GMT+2' );
 
+			$admin = Admin::where ( 'email' , $email );
+			$email_exists = $admin->first ();// !== null
+			$email_for_admin = $admin->where ( 'id' , $id )->first ();
+
 			if ( !$findid )
 				return $this->respondWithError ( 'admin not found ' , self::fail );
 			else {
 
 				$new_name = DB::table ( 'admins' )->where ( 'id' , $id )->first ();
-				//			var_dump($new_name->email);
+
 				if ( $new_name->name !== $name and $name !== null ) {
 					DB::table ( 'admins' )
 						->where ( 'id' , $id )
@@ -474,31 +459,26 @@
 
 				}
 
-				if ( $new_name->email !== $email and $email !== null ) {
-					//to get email address for supplier with the id
+				if ( !$email_exists or $email_for_admin ) {
+					if ( ($email !== null) ) {
 
-					$e = DB::table ( 'logins' )->where ( 'email' , $new_name->email )->first ();
-					$ee = DB::table ( 'admins' )->where ( 'email' , $email )->first ();
+						//to find id in supplier and edit email
+						DB::table ( 'admins' )
+							->where ( 'id' , $id )
+							->update ( ['email' => $request->input ( 'email' ) , 'updated_at' => $now] );
+						//to edit supplier email in logins table
+						DB::table ( 'logins' )->where ( 'email' , $new_name->email )
+							->update ( ['email' => $request->input ( 'email' ) , 'updated_at' => $now] );
 
-
-					//to find id in supplier and edit email
-					DB::table ( 'admins' )
-						->where ( 'id' , $id )
-						->update ( ['email' => $request->input ( 'email' ) , 'updated_at' => $now] );
-					//to edit supplier email in logins table
-					DB::table ( 'logins' )->where ( 'email' , $new_name->email )
-						->update ( ['email' => $request->input ( 'email' ) , 'updated_at' => $now] );
-
-//					else return $this->respondWithError ('email already exists',self::fail);
-
-				}
+					}
+				} else return $this->respondwithErrorMessage ( self::fail , 'this email is exists || هذا البريد الالكتروني موجود ' );
 
 
 				if ( $new_name->phone !== $phone and $phone !== null ) {
 					DB::table ( 'admins' )
 						->where ( 'id' , $id )
-						->update ( ['phone' => $request->input ( 'phone' )] )
-						->update ( ['updated_at' => $now] );
+						->update ( ['phone' => $request->input ( 'phone' ) , 'updated_at' => $now] );
+
 				}
 				if ( $new_name->password !== $password and $password !== null ) {
 
@@ -518,12 +498,11 @@
 
 
 				}
-				if ( $request->input ( 'status' ) == 0 or $request->input ( 'status' ) == 1 ) {
+				if ( ($request->input ( 'status' ) == 0 or $request->input ( 'status' )) == 1 and $request->input ( 'status' ) !== null ) {
 					DB::table ( 'admins' )
 						->where ( 'id' , $id )
 						->update ( ['status' => $request->input ( 'status' ) , 'updated_at' => $now] );
-				} else
-					return $this->respondWithError ( 'status neeed to be 0 for false and 1 for ture' , self::fail );
+				}
 
 
 				$data = admin::find ( $id );
@@ -536,7 +515,7 @@
 
 		public function get_phone_Query (Request $request)
 		{
-
+			//get admin with phone number
 			$rules = array (
 
 				'phone' => 'required|phone:JO' ,
@@ -575,6 +554,7 @@
 
 		public function respondDeactivate ($massage , $status = null)
 		{
+			//this admin is not active
 			return $this->setStatusCode ( self::HTTP_FORBIDDEN )->respond ( [
 
 				'massage' => $massage ,
@@ -587,7 +567,7 @@
 		public function get_one_user_date (Request $request)
 		{
 
-//				$date = Input::get ('date');
+			// get admin  with date
 
 
 			$rules = array (
@@ -608,20 +588,19 @@
 				if ( $errors->first ( 'date' ) )
 					return $this->respondwithErrorMessage (
 						self::fail , $errors->first ( 'date' ) );
-//				$date_after_formate= date("Y-m-d",strtotime(Input::get ('datee')));
-//				$user= User::where('created_at',date("Y-m-d",strtotime(Input::get ('datee'))))->first ();
-//			User::
+
 			$user = admin::whereDate ( 'created_at' , '=' , date ( "Y-m-d" , strtotime ( Input::get ( 'date' ) ) ) )->first ();
 
 			if ( !$user )
 				return $this->respondWithError ( 'admin not found' , self::fail );
-			else    //if ($user !== null)
+			else
 				return $this->responedFound200ForOneUser ( 'admin found' , self::success ,
 					$this->userTrans->transform ( $user ) );
 		}
 
 		public function get_date_Query (Request $request)
 		{
+			//to get admin with flight date
 			$rules = array (
 				'start_date' => 'required|date_format:Y-m-d' ,
 				'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date' ,
@@ -638,7 +617,6 @@
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
-			//			$errors= $validator;
 			$errors = $validator->errors ();
 
 
@@ -659,7 +637,7 @@
 			$user = admin::whereBetween ( 'created_at' , [$start , $end] )->where ( 'status' , Input::get ( 'status' ) )->get ();
 			if ( $user->first () === null )
 				return $this->respondWithError ( 'admin not found' , self::fail );
-			else    //if ($user !== null)
+			else
 				return $this->responedFound200 ( 'admin found' , self::success ,
 					$this->userTrans->transformCollection ( $user->toArray () ) );
 
@@ -668,6 +646,7 @@
 
 		public function get_user_by_email (Request $request)
 		{
+			//get admin by email
 			$rules = array (
 
 				'email' => 'required|email' ,
@@ -676,17 +655,15 @@
 			$messages = array (
 				'email.required' => ' must enter a email ' ,
 				'email.email' => ' enter valid email' ,
-				//				'phone.phone:KS' => ' enter phone number with jordan code 966'
+
 			);
 
 			$validator = Validator::make ( $request->all () , $rules , $messages );
-			//			$errors= $validator;
+
 			$errors = $validator->errors ();
 
 
 			if ( $validator->fails () )
-				//				return $this->setStatusCode (404)->respondwithErrorMessage (
-				//					'some thing wrong', 'fail', $errors->first('name'));
 
 				if ( $errors->first ( 'email' ) )
 					return $this->respondwithErrorMessage (
@@ -717,10 +694,10 @@
 				'email.email' => ' enter valid email' ,
 				'phone.phone:JO' => ' enter phone number with jordan code 962' ,
 				'phone.phone' => ' enter valid phone number such as 962785555555' ,
-				//				'phone.phone:KS' => ' enter phone number with jordan code 966'
+
 			);
 			$validator = Validator::make ( $request->all () , $rules , $messages );
-			//			$errors= $validator;
+
 			$errors = $validator->errors ();
 
 
@@ -755,39 +732,13 @@
 
 		public function get_inactive_users (Request $request)
 		{
+			//get inactive admin
 			$status = $request->input ( 'status' );
 			$users = admin::where ( 'status' , $status )->get ();
 
-			/*return	IlluResponse::json([
-				'data'=>$this->userTrans->transformCollection  ($users->all ())
-			],200);*/
 
-//					dd($users->count ());
 			return $this->responedFound200
 			( 'admin found' , self::success , $this->userTrans->transformCollection ( $users->all () ) );
-		}
-
-		/**
-		 * @param Paginator $lessons
-		 * @param $data
-		 * @return mixed
-		 */
-		protected function respondWithPagnation (Paginator $lessons , $data)
-		{
-			$d = $data;
-			//$d=array_count_values  ($data);
-			$data = array_merge ( $data ,
-				[
-					'paginator' => [
-						'total_count' => $lessons->Total () ,
-						'total_page' => ceil ( $lessons->Total () / $lessons->perPage () ) ,
-						'Curant_page' => $lessons->currentPage () ,
-						'limit' => $lessons->perPage () ,
-						//		'object_array'=>$d
-					]
-				] );
-
-			return $this->respond ( $data );
 		}
 
 

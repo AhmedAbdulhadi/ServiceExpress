@@ -15,13 +15,13 @@
 		{
 			Schema::create ( 'address' , function (Blueprint $table) {
 				$table->increments ( 'id' );
-				$table->double ( 'longitude' );
-				$table->double ( 'latitude' );
+				$table->double ( 'longitude' )->default(0.0);
+				$table->double ( 'latitude' )->default(0.0);
 				$table->string ( 'street' , 30 )->default ( " " )->nullable ();
 				$table->string ( 'city' , 30 )->default ( " " )->nullable ();
 				$table->string ( 'country' , 30 )->default ( " " )->nullable ();
 				$table->integer ( 'building_number' )->default ( 0 )->nullable ();
-				$table->integer ( 'neighborhood' )->default ( 0 )->nullable ();
+				$table->string ( 'neighborhood' )->default ( 0 )->nullable ();
 				$table->integer ( 'apartment_number' )->default ( 0 )->nullable ();
 				$table->integer ( 'floor' )->default ( 0 )->nullable ();
 				$table->enum  ( 'address_type' ,['0','1','2']);

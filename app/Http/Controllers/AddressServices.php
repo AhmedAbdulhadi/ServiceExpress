@@ -52,8 +52,9 @@
 
 		public function __construct (AddressTransfomer $addressTrans)
 		{
+			//to call transform to convert data object
 			$this->addressTrans = $addressTrans;
-			//$this->middleware('auth.basic', ['only' => 'store']);
+
 
 		}
 
@@ -63,6 +64,7 @@
 		 */
 		public function respondInternalError ($massage = 'Internal Error')
 		{
+			//to show 500 error
 			return $this->setStatusCode ( self::HTTP_INTERNAL_SERVER_ERROR )->respondWithError ( $massage );
 		}
 
@@ -72,6 +74,7 @@
 		 */
 		public function respondWithError ($massage , $status = null)
 		{
+			//to show bad req error
 			return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
 
 				'massage' => $massage ,
@@ -99,11 +102,13 @@
 		 */
 		public function getStatusCode ()
 		{
+			//to get status code
 			return $this->statusCode;
 		}
 
 		public function setStatusCode ($statusCode)
 		{
+			// to set status code
 			$this->statusCode = $statusCode;
 
 			return $this;
@@ -111,6 +116,7 @@
 
 		public function status ($status)
 		{
+			// return  status code
 			return $status;
 		}
 
@@ -120,6 +126,7 @@
 		 */
 		public function responedCreated ($massage , $status , $id)
 		{
+			// for response (created)
 			return $this->setStatusCode ( self::HTTP_CREATED )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status )
@@ -130,6 +137,7 @@
 
 		public function responedFound200ForOneUserToken ($massage , $status , $data , $token)
 		{
+			// response for (user with token)
 			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
@@ -141,6 +149,7 @@
 
 		public function respondwithdata ($massage , $status , $data)
 		{
+			// 400
 			return $this->setStatusCode ( self::HTTP_BAD_REQUEST )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
@@ -151,7 +160,7 @@
 
 		public function get_all_address ()
 		{
-//			$a=  new UserServices($this->addressTrans);
+			// get all address
 			$address = address::where ( 'status' , '=' , true )->get ();
 
 			return $this->responedFound200
@@ -172,7 +181,7 @@
 		public function add_address (Request $request)
 		{
 
-
+//to create address
 			$type0 = DB::table ( 'address_user' )->where ( 'user_id' , $request->input ( 'user_id' ) )->where ( 'address_type' , '0' )->first ();
 			$type1 = DB::table ( 'address_user' )->where ( 'user_id' , $request->input ( 'user_id' ) )->where ( 'address_type' , '1' )->first ();
 			$type2 = DB::table ( 'address_user' )->where ( 'user_id' , $request->input ( 'user_id' ) )->where ( 'address_type' , '2' )->first ();
@@ -195,7 +204,7 @@
 					'city' => 'required|string' ,
 					'street' => 'required|string' ,
 					'country' => 'required|string' ,
-					'neighborhood' => 'integer' ,
+					'neighborhood' => 'string' ,
 					'building_number' => 'integer' ,
 					'apartment_number' => 'integer' ,
 					'floor' => 'integer' ,
@@ -218,7 +227,7 @@
 				'country.string' => 'Enter valid country || يرجى ادخال اسم الدولة بشكل صحيح ' ,
 				'country.required' => 'country is required || يرجى ادخال اسم الدولة' ,
 
-				'neighborhood.integer' => 'Enter valid number for neighborhood || يرجى ادخال رقم الحي رقم صحيح' ,
+				'neighborhood.string' => 'Enter valid number for neighborhood || يرجى ادخال رقم الحي رقم صحيح' ,
 				'building_number.integer' => 'Enter valid number for building_number || يرجى ادخال رقم المبنى بشكل الصحيح' ,
 				'apartment_number.integer' => 'Enter valid number for apartment_number || يرجى ادخال رقم الشقة بشكل الصحيح' ,
 				'floor.integer' => 'Enter valid number for floor || يرجى ادخال رقم الطابق بشكل صحيح' ,
@@ -302,6 +311,7 @@
 
 		public function respondwithErrorMessage ($status , $data)
 		{
+			// to response with massage without data
 			$splitName = explode ( '||' , $data , 2 );
 
 			$first = $splitName[0];
@@ -337,13 +347,14 @@
 
 		public function update_address (Request $request , $id)
 		{
+			// to update address
 			$rules = array (
 				'longitude' => 'numeric' ,
 				'latitude' => 'numeric' ,
 				'city' => 'string' ,
 				'street' => 'string' ,
 				'country' => 'string' ,
-				'neighborhood' => 'integer' ,
+				'neighborhood' => 'string' ,
 				'building_number' => 'integer' ,
 				'apartment_number' => 'integer' ,
 				'floor' => 'integer' ,
@@ -365,7 +376,7 @@
 				'country.string' => 'Enter valid country || يرجى ادخال اسم الدولة بشكل صحيح ' ,
 //				'country.required' => 'country is required || يرجى ادخال اسم الدولة' ,
 
-				'neighborhood.integer' => 'Enter valid number for neighborhood || يرجى ادخال رقم الحي رقم صحيح' ,
+				'neighborhood.string' => 'Enter valid number for neighborhood || يرجى ادخال رقم الحي رقم صحيح' ,
 				'building_number.integer' => 'Enter valid number for building_number || يرجى ادخال رقم المبنى بشكل الصحيح' ,
 				'apartment_number.integer' => 'Enter valid number for apartment_number || يرجى ادخال رقم الشقة بشكل الصحيح' ,
 				'floor.integer' => 'Enter valid number for floor || يرجى ادخال رقم الطابق بشكل صحيح' ,
@@ -498,12 +509,12 @@
 							'updated_at' => $now] );
 
 				}
-				if ( $request->input ( 'status' ) == 0 or $request->input ( 'status' ) == 1 ) {
+				if ( ($request->input ( 'status' ) == 0 or $request->input ( 'status' ) == 1) and $request->input ( 'status' ) !== null ) {
 					DB::table ( 'address' )
 						->where ( 'id' , $id )
 						->update ( ['status' => $request->input ( 'status' ) , 'updated_at' => $now] );
-				} else
-					return $this->respondWithError ( 'status neeed to be 0 for false and 1 for ture' , self::fail );
+				}
+
 
 				$data = address::find ( $id );
 
@@ -515,7 +526,7 @@
 
 		public function responedFound200ForOneAddress ($massage , $status , $data)
 		{
-
+//response for one address
 			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
 				'massage' => $massage ,
 				'status' => $this->status ( $status ) ,
