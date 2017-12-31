@@ -2160,7 +2160,7 @@ EOT;
     Adaptation for the purpose of this License. "Collection" means a
     collection of literary or artistic works, such as encyclopedias and
     anthologies, or performances, phonograms or broadcasts, or other works
-    or subject matter other than works listed in Section 1(f) below,
+    or subject matter other than works listed in SectionModel 1(f) below,
     which, by reason of the selection and arrangement of their contents,
     constitute intellectual creations, in which the Work is included in
     its entirety in unmodified form along with one or more other
@@ -2197,7 +2197,7 @@ EOT;
     of this License including without limitation any production in the
     literary, scientific and artistic domain, whatever may be the mode or
     form of its expression including digital form, such as a book,
-    pamphlet and other writing; a lecture, address, sermon or other work
+    pamphlet and other writing; a lecture, adressModel, sermon or other work
     of the same nature; a dramatic or dramatico-musical work; a
     choreographic work or entertainment in dumb show; a musical
     composition with or without words; a cinematographic work to which are
@@ -2268,10 +2268,10 @@ EOT;
     exercised in all media and formats whether now known or hereafter
     devised. The above rights include the right to make such modifications
     as are technically necessary to exercise the rights in other media and
-    formats. Subject to Section 8(f), all rights not expressly granted by
+    formats. Subject to SectionModel 8(f), all rights not expressly granted by
     Licensor are hereby reserved.
 
-    4. Restrictions. The license granted in Section 3 above is expressly
+    4. Restrictions. The license granted in SectionModel 3 above is expressly
     made subject to and limited by the following restrictions:
 
     You may Distribute or Publicly Perform the Work only under the terms
@@ -2287,15 +2287,15 @@ EOT;
     Perform the Work, You may not impose any effective technological
     measures on the Work that restrict the ability of a recipient of the
     Work from You to exercise the rights granted to that recipient under
-    the terms of the License. This Section 4(a) applies to the Work as
+    the terms of the License. This SectionModel 4(a) applies to the Work as
     incorporated in a Collection, but this does not require the Collection
     apart from the Work itself to be made subject to the terms of this
     License. If You create a Collection, upon notice from any Licensor You
     must, to the extent practicable, remove from the Collection any credit
-    as required by Section 4(c), as requested. If You create an
+    as required by SectionModel 4(c), as requested. If You create an
     Adaptation, upon notice from any Licensor You must, to the extent
     practicable, remove from the Adaptation any credit as required by
-    Section 4(c), as requested. You may Distribute or Publicly Perform an
+    SectionModel 4(c), as requested. You may Distribute or Publicly Perform an
     Adaptation only under the terms of: (i) this License; (ii) a later
     version of this License with the same License Elements as this
     License; (iii) a Creative Commons jurisdiction license (either this or
@@ -2319,12 +2319,12 @@ EOT;
     You may not impose any effective technological measures on the
     Adaptation that restrict the ability of a recipient of the Adaptation
     from You to exercise the rights granted to that recipient under the
-    terms of the Applicable License. This Section 4(b) applies to the
+    terms of the Applicable License. This SectionModel 4(b) applies to the
     Adaptation as incorporated in a Collection, but this does not require
     the Collection apart from the Adaptation itself to be made subject to
     the terms of the Applicable License. If You Distribute, or Publicly
     Perform the Work or any Adaptations or Collections, You must, unless a
-    request has been made pursuant to Section 4(a), keep intact all
+    request has been made pursuant to SectionModel 4(a), keep intact all
     copyright notices for the Work and provide, reasonable to the medium
     or means You are utilizing: (i) the name of the Original Author (or
     pseudonym, if applicable) if supplied, and/or if the Original Author
@@ -2339,13 +2339,13 @@ EOT;
     the case of an Adaptation, a credit identifying the use of the Work in
     the Adaptation (e.g., "French translation of the Work by Original
     Author," or "Screenplay based on original Work by Original Author").
-    The credit required by this Section 4(c) may be implemented in any
+    The credit required by this SectionModel 4(c) may be implemented in any
     reasonable manner; provided, however, that in the case of a Adaptation
     or Collection, at a minimum such credit will appear, if a credit for
     all contributing authors of the Adaptation or Collection appears, then
     as part of these credits and in a manner at least as prominent as the
     credits for the other contributing authors. For the avoidance of
-    doubt, You may only use the credit required by this Section for the
+    doubt, You may only use the credit required by this SectionModel for the
     purpose of attribution in the manner set out above and, by exercising
     Your rights under this License, You may not implicitly or explicitly
     assert or imply any connection with, sponsorship or endorsement by the
@@ -2359,13 +2359,13 @@ EOT;
     or take other derogatory action in relation to the Work which would be
     prejudicial to the Original Author's honor or reputation. Licensor
     agrees that in those jurisdictions (e.g. Japan), in which any exercise
-    of the right granted in Section 3(b) of this License (the right to
+    of the right granted in SectionModel 3(b) of this License (the right to
     make Adaptations) would be deemed to be a distortion, mutilation,
     modification or other derogatory action prejudicial to the Original
     Author's honor and reputation, the Licensor will waive or not assert,
-    as appropriate, this Section, to the fullest extent permitted by the
+    as appropriate, this SectionModel, to the fullest extent permitted by the
     applicable national law, to enable You to reasonably exercise Your
-    right under Section 3(b) of this License (right to make Adaptations)
+    right under SectionModel 3(b) of this License (right to make Adaptations)
     but not otherwise. 5. Representations, Warranties and Disclaimer
 
     UNLESS OTHERWISE MUTUALLY AGREED TO BY THE PARTIES IN WRITING,

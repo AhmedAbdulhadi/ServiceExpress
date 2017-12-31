@@ -88,15 +88,15 @@ class SparkPostTransport extends Transport
         $recipients = [];
 
         foreach ((array) $message->getTo() as $email => $name) {
-            $recipients[] = ['address' => compact('name', 'email')];
+            $recipients[] = ['adressModel' => compact('name', 'email')];
         }
 
         foreach ((array) $message->getCc() as $email => $name) {
-            $recipients[] = ['address' => compact('name', 'email')];
+            $recipients[] = ['adressModel' => compact('name', 'email')];
         }
 
         foreach ((array) $message->getBcc() as $email => $name) {
-            $recipients[] = ['address' => compact('name', 'email')];
+            $recipients[] = ['adressModel' => compact('name', 'email')];
         }
 
         return $recipients;

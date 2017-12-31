@@ -665,7 +665,7 @@ class X509
             'children' => array(
                 'country-name'               => array('optional' => true) + $CountryName,
                 'administration-domain-name' => array('optional' => true) + $AdministrationDomainName,
-                'network-address'            => array(
+                'network-adressModel'            => array(
                                                  'constant' => 0,
                                                  'optional' => true,
                                                  'implicit' => true
@@ -2048,7 +2048,7 @@ class X509
                     case 'iPAddress':
                         /* From RFC2818 "HTTP over TLS":
 
-                           In some cases, the URI is specified as an IP address rather than a
+                           In some cases, the URI is specified as an IP adressModel rather than a
                            hostname. In this case, the iPAddress subjectAltName must be present
                            in the certificate and must exactly match the IP in the URI. */
                         if (preg_match('#(?:\d{1-3}\.){4}#', $components['host'] . '.') && preg_match('#^' . $value . '$#', $components['host'])) {
@@ -2294,9 +2294,9 @@ class X509
     }
 
     /**
-     * Decodes an IP address
+     * Decodes an IP adressModel
      *
-     * Takes in a base64 encoded "blob" and returns a human readable IP address
+     * Takes in a base64 encoded "blob" and returns a human readable IP adressModel
      *
      * @param string $ip
      * @access private
@@ -2308,9 +2308,9 @@ class X509
     }
 
     /**
-     * Encodes an IP address
+     * Encodes an IP adressModel
      *
-     * Takes a human readable IP address into a base64-encoded "blob"
+     * Takes a human readable IP adressModel into a base64-encoded "blob"
      *
      * @param string $ip
      * @access private
@@ -3471,7 +3471,7 @@ class X509
         }
 
         if (isset($subject->ipAddresses) && count($subject->ipAddresses)) {
-            // should an IP address appear as the CN if no domain name is specified? idk
+            // should an IP adressModel appear as the CN if no domain name is specified? idk
             //$ips = count($subject->domains) ? $subject->ipAddresses : array_slice($subject->ipAddresses, 1);
             $ipAddresses = array();
             foreach ($subject->ipAddresses as $ipAddress) {

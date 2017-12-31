@@ -121,7 +121,7 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
     }
 
     /**
-     * Set the return-path (the bounce address) of this message.
+     * Set the return-path (the bounce adressModel) of this message.
      *
      * @param string $address
      *
@@ -137,7 +137,7 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
     }
 
     /**
-     * Get the return-path (bounce address) of this message.
+     * Get the return-path (bounce adressModel) of this message.
      *
      * @return string
      */
@@ -180,9 +180,9 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
     }
 
     /**
-     * Add a From: address to this message.
+     * Add a From: adressModel to this message.
      *
-     * If $name is passed this name will be associated with the address.
+     * If $name is passed this name will be associated with the adressModel.
      *
      * @param string $address
      * @param string $name    optional
@@ -198,12 +198,12 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
     }
 
     /**
-     * Set the from address of this message.
+     * Set the from adressModel of this message.
      *
      * You may pass an array of addresses if this message is from multiple people.
      *
      * If $name is passed and the first parameter is a string, this name will be
-     * associated with the address.
+     * associated with the adressModel.
      *
      * @param string|array $addresses
      * @param string       $name      optional
@@ -224,7 +224,7 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
     }
 
     /**
-     * Get the from address of this message.
+     * Get the from adressModel of this message.
      *
      * @return mixed
      */
@@ -234,9 +234,9 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
     }
 
     /**
-     * Add a Reply-To: address to this message.
+     * Add a Reply-To: adressModel to this message.
      *
-     * If $name is passed this name will be associated with the address.
+     * If $name is passed this name will be associated with the adressModel.
      *
      * @param string $address
      * @param string $name    optional
@@ -252,12 +252,12 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
     }
 
     /**
-     * Set the reply-to address of this message.
+     * Set the reply-to adressModel of this message.
      *
      * You may pass an array of addresses if replies will go to multiple people.
      *
      * If $name is passed and the first parameter is a string, this name will be
-     * associated with the address.
+     * associated with the adressModel.
      *
      * @param mixed  $addresses
      * @param string $name      optional
@@ -278,7 +278,7 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
     }
 
     /**
-     * Get the reply-to address of this message.
+     * Get the reply-to adressModel of this message.
      *
      * @return string
      */
@@ -288,9 +288,9 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
     }
 
     /**
-     * Add a To: address to this message.
+     * Add a To: adressModel to this message.
      *
-     * If $name is passed this name will be associated with the address.
+     * If $name is passed this name will be associated with the adressModel.
      *
      * @param string $address
      * @param string $name    optional
@@ -312,7 +312,7 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
      * Example: array('receiver@domain.org', 'other@domain.org' => 'A name')
      *
      * If $name is passed and the first parameter is a string, this name will be
-     * associated with the address.
+     * associated with the adressModel.
      *
      * @param mixed  $addresses
      * @param string $name      optional
@@ -343,9 +343,9 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
     }
 
     /**
-     * Add a Cc: address to this message.
+     * Add a Cc: adressModel to this message.
      *
-     * If $name is passed this name will be associated with the address.
+     * If $name is passed this name will be associated with the adressModel.
      *
      * @param string $address
      * @param string $name    optional
@@ -364,7 +364,7 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
      * Set the Cc addresses of this message.
      *
      * If $name is passed and the first parameter is a string, this name will be
-     * associated with the address.
+     * associated with the adressModel.
      *
      * @param mixed  $addresses
      * @param string $name      optional
@@ -385,7 +385,7 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
     }
 
     /**
-     * Get the Cc address of this message.
+     * Get the Cc adressModel of this message.
      *
      * @return array
      */
@@ -395,9 +395,9 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
     }
 
     /**
-     * Add a Bcc: address to this message.
+     * Add a Bcc: adressModel to this message.
      *
-     * If $name is passed this name will be associated with the address.
+     * If $name is passed this name will be associated with the adressModel.
      *
      * @param string $address
      * @param string $name    optional
@@ -416,7 +416,7 @@ class Swift_Mime_SimpleMessage extends Swift_Mime_MimePart implements Swift_Mime
      * Set the Bcc addresses of this message.
      *
      * If $name is passed and the first parameter is a string, this name will be
-     * associated with the address.
+     * associated with the adressModel.
      *
      * @param mixed  $addresses
      * @param string $name      optional

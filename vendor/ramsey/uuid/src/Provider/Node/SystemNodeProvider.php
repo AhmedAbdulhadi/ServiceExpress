@@ -18,7 +18,7 @@ use Ramsey\Uuid\Provider\NodeProviderInterface;
 
 /**
  * SystemNodeProvider provides functionality to get the system node ID (MAC
- * address) using external system calls
+ * adressModel) using external system calls
  */
 class SystemNodeProvider implements NodeProviderInterface
 {

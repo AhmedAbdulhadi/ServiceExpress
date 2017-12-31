@@ -333,7 +333,7 @@ class Swift_Mime_SimpleMessageAcceptanceTest extends \PHPUnit_Framework_TestCase
         $message->setFrom(array('chris.corbyn@swiftmailer.org' => 'Chris'));
         $message->setReplyTo(array(
             'chris@w3style.co.uk' => 'Myself',
-            'my.other@address.com' => 'Me',
+            'my.other@adressModel.com' => 'Me',
             ));
         $id = $message->getId();
         $date = $message->getDate();
@@ -342,7 +342,7 @@ class Swift_Mime_SimpleMessageAcceptanceTest extends \PHPUnit_Framework_TestCase
             'Date: '.date('r', $date)."\r\n".
             'Subject: just a test subject'."\r\n".
             'From: Chris <chris.corbyn@swiftmailer.org>'."\r\n".
-            'Reply-To: Myself <chris@w3style.co.uk>, Me <my.other@address.com>'."\r\n".
+            'Reply-To: Myself <chris@w3style.co.uk>, Me <my.other@adressModel.com>'."\r\n".
             'MIME-Version: 1.0'."\r\n".
             'Content-Type: text/plain'."\r\n".
             'Content-Transfer-Encoding: quoted-printable'."\r\n",
@@ -357,7 +357,7 @@ class Swift_Mime_SimpleMessageAcceptanceTest extends \PHPUnit_Framework_TestCase
         $message->setFrom(array('chris.corbyn@swiftmailer.org' => 'Chris'));
         $message->setReplyTo(array(
             'chris@w3style.co.uk' => 'Myself',
-            'my.other@address.com' => 'Me',
+            'my.other@adressModel.com' => 'Me',
             ));
         $message->setTo('mark@swiftmailer.org');
         $id = $message->getId();
@@ -367,7 +367,7 @@ class Swift_Mime_SimpleMessageAcceptanceTest extends \PHPUnit_Framework_TestCase
             'Date: '.date('r', $date)."\r\n".
             'Subject: just a test subject'."\r\n".
             'From: Chris <chris.corbyn@swiftmailer.org>'."\r\n".
-            'Reply-To: Myself <chris@w3style.co.uk>, Me <my.other@address.com>'."\r\n".
+            'Reply-To: Myself <chris@w3style.co.uk>, Me <my.other@adressModel.com>'."\r\n".
             'To: mark@swiftmailer.org'."\r\n".
             'MIME-Version: 1.0'."\r\n".
             'Content-Type: text/plain'."\r\n".
@@ -383,7 +383,7 @@ class Swift_Mime_SimpleMessageAcceptanceTest extends \PHPUnit_Framework_TestCase
         $message->setFrom(array('chris.corbyn@swiftmailer.org' => 'Chris'));
         $message->setReplyTo(array(
             'chris@w3style.co.uk' => 'Myself',
-            'my.other@address.com' => 'Me',
+            'my.other@adressModel.com' => 'Me',
             ));
         $message->setTo(array(
             'mark@swiftmailer.org', 'chris@swiftmailer.org' => 'Chris Corbyn',
@@ -395,7 +395,7 @@ class Swift_Mime_SimpleMessageAcceptanceTest extends \PHPUnit_Framework_TestCase
             'Date: '.date('r', $date)."\r\n".
             'Subject: just a test subject'."\r\n".
             'From: Chris <chris.corbyn@swiftmailer.org>'."\r\n".
-            'Reply-To: Myself <chris@w3style.co.uk>, Me <my.other@address.com>'."\r\n".
+            'Reply-To: Myself <chris@w3style.co.uk>, Me <my.other@adressModel.com>'."\r\n".
             'To: mark@swiftmailer.org, Chris Corbyn <chris@swiftmailer.org>'."\r\n".
             'MIME-Version: 1.0'."\r\n".
             'Content-Type: text/plain'."\r\n".
@@ -411,7 +411,7 @@ class Swift_Mime_SimpleMessageAcceptanceTest extends \PHPUnit_Framework_TestCase
         $message->setFrom(array('chris.corbyn@swiftmailer.org' => 'Chris'));
         $message->setReplyTo(array(
             'chris@w3style.co.uk' => 'Myself',
-            'my.other@address.com' => 'Me',
+            'my.other@adressModel.com' => 'Me',
             ));
         $message->setTo(array(
             'mark@swiftmailer.org', 'chris@swiftmailer.org' => 'Chris Corbyn',
@@ -424,7 +424,7 @@ class Swift_Mime_SimpleMessageAcceptanceTest extends \PHPUnit_Framework_TestCase
             'Date: '.date('r', $date)."\r\n".
             'Subject: just a test subject'."\r\n".
             'From: Chris <chris.corbyn@swiftmailer.org>'."\r\n".
-            'Reply-To: Myself <chris@w3style.co.uk>, Me <my.other@address.com>'."\r\n".
+            'Reply-To: Myself <chris@w3style.co.uk>, Me <my.other@adressModel.com>'."\r\n".
             'To: mark@swiftmailer.org, Chris Corbyn <chris@swiftmailer.org>'."\r\n".
             'Cc: john@some-site.com'."\r\n".
             'MIME-Version: 1.0'."\r\n".
@@ -441,7 +441,7 @@ class Swift_Mime_SimpleMessageAcceptanceTest extends \PHPUnit_Framework_TestCase
         $message->setFrom(array('chris.corbyn@swiftmailer.org' => 'Chris'));
         $message->setReplyTo(array(
             'chris@w3style.co.uk' => 'Myself',
-            'my.other@address.com' => 'Me',
+            'my.other@adressModel.com' => 'Me',
             ));
         $message->setTo(array(
             'mark@swiftmailer.org', 'chris@swiftmailer.org' => 'Chris Corbyn',
@@ -457,7 +457,7 @@ class Swift_Mime_SimpleMessageAcceptanceTest extends \PHPUnit_Framework_TestCase
             'Date: '.date('r', $date)."\r\n".
             'Subject: just a test subject'."\r\n".
             'From: Chris <chris.corbyn@swiftmailer.org>'."\r\n".
-            'Reply-To: Myself <chris@w3style.co.uk>, Me <my.other@address.com>'."\r\n".
+            'Reply-To: Myself <chris@w3style.co.uk>, Me <my.other@adressModel.com>'."\r\n".
             'To: mark@swiftmailer.org, Chris Corbyn <chris@swiftmailer.org>'."\r\n".
             'Cc: John West <john@some-site.com>, Big Fred <fred@another-site.co.uk>'."\r\n".
             'MIME-Version: 1.0'."\r\n".
@@ -476,7 +476,7 @@ class Swift_Mime_SimpleMessageAcceptanceTest extends \PHPUnit_Framework_TestCase
         $message->setFrom(array('chris.corbyn@swiftmailer.org' => 'Chris'));
         $message->setReplyTo(array(
             'chris@w3style.co.uk' => 'Myself',
-            'my.other@address.com' => 'Me',
+            'my.other@adressModel.com' => 'Me',
             ));
         $message->setTo(array(
             'mark@swiftmailer.org', 'chris@swiftmailer.org' => 'Chris Corbyn',
@@ -493,7 +493,7 @@ class Swift_Mime_SimpleMessageAcceptanceTest extends \PHPUnit_Framework_TestCase
             'Date: '.date('r', $date)."\r\n".
             'Subject: just a test subject'."\r\n".
             'From: Chris <chris.corbyn@swiftmailer.org>'."\r\n".
-            'Reply-To: Myself <chris@w3style.co.uk>, Me <my.other@address.com>'."\r\n".
+            'Reply-To: Myself <chris@w3style.co.uk>, Me <my.other@adressModel.com>'."\r\n".
             'To: mark@swiftmailer.org, Chris Corbyn <chris@swiftmailer.org>'."\r\n".
             'Cc: John West <john@some-site.com>, Big Fred <fred@another-site.co.uk>'."\r\n".
             'Bcc: x@alphabet.tld'."\r\n".
@@ -513,7 +513,7 @@ class Swift_Mime_SimpleMessageAcceptanceTest extends \PHPUnit_Framework_TestCase
         $message->setFrom(array('chris.corbyn@swiftmailer.org' => 'Chris'));
         $message->setReplyTo(array(
             'chris@w3style.co.uk' => 'Myself',
-            'my.other@address.com' => 'Me',
+            'my.other@adressModel.com' => 'Me',
             ));
         $message->setTo(array(
             'mark@swiftmailer.org', 'chris@swiftmailer.org' => 'Chris Corbyn',
@@ -530,7 +530,7 @@ class Swift_Mime_SimpleMessageAcceptanceTest extends \PHPUnit_Framework_TestCase
             'Date: '.date('r', $date)."\r\n".
             'Subject: just a test subject'."\r\n".
             'From: Chris <chris.corbyn@swiftmailer.org>'."\r\n".
-            'Reply-To: Myself <chris@w3style.co.uk>, Me <my.other@address.com>'."\r\n".
+            'Reply-To: Myself <chris@w3style.co.uk>, Me <my.other@adressModel.com>'."\r\n".
             'To: mark@swiftmailer.org, Chris Corbyn <chris@swiftmailer.org>'."\r\n".
             'Cc: John West <john@some-site.com>, Big Fred <fred@another-site.co.uk>'."\r\n".
             'Bcc: x@alphabet.tld, A <a@alphabet.tld>'."\r\n".

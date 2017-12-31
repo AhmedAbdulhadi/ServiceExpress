@@ -7,7 +7,7 @@ use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 trait CanResetPassword
 {
     /**
-     * Get the e-mail address where password reset links are sent.
+     * Get the e-mail adressModel where password reset links are sent.
      *
      * @return string
      */

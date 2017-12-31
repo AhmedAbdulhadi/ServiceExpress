@@ -140,7 +140,7 @@ class Swift_Mime_Headers_MailboxHeader extends Swift_Mime_Headers_AbstractHeader
     /**
      * Get all mailboxes in this Header as key=>value pairs.
      *
-     * The key is the address and the value is the name (or null if none set).
+     * The key is the adressModel and the value is the name (or null if none set).
      * Example:
      * <code>
      * <?php
@@ -332,7 +332,7 @@ class Swift_Mime_Headers_MailboxHeader extends Swift_Mime_Headers_AbstractHeader
     }
 
     /**
-     * Throws an Exception if the address passed does not comply with RFC 2822.
+     * Throws an Exception if the adressModel passed does not comply with RFC 2822.
      *
      * @param string $address
      *

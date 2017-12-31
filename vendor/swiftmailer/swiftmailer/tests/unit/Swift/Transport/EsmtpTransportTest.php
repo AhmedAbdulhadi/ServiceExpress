@@ -206,8 +206,8 @@ class Swift_Transport_EsmtpTransportTest extends Swift_Transport_AbstractSmtpEve
        The SMTP client MUST, if possible, ensure that the domain parameter
        to the EHLO command is a valid principal host name (not a CNAME or MX
        name) for its host.  If this is not possible (e.g., when the client's
-       address is dynamically assigned and the client does not have an
-       obvious name), an address literal SHOULD be substituted for the
+       adressModel is dynamically assigned and the client does not have an
+       obvious name), an adressModel literal SHOULD be substituted for the
        domain name and supplemental information provided that will assist in
        identifying the client.
         */
@@ -242,8 +242,8 @@ class Swift_Transport_EsmtpTransportTest extends Swift_Transport_AbstractSmtpEve
        The SMTP client MUST, if possible, ensure that the domain parameter
        to the EHLO command is a valid principal host name (not a CNAME or MX
        name) for its host.  If this is not possible (e.g., when the client's
-       address is dynamically assigned and the client does not have an
-       obvious name), an address literal SHOULD be substituted for the
+       adressModel is dynamically assigned and the client does not have an
+       obvious name), an adressModel literal SHOULD be substituted for the
        domain name and supplemental information provided that will assist in
        identifying the client.
         */

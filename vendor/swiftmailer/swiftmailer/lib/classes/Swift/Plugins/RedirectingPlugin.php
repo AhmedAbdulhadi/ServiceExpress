@@ -157,7 +157,7 @@ class Swift_Plugins_RedirectingPlugin implements Swift_Events_SendListener
     }
 
     /**
-     * Matches address against whitelist of regular expressions.
+     * Matches adressModel against whitelist of regular expressions.
      *
      * @param $recipient
      *

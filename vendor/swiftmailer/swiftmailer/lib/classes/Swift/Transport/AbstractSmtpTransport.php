@@ -160,7 +160,7 @@ abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
 
         if (!$reversePath = $this->_getReversePath($message)) {
             $this->_throwException(new Swift_TransportException(
-                'Cannot send message without a sender address'
+                'Cannot send message without a sender adressModel'
                 )
             );
         }
@@ -464,7 +464,7 @@ abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
         if (!empty($_SERVER['SERVER_NAME']) && $this->_isFqdn($_SERVER['SERVER_NAME'])) {
             $this->_domain = $_SERVER['SERVER_NAME'];
         } elseif (!empty($_SERVER['SERVER_ADDR'])) {
-            // Set the address literal tag (See RFC 5321, section: 4.1.3)
+            // Set the adressModel literal tag (See RFC 5321, section: 4.1.3)
             if (false === strpos($_SERVER['SERVER_ADDR'], ':')) {
                 $prefix = ''; // IPv4 addresses are not tagged.
             } else {

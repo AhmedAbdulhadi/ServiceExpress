@@ -19,11 +19,12 @@
     "autoload": {
         "classmap": [
             "database",
-            "app/Novent"
+            "app/Http/Services",
+            "app/Http/Unit"
         ],
         "psr-4": {
             "App\\": "app/",
-            "Novent\\":"app/Novent"
+        "Unit\\":"app/Http/Unit"
         }
     },
     "autoload-dev": {

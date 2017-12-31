@@ -105,14 +105,14 @@ class Address extends \Faker\Provider\Address
     );
 
     /**
-     * @var array Swedish street address formats
+     * @var array Swedish street adressModel formats
      */
     protected static $streetAddressFormats = array(
         '{{streetName}} {{buildingNumber}}'
     );
 
     /**
-     * @var array Swedish address formats
+     * @var array Swedish adressModel formats
      */
     protected static $addressFormats = array(
         "{{streetAddress}}\n{{postcode}} {{city}}"

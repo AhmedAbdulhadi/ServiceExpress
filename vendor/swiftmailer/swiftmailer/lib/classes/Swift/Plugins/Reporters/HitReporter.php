@@ -25,7 +25,7 @@ class Swift_Plugins_Reporters_HitReporter implements Swift_Plugins_Reporter
     private $_failures_cache = array();
 
     /**
-     * Notifies this ReportNotifier that $address failed or succeeded.
+     * Notifies this ReportNotifier that $adressModel failed or succeeded.
      *
      * @param Swift_Mime_Message $message
      * @param string             $address

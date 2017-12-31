@@ -152,22 +152,22 @@ interface UuidInterface extends \JsonSerializable, \Serializable
      * Returns the node value associated with this UUID
      *
      * For UUID version 1, the node field consists of an IEEE 802 MAC
-     * address, usually the host address. For systems with multiple IEEE
+     * adressModel, usually the host adressModel. For systems with multiple IEEE
      * 802 addresses, any available one can be used. The lowest addressed
      * octet (octet number 10) contains the global/local bit and the
-     * unicast/multicast bit, and is the first octet of the address
+     * unicast/multicast bit, and is the first octet of the adressModel
      * transmitted on an 802.3 LAN.
      *
-     * For systems with no IEEE address, a randomly or pseudo-randomly
-     * generated value may be used; see RFC 4122, Section 4.5. The
+     * For systems with no IEEE adressModel, a randomly or pseudo-randomly
+     * generated value may be used; see RFC 4122, SectionModel 4.5. The
      * multicast bit must be set in such addresses, in order that they
      * will never conflict with addresses obtained from network cards.
      *
      * For UUID version 3 or 5, the node field is a 48-bit value constructed
-     * from a name as described in RFC 4122, Section 4.3.
+     * from a name as described in RFC 4122, SectionModel 4.3.
      *
      * For UUID version 4, the node field is a randomly or pseudo-randomly
-     * generated 48-bit value as described in RFC 4122, Section 4.4.
+     * generated 48-bit value as described in RFC 4122, SectionModel 4.4.
      *
      * @return string Hexadecimal value of node
      * @link http://tools.ietf.org/html/rfc4122#section-4.1.6

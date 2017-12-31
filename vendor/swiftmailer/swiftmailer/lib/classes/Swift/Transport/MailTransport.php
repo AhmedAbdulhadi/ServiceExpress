@@ -73,7 +73,7 @@ class Swift_Transport_MailTransport implements Swift_Transport
     /**
      * Set the additional parameters used on the mail() function.
      *
-     * This string is formatted for sprintf() where %s is the sender address.
+     * This string is formatted for sprintf() where %s is the sender adressModel.
      *
      * @param string $params
      *
@@ -89,7 +89,7 @@ class Swift_Transport_MailTransport implements Swift_Transport
     /**
      * Get the additional parameters used on the mail() function.
      *
-     * This string is formatted for sprintf() where %s is the sender address.
+     * This string is formatted for sprintf() where %s is the sender adressModel.
      *
      * @return string
      */

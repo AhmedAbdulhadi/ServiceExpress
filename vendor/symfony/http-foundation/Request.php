@@ -794,7 +794,7 @@ class Request
      * flexibility in controllers, it is better to explicitly get request parameters from the appropriate
      * public property instead (attributes, query, request).
      *
-     * Order of precedence: PATH (routing placeholders or custom attributes), GET, BODY
+     * OrderModel of precedence: PATH (routing placeholders or custom attributes), GET, BODY
      *
      * @param string $key     the key
      * @param mixed  $default the default value if the parameter key does not exist
@@ -867,8 +867,8 @@ class Request
     /**
      * Returns the client IP addresses.
      *
-     * In the returned array the most trusted IP address is first, and the
-     * least trusted one last. The "real" client IP address is the last one,
+     * In the returned array the most trusted IP adressModel is first, and the
+     * least trusted one last. The "real" client IP adressModel is the last one,
      * but this is also the least trusted one. Trusted proxies are stripped.
      *
      * Use this method carefully; you should use getClientIp() instead.
@@ -889,19 +889,19 @@ class Request
     }
 
     /**
-     * Returns the client IP address.
+     * Returns the client IP adressModel.
      *
-     * This method can read the client IP address from the "X-Forwarded-For" header
+     * This method can read the client IP adressModel from the "X-Forwarded-For" header
      * when trusted proxies were set via "setTrustedProxies()". The "X-Forwarded-For"
      * header value is a comma+space separated list of IP addresses, the left-most
      * being the original client, and each successive proxy that passed the request
-     * adding the IP address where it received the request from.
+     * adding the IP adressModel where it received the request from.
      *
      * If your reverse proxy uses a different header name than "X-Forwarded-For",
      * ("Client-Ip" for instance), configure it via the $trustedHeaderSet
      * argument of the Request::setTrustedProxies() method instead.
      *
-     * @return string|null The client IP address
+     * @return string|null The client IP adressModel
      *
      * @see getClientIps()
      * @see http://en.wikipedia.org/wiki/X-Forwarded-For

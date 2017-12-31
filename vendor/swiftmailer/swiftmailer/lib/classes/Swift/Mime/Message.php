@@ -51,14 +51,14 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
     public function getDate();
 
     /**
-     * Set the return-path (bounce-detect) address.
+     * Set the return-path (bounce-detect) adressModel.
      *
      * @param string $address
      */
     public function setReturnPath($address);
 
     /**
-     * Get the return-path (bounce-detect) address.
+     * Get the return-path (bounce-detect) adressModel.
      *
      * @return string
      */
@@ -73,10 +73,10 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
      * addresses, but Swift itself does not require it directly.
      *
      * An associative array (with one element!) can be used to provide a display-
-     * name: i.e. array('email@address' => 'Real Name').
+     * name: i.e. array('email@adressModel' => 'Real Name').
      *
      * If the second parameter is provided and the first is a string, then $name
-     * is associated with the address.
+     * is associated with the adressModel.
      *
      * @param mixed  $address
      * @param string $name    optional
@@ -84,27 +84,27 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
     public function setSender($address, $name = null);
 
     /**
-     * Get the sender address for this message.
+     * Get the sender adressModel for this message.
      *
-     * This has a higher significance than the From address.
+     * This has a higher significance than the From adressModel.
      *
      * @return string
      */
     public function getSender();
 
     /**
-     * Set the From address of this message.
+     * Set the From adressModel of this message.
      *
      * It is permissible for multiple From addresses to be set using an array.
      *
-     * If multiple From addresses are used, you SHOULD set the Sender address and
-     * according to RFC 2822, MUST set the sender address.
+     * If multiple From addresses are used, you SHOULD set the Sender adressModel and
+     * according to RFC 2822, MUST set the sender adressModel.
      *
      * An array can be used if display names are to be provided: i.e.
-     * array('email@address.com' => 'Real Name').
+     * array('email@adressModel.com' => 'Real Name').
      *
      * If the second parameter is provided and the first is a string, then $name
-     * is associated with the address.
+     * is associated with the adressModel.
      *
      * @param mixed  $addresses
      * @param string $name      optional
@@ -112,7 +112,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
     public function setFrom($addresses, $name = null);
 
     /**
-     * Get the From address(es) of this message.
+     * Get the From adressModel(es) of this message.
      *
      * This method always returns an associative array where the keys are the
      * addresses.
@@ -122,16 +122,16 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
     public function getFrom();
 
     /**
-     * Set the Reply-To address(es).
+     * Set the Reply-To adressModel(es).
      *
-     * Any replies from the receiver will be sent to this address.
+     * Any replies from the receiver will be sent to this adressModel.
      *
      * It is permissible for multiple reply-to addresses to be set using an array.
      *
      * This method has the same synopsis as {@link setFrom()} and {@link setTo()}.
      *
      * If the second parameter is provided and the first is a string, then $name
-     * is associated with the address.
+     * is associated with the adressModel.
      *
      * @param mixed  $addresses
      * @param string $name      optional
@@ -149,14 +149,14 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
     public function getReplyTo();
 
     /**
-     * Set the To address(es).
+     * Set the To adressModel(es).
      *
      * Recipients set in this field will receive a copy of this message.
      *
      * This method has the same synopsis as {@link setFrom()} and {@link setCc()}.
      *
      * If the second parameter is provided and the first is a string, then $name
-     * is associated with the address.
+     * is associated with the adressModel.
      *
      * @param mixed  $addresses
      * @param string $name      optional
@@ -174,7 +174,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
     public function getTo();
 
     /**
-     * Set the Cc address(es).
+     * Set the Cc adressModel(es).
      *
      * Recipients set in this field will receive a 'carbon-copy' of this message.
      *
@@ -196,7 +196,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
     public function getCc();
 
     /**
-     * Set the Bcc address(es).
+     * Set the Bcc adressModel(es).
      *
      * Recipients set in this field will receive a 'blind-carbon-copy' of this
      * message.

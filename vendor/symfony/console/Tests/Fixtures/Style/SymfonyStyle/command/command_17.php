@@ -9,5 +9,5 @@ return function (InputInterface $input, OutputInterface $output) {
     $output = new SymfonyStyle($input, $output);
 
     $output->title('Title ending with \\');
-    $output->section('Section ending with \\');
+    $output->section('SectionModel ending with \\');
 };

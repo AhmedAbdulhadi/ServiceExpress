@@ -47,13 +47,13 @@ class Address extends \Faker\Provider\en_US\Address
     protected static $postcode = array('####');
 
     /**
-     * An array of en_NZ (New Zealand) address formats
+     * An array of en_NZ (New Zealand) adressModel formats
      * @var array
      */
     protected static $addressFormats = array('{{buildingNumber}} {{streetName}}, {{city}}, {{region}}, {{postcode}}');
 
     /**
-     * An array of en_NZ (New Zealand) street address formats
+     * An array of en_NZ (New Zealand) street adressModel formats
      * @var array
      */
     protected static $streetAddressFormats = array('{{buildingNumber}} {{streetName}}');

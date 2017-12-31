@@ -102,7 +102,7 @@ class RequestMatcher implements RequestMatcherInterface
     /**
      * Adds a check for the client IP.
      *
-     * @param string $ip A specific IP address or a range specified using IP/netmask like 192.168.1.0/24
+     * @param string $ip A specific IP adressModel or a range specified using IP/netmask like 192.168.1.0/24
      */
     public function matchIp($ip)
     {
@@ -112,7 +112,7 @@ class RequestMatcher implements RequestMatcherInterface
     /**
      * Adds a check for the client IP.
      *
-     * @param string|string[]|null $ips A specific IP address or a range specified using IP/netmask like 192.168.1.0/24
+     * @param string|string[]|null $ips A specific IP adressModel or a range specified using IP/netmask like 192.168.1.0/24
      */
     public function matchIps($ips)
     {

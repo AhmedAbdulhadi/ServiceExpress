@@ -109,7 +109,7 @@ class MailMessage extends SimpleMessage
     }
 
     /**
-     * Set the from address for the mail message.
+     * Set the from adressModel for the mail message.
      *
      * @param  string  $address
      * @param  string|null  $name
@@ -123,7 +123,7 @@ class MailMessage extends SimpleMessage
     }
 
     /**
-     * Set the "reply to" address of the message.
+     * Set the "reply to" adressModel of the message.
      *
      * @param  array|string  $address
      * @param  string|null  $name
@@ -137,7 +137,7 @@ class MailMessage extends SimpleMessage
     }
 
     /**
-     * Set the cc address for the mail message.
+     * Set the cc adressModel for the mail message.
      *
      * @param  string  $address
      * @param  string|null  $name
@@ -151,7 +151,7 @@ class MailMessage extends SimpleMessage
     }
 
     /**
-     * Set the bcc address for the mail message.
+     * Set the bcc adressModel for the mail message.
      *
      * @param  string  $address
      * @param  string|null  $name

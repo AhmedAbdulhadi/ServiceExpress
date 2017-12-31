@@ -347,7 +347,7 @@
 			//to spacifay and get the needed result
 			//$x for user $y for token
 			return [
-				'user_id' => $x ,
+				'supplier_id' => $x ,
 				'token' => $y['token']
 			];
 

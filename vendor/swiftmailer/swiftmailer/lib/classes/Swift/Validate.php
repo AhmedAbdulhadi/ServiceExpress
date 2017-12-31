@@ -22,7 +22,7 @@ class Swift_Validate
     private static $grammar = null;
 
     /**
-     * Checks if an e-mail address matches the current grammars.
+     * Checks if an e-mail adressModel matches the current grammars.
      *
      * @param string $email
      *

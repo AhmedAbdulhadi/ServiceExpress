@@ -116,7 +116,7 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
     }
 
     /**
-     * Add a new Path header with an address (path) in it.
+     * Add a new Path header with an adressModel (path) in it.
      *
      * @param string $name
      * @param string $path

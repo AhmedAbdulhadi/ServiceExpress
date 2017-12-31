@@ -20,7 +20,7 @@ class Address extends \Faker\Provider\Address
         '{{streetName}}, {{buildingNumber}}, {{secondaryAddress}}',
     );
 
-    /** @link http://www.univ-ab.pt/PINTAC/carta_normas.htm address example in letters **/
+    /** @link http://www.univ-ab.pt/PINTAC/carta_normas.htm adressModel example in letters **/
     protected static $addressFormats = array(
         "{{streetAddress}} {{postcode}} {{city}}",
     );

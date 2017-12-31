@@ -22,7 +22,9 @@ class CreateAdminsTable extends Migration
 	        $table->boolean ('status')->default(true);
 	        $table->boolean('role')->default(false);
 	        $table->timestamp ('deleted_at')->nullable();
-	        $table->timestamps ();
+//	        $table->timestamps ();
+	        $table->timestamp ('created_at');
+	        $table->timestamp ('updated_at')->nullable();
         });
     }
 

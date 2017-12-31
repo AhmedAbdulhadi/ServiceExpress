@@ -26,8 +26,10 @@ class CreateSuppliersTable extends Migration
 	        $table->integer('exp_year')->nullable();
 	        $table->boolean('type')->default(false);
 	        $table->timestamp ('deleted_at')->nullable();
+	        $table->timestamp ('created_at');
+	        $table->timestamp ('updated_at')->nullable();
 //            $table->rememberToken();
-	        $table->timestamps();
+//	        $table->timestamps();
         });
 
 

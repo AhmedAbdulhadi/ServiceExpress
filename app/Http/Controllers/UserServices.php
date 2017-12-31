@@ -8,6 +8,7 @@
 
 	namespace App\Http\Controllers;
 
+	use App\address;
 	use App\login;
 	use App\User;
 	use Carbon\Carbon;
@@ -181,7 +182,7 @@
 
 		public function getAllUser ()
 		{
-
+dd(Auth::user ()->getAuthIdentifier ());
 			// get all users with status true
 			$users = User::where ( 'status' , true )->get ();
 
@@ -330,18 +331,6 @@
 			}
 		}
 
-		private function return_r ($x , $y)
-		{
-
-			//to spacifay and get the needed result
-			//$x for user $y for token
-			return [
-				'user_id' => $x ,
-				'token' => $y['token']
-			];
-
-		}
-
 		public function respondwithErrorMessage ($status , $data)
 		{
 			$splitName = explode ( '||' , $data , 2 );
@@ -366,14 +355,17 @@
 				] );
 		}
 
-		public function responedCreated200 ($massage , $status , $id = null)
+		private function return_r ($x , $y)
 		{
-			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
-				'massage' => $massage ,
-				'id' => $id ,
-				'status' => $this->status ( $status )
-				, 'code' => $this->statusCode
-			] );
+
+			//to spacifay and get the needed result
+			//$x for user $y for token
+			return [
+				'user_id' => $x ,
+				'token' => $y['token'],
+				'path' =>'com.example.novapp_tasneem.serviceexpress.userFragments.userProfileFragment'
+			];
+
 		}
 
 		public function responedCreated200S ($massage , $status , $data)
@@ -383,6 +375,16 @@
 				'status' => $this->status ( $status )
 				, 'code' => $this->statusCode ,
 				'data' => $data ,
+			] );
+		}
+
+		public function responedCreated200 ($massage , $status , $id = null)
+		{
+			return $this->setStatusCode ( self::HTTP_OK )->respond ( [
+				'massage' => $massage ,
+				'id' => $id ,
+				'status' => $this->status ( $status )
+				, 'code' => $this->statusCode
 			] );
 		}
 
@@ -428,6 +430,16 @@
 				'phone' => 'phone:JO|unique:users|unique:suppliers' ,
 				'password' => 'min:8|max:30' ,
 
+				'address.longitude' => 'numeric' ,
+				'address.latitude' => 'numeric' ,
+				'address.city' => 'string' ,
+				'address.street' => 'string' ,
+				'address.country' => 'string' ,
+				'address.neighborhood' => 'string' ,
+				'address.building_number' => 'integer' ,
+				'address.apartment_number' => 'integer' ,
+				'address.floor' => 'integer' ,
+
 			);
 			$messages = array (
 				'name.regex' => 'The name is invalid. || يرجى ادخال الاسم بالغة الانجليزية او العربية' ,
@@ -443,7 +455,24 @@
 
 				'password.min' => 'the password min is 8 . || يرجى ادخال ما يزيد عن 8 احرف لكلمة المرور' ,
 				'password.max' => 'the password max is 30 . || يرجى ادخال ما لا يزيد عن 30 حرف لكلمة المرور' ,
+				'address.longitude.numeric' => 'Enter valid longitude ||  يرجى ادخال خط العرض بشكل صحيح' ,
 
+//				'latitude.required' => 'latitude is required || يرجى ادخال خط الطول ' ,
+				'address.latitude.numeric' => 'Enter valid latitude || يرجى ادخال خط الطول بشكل الصحيح' ,
+
+				'address.city.string' => 'Enter valid city || يرجى ادخال اسم المدينة بالشكل الصحيح' ,
+//				'city.required' => 'city is required  || يرجى ادخال اسم المدينة' ,
+
+				'address.street.string' => 'Enter valid street || يرجى ادخال اسم الشارع بشكل الصحيح' ,
+//				'street.required' => 'street is required || يرجى ادخال اسم الشارع'  ,
+
+				'address.country.string' => 'Enter valid country || يرجى ادخال اسم الدولة بشكل صحيح ' ,
+//				'country.required' => 'country is required || يرجى ادخال اسم الدولة' ,
+
+				'address.neighborhood.string' => 'Enter valid number for neighborhood || يرجى ادخال رقم الحي رقم صحيح' ,
+				'address.building_number.integer' => 'Enter valid number for building_number || يرجى ادخال رقم المبنى بشكل الصحيح' ,
+				'address.apartment_number.integer' => 'Enter valid number for apartment_number || يرجى ادخال رقم الشقة بشكل الصحيح' ,
+				'address.floor.integer' => 'Enter valid number for floor || يرجى ادخال رقم الطابق بشكل صحيح' ,
 
 			);
 
@@ -465,6 +494,34 @@
 			if ( $errors->first ( 'password' ) )
 				return $this->respondwithErrorMessage (
 					self::fail , $errors->first ( 'password' ) );
+			if ( $errors->first ( 'address.longitude' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'address.longitude' ) );
+			if ( $errors->first ( 'address.latitude' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'address.latitude' ) );
+			if ( $errors->first ( 'address.city' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'address.city' ) );
+			if ( $errors->first ( 'address.street' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'address.street' ) );
+			if ( $errors->first ( 'address.country' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'address.country' ) );
+
+			if ( $errors->first ( 'address.building_number' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'address.building_number' ) );
+
+			if ( $errors->first ( 'address.apartment_number' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'address.apartment_number' ) );
+
+			if ( $errors->first ( 'address.floor' ) )
+				return $this->respondwithErrorMessage (
+					self::fail , $errors->first ( 'address.floor' ) );
+
 
 
 			$findid = User::find ( $id );
@@ -474,14 +531,22 @@
 			$phone = $request->input ( 'phone' );
 			$password = $request->input ( 'password' );
 			$status = $request->input ( 'status' );
+			$address = $request->input ( 'address' );
 			$now = Carbon::now ( 'GMT+2' );
 
 			$user = User::where ( 'email' , $email );
 			$email_exists = $user->first ();// !== null
 			$email_for_user = $user->where ( 'id' , $id )->first ();
+
+			$user_address = $findid->address ()->get ()->first ();
+//				dd($user_address->first()->toArray());
+//			return $user_address[0]['id'];
+//			die();
+//			dd($user_address->toArray ());
 			if ( !$findid )
 				return $this->respondWithError ( 'User not found ' , self::fail );
 			else {
+
 
 				$new_name = DB::table ( 'users' )->where ( 'id' , $id )->first ();
 				//			var_dump($new_name->email);
@@ -543,6 +608,77 @@
 
 				}
 
+
+				if ( $address ) {
+					if ( $user_address['address_type'] == 0) //
+					{
+						$add = address::find ( $user_address['id'] );
+						if ( !empty( $address['longitude'] ) ) {
+							$add->longitude = $address['longitude'];
+							$add->save ();
+						}
+
+						if ( !empty( $address['latitude'] ) ) {
+							$add->latitude = $address['latitude'];
+							$add->save ();
+						}
+
+						if ( !empty( $address['street'] ) ) {
+							$add->street = $address['street'];
+							$add->save ();
+						}
+
+						if ( !empty( $address['city'] ) ) {
+							$add->city = $address['city'];
+							$add->save ();
+						}
+
+						if ( !empty( $address['country'] ) ) {
+							$add->country = $address['country'];
+							$add->save ();
+						}
+
+						if ( !empty( $address['building_number'] ) ) {
+							$add->building_number = $address['building_number'];
+							$add->save ();
+						}
+
+						if ( !empty( $address['neighborhood'] ) ) {
+							$add->neighborhood = $address['neighborhood'];
+							$add->save ();
+						}
+
+						if ( !empty( $address['apartment_number'] ) ) {
+							$add->apartment_number = $address['apartment_number'];
+							$add->save ();
+						}
+
+						if ( !empty( $address['floor'] ) ) {
+							$add->floor = $address['floor'];
+							$add->save ();
+						}
+
+						if(!empty($address['status'])){
+							$add['status'] = $address['status'];
+							$add->save ();
+						}
+
+						$add->updated_at = $now;
+
+						$add->save ();
+					}
+				}
+				if(!$user_address)
+				{
+//						dd($address);
+//					$user x = User::find ( $request->input ( 'user_id' ) );
+					$user=$findid;
+					$add = new address();
+					$address_id=$add->insertGetId ($address);
+//					dd($x);
+					$user->address ()->attach ( $address_id );
+//					$add->save ();
+				}
 
 				$data = User::find ( $id );
 

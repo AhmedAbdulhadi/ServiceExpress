@@ -63,10 +63,10 @@ class DefaultTimeGenerator implements TimeGeneratorInterface
      * Generate a version 1 UUID from a host ID, sequence number, and the current time
      *
      * If $node is not given, we will attempt to obtain the local hardware
-     * address. If $clockSeq is given, it is used as the sequence number;
+     * adressModel. If $clockSeq is given, it is used as the sequence number;
      * otherwise a random 14-bit sequence number is chosen.
      *
-     * @param int|string $node A 48-bit number representing the hardware address
+     * @param int|string $node A 48-bit number representing the hardware adressModel
      *     This number may be represented as an integer or a hexadecimal string.
      * @param int $clockSeq A 14-bit number used to help avoid duplicates that
      *     could arise when the clock is set backwards in time or if the node ID
@@ -107,7 +107,7 @@ class DefaultTimeGenerator implements TimeGeneratorInterface
 
     /**
      * Uses the node provider given when constructing this instance to get
-     * the node ID (usually a MAC address)
+     * the node ID (usually a MAC adressModel)
      *
      * @param string|int $node A node value that may be used to override the node provider
      * @return string Hexadecimal representation of the node ID

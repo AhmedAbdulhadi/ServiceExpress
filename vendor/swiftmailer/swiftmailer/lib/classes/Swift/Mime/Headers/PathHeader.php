@@ -16,7 +16,7 @@
 class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
 {
     /**
-     * The address in this Header (if specified).
+     * The adressModel in this Header (if specified).
      *
      * @var string
      */
@@ -49,7 +49,7 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
 
     /**
      * Set the model for the field body.
-     * This method takes a string for an address.
+     * This method takes a string for an adressModel.
      *
      * @param string $model
      *
@@ -62,7 +62,7 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
 
     /**
      * Get the model for the field body.
-     * This method returns a string email address.
+     * This method returns a string email adressModel.
      *
      * @return mixed
      */
@@ -92,9 +92,9 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
     }
 
     /**
-     * Get the address which is used in this Header (if any).
+     * Get the adressModel which is used in this Header (if any).
      *
-     * Null is returned if no address is set.
+     * Null is returned if no adressModel is set.
      *
      * @return string
      */
@@ -125,11 +125,11 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
     }
 
     /**
-     * Throws an Exception if the address passed does not comply with RFC 2822.
+     * Throws an Exception if the adressModel passed does not comply with RFC 2822.
      *
      * @param string $address
      *
-     * @throws Swift_RfcComplianceException If address is invalid
+     * @throws Swift_RfcComplianceException If adressModel is invalid
      */
     private function _assertValidAddress($address)
     {

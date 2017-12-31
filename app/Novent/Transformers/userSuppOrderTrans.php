@@ -39,10 +39,12 @@
 				$up="";
 			else
 				$up=	date ( 'Y-m-d' , strtotime ( $user['updated_at'] ) );
-			if($user['info'])
-				$info=$user['info'];
-//dd($user->toArray());
-//dd($user->toArray());
+			if($user['section'])
+				$section=$user['section'];
+			else
+				$section="";
+
+
 			return [
 				'id' => $user['id'] ,
 				'desc' => $user['desc'] ,
@@ -55,7 +57,8 @@
 				'updated_at' => $up ,
 				'user'=>$user['user'],
 				'supplier'=>$user['supplier'],
-				'service'=>$user['services']
+				'service'=>$user['services'],
+				'section'=>$section
 
 
 			];

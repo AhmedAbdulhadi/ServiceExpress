@@ -61,7 +61,7 @@ class Name
                 return function () use ($generator) {
                     return $generator->phoneNumber;
                 };
-            case 'address':
+            case 'adressModel':
                 return function () use ($generator) {
                     return $generator->address;
                 };

@@ -894,7 +894,7 @@ class Blueprint
     }
 
     /**
-     * Create a new IP address column on the table.
+     * Create a new IP adressModel column on the table.
      *
      * @param  string  $column
      * @return \Illuminate\Support\Fluent
@@ -905,7 +905,7 @@ class Blueprint
     }
 
     /**
-     * Create a new MAC address column on the table.
+     * Create a new MAC adressModel column on the table.
      *
      * @param  string  $column
      * @return \Illuminate\Support\Fluent

@@ -200,7 +200,7 @@ class Address extends \Faker\Provider\Address
     );
 
     /**
-     * @var array Danish street's address formats.
+     * @var array Danish street's adressModel formats.
      */
     protected static $streetAddressFormats = array(
         '{{streetName}} {{buildingNumber}}',
@@ -209,7 +209,7 @@ class Address extends \Faker\Provider\Address
     );
 
     /**
-     * @var array Danish address format.
+     * @var array Danish adressModel format.
      */
     protected static $addressFormats = array(
         "{{streetAddress}}\n{{postcode}} {{city}}",

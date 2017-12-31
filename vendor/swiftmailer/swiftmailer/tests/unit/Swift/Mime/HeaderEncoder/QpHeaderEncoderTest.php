@@ -123,7 +123,7 @@ class Swift_Mime_HeaderEncoder_QpHeaderEncoderTest extends \SwiftMailerTestCase
     {
         /* -- RFC 2047, 5.
         (3) As a replacement for a 'word' entity within a 'phrase', for example,
-        one that precedes an address in a From, To, or Cc header.  The ABNF
+        one that precedes an adressModel in a From, To, or Cc header.  The ABNF
         definition for 'phrase' from RFC 822 thus becomes:
 
         phrase = 1*( encoded-word / word )

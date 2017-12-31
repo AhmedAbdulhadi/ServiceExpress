@@ -198,11 +198,11 @@ class ErrorHandlerTest extends TestCase
 
             $warnArgCheck = function ($logLevel, $message, $context) {
                 $this->assertEquals('info', $logLevel);
-                $this->assertEquals('User Deprecated: foo', $message);
+                $this->assertEquals('UserModel Deprecated: foo', $message);
                 $this->assertArrayHasKey('exception', $context);
                 $exception = $context['exception'];
                 $this->assertInstanceOf(\ErrorException::class, $exception);
-                $this->assertSame('User Deprecated: foo', $exception->getMessage());
+                $this->assertSame('UserModel Deprecated: foo', $exception->getMessage());
                 $this->assertSame(E_USER_DEPRECATED, $exception->getSeverity());
             };
 
@@ -286,7 +286,7 @@ class ErrorHandlerTest extends TestCase
             $this->assertArrayHasKey('exception', $context);
             $exception = $context['exception'];
             $this->assertInstanceOf(\ErrorException::class, $exception);
-            $this->assertSame('User Deprecated: Foo deprecation', $exception->getMessage());
+            $this->assertSame('UserModel Deprecated: Foo deprecation', $exception->getMessage());
         };
 
         $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')->getMock();
@@ -355,7 +355,7 @@ class ErrorHandlerTest extends TestCase
                 ->method('log')
                 ->withConsecutive(
                     array($this->equalTo(LogLevel::WARNING), $this->equalTo('Dummy log')),
-                    array($this->equalTo(LogLevel::DEBUG), $this->equalTo('User Warning: Silenced warning'))
+                    array($this->equalTo(LogLevel::DEBUG), $this->equalTo('UserModel Warning: Silenced warning'))
                 )
             ;
 

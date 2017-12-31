@@ -3405,7 +3405,7 @@ EOT;
     Gutenberg-tm License (available with this file or online at
     http://gutenberg.org/license).
 
-    Section 1.  General Terms of Use and Redistributing Project Gutenberg-tm
+    SectionModel 1.  General Terms of Use and Redistributing Project Gutenberg-tm
     electronic works
 
     1.A.  By reading or using any part of this Project Gutenberg-tm
@@ -3527,7 +3527,7 @@ EOT;
          prepare (or are legally required to prepare) your periodic tax
          returns.  Royalty payments should be clearly marked as such and
          sent to the Project Gutenberg Literary Archive Foundation at the
-         address specified in Section 4, "Information about donations to
+         adressModel specified in SectionModel 4, "Information about donations to
          the Project Gutenberg Literary Archive Foundation."
 
     - You provide a full refund of any money paid by a user who notifies
@@ -3551,7 +3551,7 @@ EOT;
     forth in this agreement, you must obtain permission in writing from
     both the Project Gutenberg Literary Archive Foundation and Michael
     Hart, the owner of the Project Gutenberg-tm trademark.  Contact the
-    Foundation as set forth in Section 3 below.
+    Foundation as set forth in SectionModel 3 below.
 
     1.F.
 
@@ -3617,7 +3617,7 @@ EOT;
     work, (b) alteration, modification, or additions or deletions to any
     Project Gutenberg-tm work, and (c) any Defect you cause.
 
-    Section  2.  Information about the Mission of Project Gutenberg-tm
+    SectionModel  2.  Information about the Mission of Project Gutenberg-tm
 
     Project Gutenberg-tm is synonymous with the free distribution of
     electronic works in formats readable by the widest variety of computers
@@ -3636,7 +3636,7 @@ EOT;
     and the Foundation web page at http://www.pglaf.org.
 
 
-    Section 3.  Information about the Project Gutenberg Literary Archive
+    SectionModel 3.  Information about the Project Gutenberg Literary Archive
     Foundation
 
     The Project Gutenberg Literary Archive Foundation is a non profit
@@ -3661,7 +3661,7 @@ EOT;
          Chief Executive and Director
          gbnewby@pglaf.org
 
-    Section 4.  Information about Donations to the Project Gutenberg
+    SectionModel 4.  Information about Donations to the Project Gutenberg
     Literary Archive Foundation
 
     Project Gutenberg-tm depends upon and cannot survive without wide
@@ -3695,7 +3695,7 @@ EOT;
     ways including checks, online payments and credit card donations.
     To donate, please visit: http://pglaf.org/donate
 
-    Section 5.  General Information About Project Gutenberg-tm electronic
+    SectionModel 5.  General Information About Project Gutenberg-tm electronic
     works.
 
     Professor Michael S. Hart is the originator of the Project Gutenberg-tm

@@ -3,7 +3,7 @@
 	namespace App\Exceptions;
 
 	use App\Http\Controllers\UserServices;
-	use App\User;
+	use App\UserModel;
 	use Exception;
 	use Illuminate\Auth\AuthenticationException;
 	use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -54,9 +54,9 @@ class Handler extends ExceptionHandler
     {
 	    if ($exception instanceof MethodNotAllowedHttpException) {
 		    if ($request->expectsJson()) {
-			    return $this->respondWithError ('Method Not Allowed',UserServices::fail);
+			    return $this->respondWithError ('Method Not Allowed','fail');
 		    }
-		    return $this->respondWithError ('invalid url',UserServices::fail);
+		    return $this->respondWithError ('invalid url','fail');
 	    }
 	    /*    if($request->is('api/*')){
 				return response()->json([
@@ -67,7 +67,7 @@ class Handler extends ExceptionHandler
 
 	    if($exception instanceof NotFoundHttpException )
 //		    if ($request->expectsJson()) {
-			    return $this->respondWithError('invalid url',UserServices::fail);
+			    return $this->respondWithError('invalid url','fail');
 //		    }
 //	    return $this->respondWithError ('invalid url',UserServices::fail);
 
@@ -76,7 +76,7 @@ class Handler extends ExceptionHandler
 
 
 	    if($exception instanceof AuthenticationException  )
-		    return $this->respondWithErrorUn('Unauthorized',UserServices::fail);
+		    return $this->respondWithErrorUn('Unauthorized','fail');
 
 
 
@@ -97,15 +97,15 @@ class Handler extends ExceptionHandler
     {
 	    if ($request->expectsJson()) {
 //            return response()->json(['error' => 'Unautheasdasdasdasdanticated.'], 401);
-		    return $this->respondWithErrorUn  ('Unauthrized',UserServices::fail);
+		    return $this->respondWithErrorUn  ('Unauthrized','fail');
 	    }
 
-        return $this->respondWithErrorUn  ('Unauthrized',UserServices::fail);
+        return $this->respondWithErrorUn  ('Unauthrized','fail');
 //        return dd('Unauthrized');
     }
 	public function respondWithError ($massage , $status = null)
 	{
-		return $this->setStatusCode ( UserServices::HTTP_BAD_REQUEST )->respond ( [
+		return $this->setStatusCode ( 400 )->respond ( [
 
 			'massage' => $massage ,
 			'code' => $this->statusCode
@@ -115,7 +115,7 @@ class Handler extends ExceptionHandler
 	}
 	public function respondWithErrorUn ($massage , $status = null)
 	{
-		return $this->setStatusCode ( UserServices::HTTP_FORBIDDEN )->respond ( [
+		return $this->setStatusCode ( 403 )->respond ( [
 
 			'massage' => $massage ,
 			'code' => $this->statusCode

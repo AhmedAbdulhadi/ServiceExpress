@@ -150,14 +150,14 @@ class Address extends \Faker\Provider\Address
     );
 
     /**
-    * @var array Norwegian street address formats
+    * @var array Norwegian street adressModel formats
     */
     protected static $streetAddressFormats = array(
         '{{streetName}} {{buildingNumber}}'
     );
 
     /**
-    * @var array Norwegian address formats
+    * @var array Norwegian adressModel formats
     */
     protected static $addressFormats = array(
         "{{streetAddress}}\n{{postcode}} {{city}}"

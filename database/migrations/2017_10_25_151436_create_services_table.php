@@ -15,6 +15,7 @@ class CreateServicesTable extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer ('section_model_id');
 	        $table->string('name_ar');
 	        $table->string('name_en');
 	        $table->text('desc_en');
@@ -23,8 +24,11 @@ class CreateServicesTable extends Migration
 
 	        $table->string('image');
 	        $table->timestamp ( 'deleted_at' )->nullable ();
-            $table->timestamps();
+//            $table->timestamps();
+	        $table->timestamp ('created_at');
+	        $table->timestamp ('updated_at')->nullable();
         });
+
 	    Schema::create ( 'section_services' , function (Blueprint $table) {
 		    $table->increments ( 'id' );
 
@@ -36,7 +40,9 @@ class CreateServicesTable extends Migration
 
 		    $table->boolean ( 'status' )->default ( true );
 		    $table->timestamp ( 'deleted_at' )->nullable ();
-		    $table->timestamps ();
+//		    $table->timestamps ();
+		    $table->timestamp ('created_at');
+		    $table->timestamp ('updated_at')->nullable();
 	    } );
     }
 

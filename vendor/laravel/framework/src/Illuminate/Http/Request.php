@@ -252,7 +252,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     }
 
     /**
-     * Get the client IP address.
+     * Get the client IP adressModel.
      *
      * @return string
      */
@@ -278,7 +278,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      */
     public function userAgent()
     {
-        return $this->headers->get('User-Agent');
+        return $this->headers->get('UserModel-Agent');
     }
 
     /**
@@ -453,7 +453,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     }
 
     /**
-     * Get a unique fingerprint for the request / route / IP address.
+     * Get a unique fingerprint for the request / route / IP adressModel.
      *
      * @return string
      *

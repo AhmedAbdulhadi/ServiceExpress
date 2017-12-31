@@ -30,8 +30,11 @@ class CreateOrderTable extends Migration
 		    $table->boolean('is_rated')->default(false);
 		    $table->double ('rate','5')->default(0)->nullable();
 
-		    $table->timestamps ();
-	    } );
+//		    $table->timestamps ();
+		    $table->timestamp ('created_at');
+		    $table->timestamp ('updated_at')->nullable();
+	     } );
+
     }
 
     /**

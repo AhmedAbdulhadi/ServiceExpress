@@ -75,10 +75,10 @@ class RouteCollectionBuilderTest extends TestCase
     {
         $collectionBuilder = new RouteCollectionBuilder();
 
-        $addedRoute = $collectionBuilder->add('/checkout', 'AppBundle:Order:checkout');
+        $addedRoute = $collectionBuilder->add('/checkout', 'AppBundle:OrderModel:checkout');
         $addedRoute2 = $collectionBuilder->add('/blogs', 'AppBundle:Blog:list', 'blog_list');
         $this->assertInstanceOf('Symfony\Component\Routing\Route', $addedRoute);
-        $this->assertEquals('AppBundle:Order:checkout', $addedRoute->getDefault('_controller'));
+        $this->assertEquals('AppBundle:OrderModel:checkout', $addedRoute->getDefault('_controller'));
 
         $finalCollection = $collectionBuilder->build();
         $this->assertSame($addedRoute2, $finalCollection->get('blog_list'));
@@ -103,13 +103,13 @@ class RouteCollectionBuilderTest extends TestCase
         $routes = new RouteCollectionBuilder($loader);
 
         // 1) Add a route
-        $routes->add('/checkout', 'AppBundle:Order:checkout', 'checkout_route');
+        $routes->add('/checkout', 'AppBundle:OrderModel:checkout', 'checkout_route');
         // 2) Import from a file
         $routes->mount('/', $routes->import('admin_routing.yml'));
         // 3) Add another route
         $routes->add('/', 'AppBundle:Default:homepage', 'homepage');
         // 4) Add another route
-        $routes->add('/admin', 'AppBundle:Admin:dashboard', 'admin_dashboard');
+        $routes->add('/admin', 'AppBundle:AdminModel:dashboard', 'admin_dashboard');
 
         // set a default value
         $routes->setDefault('_locale', 'fr');
@@ -138,7 +138,7 @@ class RouteCollectionBuilderTest extends TestCase
         $collectionBuilder = new RouteCollectionBuilder();
 
         // add a "named" route
-        $collectionBuilder->add('/admin', 'AppBundle:Admin:dashboard', 'admin_dashboard');
+        $collectionBuilder->add('/admin', 'AppBundle:AdminModel:dashboard', 'admin_dashboard');
         // add an unnamed route
         $collectionBuilder->add('/blogs', 'AppBundle:Blog:list')
             ->setMethods(array('GET'));

@@ -57,7 +57,7 @@ interface Swift_Mime_HeaderSet extends Swift_Mime_CharsetObserver
     public function addIdHeader($name, $ids = null);
 
     /**
-     * Add a new Path header with an address (path) in it.
+     * Add a new Path header with an adressModel (path) in it.
      *
      * @param string $name
      * @param string $path

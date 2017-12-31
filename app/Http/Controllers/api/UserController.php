@@ -126,15 +126,16 @@
 				if ( Auth::user ()->type == 0 ) {
 					$user_i = User::all ()->where ( 'email' , request ( 'email' ) )->first ()->toArray ();
 					$address= User::find ( $user_i['id'] )->address ()->get ()->first ();
-
+//dd($address['longitude']);
 
 					if($address)
-						$path='userCategoryFragment.java';
+						$path='com.example.novapp_tasneem.serviceexpress.userFragments.userCategoryFragment';
+//						dd($address['latitude']);
 					elseif (!$address)
-						$path='userProfileFragment.java';
+						$path='com.example.novapp_tasneem.serviceexpress.userFragments.userProfileFragment';
 
 					if ( $user_i['status'] == 1 )
-						$user_i = $this->return_r ( $user_i , $this->content,$path );
+						$user_i = $this->return_r ( $user_i , $this->content,$path ,$address);
 					else {
 						return $this->respondWithError ( 'ACCOUNT IS SUSPENDED || الحساب مقفل' , self::fail );
 
@@ -154,14 +155,25 @@
 
 		}
 
-		private function return_r ($x , $y,$z)
+		private function return_r ($x , $y,$z,$address)
 		{
 			//to spacifay and get the needed result
 			//$x for user $y for token
+			if($address['longitude'])
+				$long=$address['longitude'];
+			else
+				$long="";
+			if($address['latitude'])
+				$lat=$address['latitude'];
+			else
+				$lat="";
 			return [
 				'user_id' => $x['id'] ,
 				'token' => $y['token'],
-				'path'=>$z
+				'path'=>$z,
+				'longitude'=>$long,
+				'latitude'=>$lat,
+
 			];
 
 		}

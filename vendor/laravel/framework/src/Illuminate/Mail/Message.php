@@ -36,7 +36,7 @@ class Message
     }
 
     /**
-     * Add a "from" address to the message.
+     * Add a "from" adressModel to the message.
      *
      * @param  string|array  $address
      * @param  string|null  $name
@@ -134,7 +134,7 @@ class Message
     }
 
     /**
-     * Add a reply to address to the message.
+     * Add a reply to adressModel to the message.
      *
      * @param  string|array  $address
      * @param  string|null  $name

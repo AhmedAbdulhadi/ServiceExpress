@@ -227,7 +227,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface, ExistenceAwareI
     }
 
     /**
-     * Get the IP address for the current request.
+     * Get the IP adressModel for the current request.
      *
      * @return string
      */
@@ -243,7 +243,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface, ExistenceAwareI
      */
     protected function userAgent()
     {
-        return substr((string) $this->container->make('request')->header('User-Agent'), 0, 500);
+        return substr((string) $this->container->make('request')->header('UserModel-Agent'), 0, 500);
     }
 
     /**

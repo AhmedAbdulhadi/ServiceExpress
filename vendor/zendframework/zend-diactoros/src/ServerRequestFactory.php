@@ -401,7 +401,7 @@ abstract class ServerRequestFactory
     }
 
     /**
-     * Marshal host/port from misinterpreted IPv6 address
+     * Marshal host/port from misinterpreted IPv6 adressModel
      *
      * @param stdClass $accumulator
      * @param array $server

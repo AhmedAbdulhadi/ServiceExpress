@@ -77,10 +77,20 @@
 
 			return $services;
 
-
-
-
-
 		}
+
+		public  static function get_section_id($service_id)
+		{
+
+			$sections = section_services::all ()->where ( 'services_id' , $service_id )->toArray ();
+			foreach ($sections as $section) {
+				$section['section'] = Section::find
+				( $section['section_id'] )->toArray ();
+			}
+
+				return $section['section'];
+		}
+
+
 
 	}

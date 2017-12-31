@@ -68,7 +68,8 @@
 		protected $userSuppOrderTrans;
 
 
-		public function __construct (OrderTrans $userTrans , orderTransOne $userTransOne , orderTransOneC $orderTransOneC , userSuppOrderTrans $userSuppOrderTrans)
+		public function __construct (OrderTrans $userTrans , orderTransOne $userTransOne , orderTransOneC $orderTransOneC
+			, userSuppOrderTrans $userSuppOrderTrans)
 		{
 			$this->userTrans = $userTrans;
 			$this->userTransOne = $userTransOne;
@@ -246,9 +247,11 @@
 				$data = Input::all ();
 				if ( Input::has ( 'image' ) ) {
 					$png_url = "/orders-" . time () . ".png";
-					$path = base_path ( "images\orders\\" ) . $png_url;
+//					$path = base_path ( "images\orders\\" ) . $png_url;// local host dir config
+					$path = base_path ( "images/orders" ) . $png_url;
+
 					$data = $data['image'];
-					list( $type , $data ) = explode ( ';' , $data );
+//					list( $type , $data ) = explode ( ';' , $data );
 					list( , $data ) = explode ( ',' , $data );
 					$data = base64_decode ( $data );
 
@@ -478,16 +481,17 @@
 					if ( $rate ) {
 						DB::table ( 'orders' )
 							->where ( 'id' , $id )
-							->update ( ['rate' => $rate , 'updated_at' => $now] );
+							->update ( ['rate' => $rate , 'updated_at' => $now,'is_rated' => 1] );
 					}
 
 
 				if ( $new_name->is_rated !== $is_rated and $is_rated !== null )
-					if ( $is_rated == 0 ) {
+					if ( $is_rated == 0  ) {
 						DB::table ( 'orders' )
 							->where ( 'id' , $id )
 							->update ( ['is_rated' => $is_rated , 'rate' => 0 , 'updated_at' => $now] );
-					} else if ( $is_rated == 1 ) {
+					}
+					else if ( $is_rated == 1  ) {
 						DB::table ( 'orders' )
 							->where ( 'id' , $id )
 							->update ( ['is_rated' => $is_rated , 'updated_at' => $now] );
@@ -616,9 +620,11 @@
 					$user = Order::get_user_id ( $user_id );
 					$suppleir = Order::get_supplier_id ( $supplier_id );
 					$services = Order::get_service_id ( $actOrders['service_id'] );
+					$sections = Order::get_section_id( $actOrders['service_id'] );
 					$actOrders->user = $user;
 					$actOrders->supplier = $suppleir;
 					$actOrders->services = $services;
+					$actOrders->section=$sections;
 					$activeList[] = $actOrders;
 
 				}

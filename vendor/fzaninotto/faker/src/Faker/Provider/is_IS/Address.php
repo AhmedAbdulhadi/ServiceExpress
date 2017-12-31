@@ -123,14 +123,14 @@ class Address extends \Faker\Provider\Address
     );
 
     /**
-     * @var array Icelandic street's address formats.
+     * @var array Icelandic street's adressModel formats.
      */
     protected static $streetAddressFormats = array(
         '{{streetName}} {{buildingNumber}}'
     );
 
     /**
-     * @var array Icelandic address format.
+     * @var array Icelandic adressModel format.
      */
     protected static $addressFormats = array(
         "{{streetAddress}}\n{{postcode}} {{city}}",

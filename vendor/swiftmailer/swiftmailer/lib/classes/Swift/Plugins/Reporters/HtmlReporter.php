@@ -16,7 +16,7 @@
 class Swift_Plugins_Reporters_HtmlReporter implements Swift_Plugins_Reporter
 {
     /**
-     * Notifies this ReportNotifier that $address failed or succeeded.
+     * Notifies this ReportNotifier that $adressModel failed or succeeded.
      *
      * @param Swift_Mime_Message $message
      * @param string             $address

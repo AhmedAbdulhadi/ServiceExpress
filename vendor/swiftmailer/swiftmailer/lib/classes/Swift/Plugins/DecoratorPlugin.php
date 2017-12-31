@@ -46,7 +46,7 @@ class Swift_Plugins_DecoratorPlugin implements Swift_Events_SendListener, Swift_
      * </code>
      *
      * When using an instance of {@link Swift_Plugins_Decorator_Replacements},
-     * the object should return just the array of replacements for the address
+     * the object should return just the array of replacements for the adressModel
      * given to {@link Swift_Plugins_Decorator_Replacements::getReplacementsFor()}.
      *
      * @param mixed $replacements Array or Swift_Plugins_Decorator_Replacements
@@ -140,7 +140,7 @@ class Swift_Plugins_DecoratorPlugin implements Swift_Events_SendListener, Swift_
     }
 
     /**
-     * Find a map of replacements for the address.
+     * Find a map of replacements for the adressModel.
      *
      * If this plugin was provided with a delegate instance of
      * {@link Swift_Plugins_Decorator_Replacements} then the call will be

@@ -3547,7 +3547,7 @@ return array (
   1256 => 'Alabama',
   1256216 => 'Athens, AL',
   1256217 => 'Huntsville, AL',
-  1256228 => 'Section, AL',
+  1256228 => 'SectionModel, AL',
   1256230 => 'Athens, AL',
   1256231 => 'Anniston, AL',
   1256232 => 'Athens, AL',

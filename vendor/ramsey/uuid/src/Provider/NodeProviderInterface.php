@@ -16,7 +16,7 @@ namespace Ramsey\Uuid\Provider;
 
 /**
  * NodeProviderInterface provides functionality to get the node ID (or host ID
- * in the form of the system's MAC address) from a specific type of node provider
+ * in the form of the system's MAC adressModel) from a specific type of node provider
  */
 interface NodeProviderInterface
 {

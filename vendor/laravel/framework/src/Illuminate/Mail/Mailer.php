@@ -41,21 +41,21 @@ class Mailer implements MailerContract, MailQueueContract
     protected $events;
 
     /**
-     * The global from address and name.
+     * The global from adressModel and name.
      *
      * @var array
      */
     protected $from;
 
     /**
-     * The global reply-to address and name.
+     * The global reply-to adressModel and name.
      *
      * @var array
      */
     protected $replyTo;
 
     /**
-     * The global to address and name.
+     * The global to adressModel and name.
      *
      * @var array
      */
@@ -91,7 +91,7 @@ class Mailer implements MailerContract, MailQueueContract
     }
 
     /**
-     * Set the global from address and name.
+     * Set the global from adressModel and name.
      *
      * @param  string  $address
      * @param  string|null  $name
@@ -103,7 +103,7 @@ class Mailer implements MailerContract, MailQueueContract
     }
 
     /**
-     * Set the global reply-to address and name.
+     * Set the global reply-to adressModel and name.
      *
      * @param  string  $address
      * @param  string|null  $name
@@ -115,7 +115,7 @@ class Mailer implements MailerContract, MailQueueContract
     }
 
     /**
-     * Set the global to address and name.
+     * Set the global to adressModel and name.
      *
      * @param  string  $address
      * @param  string|null  $name
@@ -201,10 +201,10 @@ class Mailer implements MailerContract, MailQueueContract
 
         call_user_func($callback, $message);
 
-        // If a global "to" address has been set, we will set that address on the mail
+        // If a global "to" adressModel has been set, we will set that adressModel on the mail
         // message. This is primarily useful during local development in which each
-        // message should be delivered into a single mail address for inspection.
-        if (isset($this->to['address'])) {
+        // message should be delivered into a single mail adressModel for inspection.
+        if (isset($this->to['adressModel'])) {
             $this->setGlobalTo($message);
         }
 
@@ -311,16 +311,16 @@ class Mailer implements MailerContract, MailQueueContract
     }
 
     /**
-     * Set the global "to" address on the given message.
+     * Set the global "to" adressModel on the given message.
      *
      * @param  \Illuminate\Mail\Message  $message
      * @return void
      */
     protected function setGlobalTo($message)
     {
-        $message->to($this->to['address'], $this->to['name'], true);
-        $message->cc($this->to['address'], $this->to['name'], true);
-        $message->bcc($this->to['address'], $this->to['name'], true);
+        $message->to($this->to['adressModel'], $this->to['name'], true);
+        $message->cc($this->to['adressModel'], $this->to['name'], true);
+        $message->bcc($this->to['adressModel'], $this->to['name'], true);
     }
 
     /**
@@ -414,18 +414,18 @@ class Mailer implements MailerContract, MailQueueContract
     {
         $message = new Message($this->swift->createMessage('message'));
 
-        // If a global from address has been specified we will set it on every message
+        // If a global from adressModel has been specified we will set it on every message
         // instances so the developer does not have to repeat themselves every time
-        // they create a new message. We will just go ahead and push the address.
-        if (! empty($this->from['address'])) {
-            $message->from($this->from['address'], $this->from['name']);
+        // they create a new message. We will just go ahead and push the adressModel.
+        if (! empty($this->from['adressModel'])) {
+            $message->from($this->from['adressModel'], $this->from['name']);
         }
 
-        // When a global reply address was specified we will set this on every message
+        // When a global reply adressModel was specified we will set this on every message
         // instances so the developer does not have to repeat themselves every time
-        // they create a new message. We will just go ahead and push the address.
-        if (! empty($this->replyTo['address'])) {
-            $message->replyTo($this->replyTo['address'], $this->replyTo['name']);
+        // they create a new message. We will just go ahead and push the adressModel.
+        if (! empty($this->replyTo['adressModel'])) {
+            $message->replyTo($this->replyTo['adressModel'], $this->replyTo['name']);
         }
 
         return $message;

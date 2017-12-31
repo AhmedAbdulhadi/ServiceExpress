@@ -144,7 +144,7 @@ class Swift_Mime_SimpleHeaderFactory implements Swift_Mime_HeaderFactory
     }
 
     /**
-     * Create a new Path header with an address (path) in it.
+     * Create a new Path header with an adressModel (path) in it.
      *
      * @param string $name
      * @param string $path

@@ -20,7 +20,9 @@ class CreateLoginsTable extends Migration
 		    $table->enum  ( 'type',['0','1','2']);
 		    $table->timestamp ( 'deleted_at' )->nullable ();
 		    $table->boolean ('status')->default(true);
-		    $table->timestamps ();
+//		    $table->timestamps ();
+		    $table->timestamp ('created_at');
+		    $table->timestamp ('updated_at')->nullable();
 	    } );
     }
 

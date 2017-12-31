@@ -22,7 +22,7 @@ interface Swift_Plugins_Reporter
     const RESULT_FAIL = 0x10;
 
     /**
-     * Notifies this ReportNotifier that $address failed or succeeded.
+     * Notifies this ReportNotifier that $adressModel failed or succeeded.
      *
      * @param Swift_Mime_Message $message
      * @param string             $address

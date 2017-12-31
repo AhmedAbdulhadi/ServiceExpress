@@ -27,7 +27,7 @@ use Ramsey\Uuid\Exception\UnsupportedOperationException;
  *
  * If all you want is a unique ID, you should probably call `uuid1()` or `uuid4()`.
  * Note that `uuid1()` may compromise privacy since it creates a UUID containing
- * the computer’s network address. `uuid4()` creates a random UUID.
+ * the computer’s network adressModel. `uuid4()` creates a random UUID.
  *
  * @link http://tools.ietf.org/html/rfc4122
  * @link http://en.wikipedia.org/wiki/Universally_unique_identifier
@@ -308,10 +308,10 @@ class Uuid implements UuidInterface
      * or if the node ID changes.
      *
      * For UUID version 3 or 5, the clock sequence is a 14-bit value
-     * constructed from a name as described in RFC 4122, Section 4.3.
+     * constructed from a name as described in RFC 4122, SectionModel 4.3.
      *
      * For UUID version 4, clock sequence is a randomly or pseudo-randomly
-     * generated 14-bit value as described in RFC 4122, Section 4.4.
+     * generated 14-bit value as described in RFC 4122, SectionModel 4.4.
      *
      * @return int Unsigned 14-bit integer value of clock sequence
      * @link http://tools.ietf.org/html/rfc4122#section-4.1.5
@@ -433,22 +433,22 @@ class Uuid implements UuidInterface
      * Returns the node value associated with this UUID
      *
      * For UUID version 1, the node field consists of an IEEE 802 MAC
-     * address, usually the host address. For systems with multiple IEEE
+     * adressModel, usually the host adressModel. For systems with multiple IEEE
      * 802 addresses, any available one can be used. The lowest addressed
      * octet (octet number 10) contains the global/local bit and the
-     * unicast/multicast bit, and is the first octet of the address
+     * unicast/multicast bit, and is the first octet of the adressModel
      * transmitted on an 802.3 LAN.
      *
-     * For systems with no IEEE address, a randomly or pseudo-randomly
-     * generated value may be used; see RFC 4122, Section 4.5. The
+     * For systems with no IEEE adressModel, a randomly or pseudo-randomly
+     * generated value may be used; see RFC 4122, SectionModel 4.5. The
      * multicast bit must be set in such addresses, in order that they
      * will never conflict with addresses obtained from network cards.
      *
      * For UUID version 3 or 5, the node field is a 48-bit value constructed
-     * from a name as described in RFC 4122, Section 4.3.
+     * from a name as described in RFC 4122, SectionModel 4.3.
      *
      * For UUID version 4, the node field is a randomly or pseudo-randomly
-     * generated 48-bit value as described in RFC 4122, Section 4.4.
+     * generated 48-bit value as described in RFC 4122, SectionModel 4.4.
      *
      * @return int Unsigned 48-bit integer value of node
      * @link http://tools.ietf.org/html/rfc4122#section-4.1.6
@@ -664,7 +664,7 @@ class Uuid implements UuidInterface
     /**
      * Generate a version 1 UUID from a host ID, sequence number, and the current time.
      *
-     * @param int|string $node A 48-bit number representing the hardware address
+     * @param int|string $node A 48-bit number representing the hardware adressModel
      *     This number may be represented as an integer or a hexadecimal string.
      * @param int $clockSeq A 14-bit number used to help avoid duplicates that
      *     could arise when the clock is set backwards in time or if the node ID

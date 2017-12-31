@@ -470,7 +470,7 @@ class SSH2
     /**
      * Send Sequence Number
      *
-     * See 'Section 6.4.  Data Integrity' of rfc4253 for more info.
+     * See 'SectionModel 6.4.  Data Integrity' of rfc4253 for more info.
      *
      * @see self::_send_binary_packet()
      * @var int
@@ -481,7 +481,7 @@ class SSH2
     /**
      * Get Sequence Number
      *
-     * See 'Section 6.4.  Data Integrity' of rfc4253 for more info.
+     * See 'SectionModel 6.4.  Data Integrity' of rfc4253 for more info.
      *
      * @see self::_get_binary_packet()
      * @var int
@@ -1070,7 +1070,7 @@ class SSH2
                 // compatibility with older, undocumented versions of this protocol may
                 // want to process the identification string without expecting the
                 // presence of the carriage return character for reasons described in
-                // Section 5 of this document."
+                // SectionModel 5 of this document."
 
                 //if (substr($line, -2) == "\r\n") {
                 //    break;

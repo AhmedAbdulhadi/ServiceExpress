@@ -53,7 +53,7 @@ class MailServiceProvider extends ServiceProvider
 
             // Next we will set all of the global addresses on this mailer, which allows
             // for easy unification of all "from" addresses as well as easy debugging
-            // of sent messages since they get be sent into a single email address.
+            // of sent messages since they get be sent into a single email adressModel.
             foreach (['from', 'reply_to', 'to'] as $type) {
                 $this->setGlobalAddress($mailer, $config, $type);
             }
@@ -63,7 +63,7 @@ class MailServiceProvider extends ServiceProvider
     }
 
     /**
-     * Set a global address on the mailer by type.
+     * Set a global adressModel on the mailer by type.
      *
      * @param  \Illuminate\Mail\Mailer  $mailer
      * @param  array  $config
@@ -74,8 +74,8 @@ class MailServiceProvider extends ServiceProvider
     {
         $address = Arr::get($config, $type);
 
-        if (is_array($address) && isset($address['address'])) {
-            $mailer->{'always'.Str::studly($type)}($address['address'], $address['name']);
+        if (is_array($address) && isset($address['adressModel'])) {
+            $mailer->{'always'.Str::studly($type)}($address['adressModel'], $address['name']);
         }
     }
 

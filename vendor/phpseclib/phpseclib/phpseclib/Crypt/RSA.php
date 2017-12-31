@@ -749,7 +749,7 @@ class RSA
                 if ($num_primes != 2) {
                     return false;
                 }
-                $key = "PuTTY-User-Key-File-2: ssh-rsa\r\nEncryption: ";
+                $key = "PuTTY-UserModel-Key-File-2: ssh-rsa\r\nEncryption: ";
                 $encryption = (!empty($this->password) || is_string($this->password)) ? 'aes256-cbc' : 'none';
                 $key.= $encryption;
                 $key.= "\r\nComment: " . $this->comment . "\r\n";
@@ -1337,7 +1337,7 @@ class RSA
             case self::PRIVATE_FORMAT_PUTTY:
                 $components = array();
                 $key = preg_split('#\r\n|\r|\n#', $key);
-                $type = trim(preg_replace('#PuTTY-User-Key-File-2: (.+)#', '$1', $key[0]));
+                $type = trim(preg_replace('#PuTTY-UserModel-Key-File-2: (.+)#', '$1', $key[0]));
                 if ($type != 'ssh-rsa') {
                     return false;
                 }

@@ -16,7 +16,7 @@
 interface Swift_Plugins_Decorator_Replacements
 {
     /**
-     * Return the array of replacements for $address.
+     * Return the array of replacements for $adressModel.
      *
      * This method is invoked once for every single recipient of a message.
      *

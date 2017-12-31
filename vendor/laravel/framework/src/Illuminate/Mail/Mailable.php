@@ -241,7 +241,7 @@ class Mailable implements MailableContract
     protected function buildFrom($message)
     {
         if (! empty($this->from)) {
-            $message->from($this->from[0]['address'], $this->from[0]['name']);
+            $message->from($this->from[0]['adressModel'], $this->from[0]['name']);
         }
 
         return $this;
@@ -257,7 +257,7 @@ class Mailable implements MailableContract
     {
         foreach (['to', 'cc', 'bcc', 'replyTo'] as $type) {
             foreach ($this->{$type} as $recipient) {
-                $message->{$type}($recipient['address'], $recipient['name']);
+                $message->{$type}($recipient['adressModel'], $recipient['name']);
             }
         }
 
@@ -431,7 +431,7 @@ class Mailable implements MailableContract
     }
 
     /**
-     * Set the "reply to" address of the message.
+     * Set the "reply to" adressModel of the message.
      *
      * @param  object|array|string  $address
      * @param  string|null  $name
@@ -445,7 +445,7 @@ class Mailable implements MailableContract
     /**
      * Set the recipients of the message.
      *
-     * All recipients are stored internally as [['name' => ?, 'address' => ?]]
+     * All recipients are stored internally as [['name' => ?, 'adressModel' => ?]]
      *
      * @param  object|array|string  $address
      * @param  string|null  $name
@@ -459,7 +459,7 @@ class Mailable implements MailableContract
 
             $this->{$property}[] = [
                 'name' => isset($recipient->name) ? $recipient->name : null,
-                'address' => $recipient->email,
+                'adressModel' => $recipient->email,
             ];
         }
 
@@ -515,12 +515,12 @@ class Mailable implements MailableContract
 
         $expected = [
             'name' => isset($expected->name) ? $expected->name : null,
-            'address' => $expected->email,
+            'adressModel' => $expected->email,
         ];
 
         return collect($this->{$property})->contains(function ($actual) use ($expected) {
             if (! isset($expected['name'])) {
-                return $actual['address'] == $expected['address'];
+                return $actual['adressModel'] == $expected['adressModel'];
             } else {
                 return $actual == $expected;
             }

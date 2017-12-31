@@ -590,7 +590,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for an IP address type.
+     * Create the column definition for an IP adressModel type.
      *
      * @param  \Illuminate\Support\Fluent  $column
      * @return string
@@ -601,7 +601,7 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a MAC address type.
+     * Create the column definition for a MAC adressModel type.
      *
      * @param  \Illuminate\Support\Fluent  $column
      * @return string

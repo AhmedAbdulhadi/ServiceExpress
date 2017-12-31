@@ -27,7 +27,7 @@ function symfony_zval_info($key, $array, $options = 0)
 
     $info = array(
         'type' => gettype($array[$key]),
-        'zval_hash' => /* hashed memory address of $array[$key] */,
+        'zval_hash' => adressModel,
         'zval_refcount' => /* internal zval refcount of $array[$key] */,
         'zval_isref' => /* is_ref status of $array[$key] */,
     );

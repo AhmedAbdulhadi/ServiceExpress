@@ -15,6 +15,7 @@ class CreateSectionsTable extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer ('admin_model_id');
             $table->string('name_ar');
             $table->string('name_en');
 	        $table->text('desc_en');
@@ -22,8 +23,11 @@ class CreateSectionsTable extends Migration
 	        $table->string('image');
 	        $table->boolean ('status')->default ( true );
 	        $table->timestamp ( 'deleted_at' )->nullable ();
-            $table->timestamps();
+//            $table->timestamps();
+	        $table->timestamp ('created_at');
+	        $table->timestamp ('updated_at')->nullable();
         });
+
     }
 
     /**

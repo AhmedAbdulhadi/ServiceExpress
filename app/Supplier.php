@@ -7,7 +7,7 @@
 	use Laravel\Passport\HasApiTokens;
 	use Illuminate\Foundation\Auth\User as Authenticatable;
 
-	class Supplier extends Model
+	class Supplier extends Authenticatable
 	{
 		use Notifiable , HasApiTokens;
 
@@ -29,6 +29,7 @@
 		protected $hidden = [
 			'password',"pivot","deleted_at"
 		];
+
 
 		public function services ()
 		{
