@@ -4,6 +4,10 @@
 	namespace App\Http\Controllers\api;
 
 	use App\Http\Controllers\Controller;
+	use App\Http\Controllers\ResponseCode;
+	use App\Http\Controllers\ResponseDisplay;
+	use App\Http\Controllers\ResponseMassage;
+	use App\Http\Controllers\ResponseStatus;
 	use App\Http\Controllers\SupplierServices;
 //	use App\Http\Controllers\UserServices;
 	use App\SupplierModel;
@@ -54,7 +58,7 @@
 		public function show ($id = null)
 		{
 
-			return  SupplierServices::getSupplierById  ($id);
+			return SupplierServices::getSupplierById ( $id );
 
 		}
 
@@ -62,7 +66,7 @@
 		{
 //			dd($request->input ('name'));
 
-			return SupplierServices::createSupplier   ($request);
+			return SupplierServices::createSupplier ( $request );
 
 		}
 
@@ -74,7 +78,7 @@
 		public function destroy ($id)
 		{
 
-			return SupplierServices::deleteSupplier ($id);
+			return SupplierServices::deleteSupplier ( $id );
 
 		}
 
@@ -85,7 +89,7 @@
 		 */
 		public function update (Request $request , $id)
 		{
-			return SupplierServices::updateSupplier ($request,$id);
+			return SupplierServices::updateSupplier ( $request , $id );
 
 		}
 
@@ -95,8 +99,7 @@
 		 */
 		public function getPhoneQuery (Request $request)
 		{
-//				if($request->has ('phone'))
-			return SupplierServices::getPhoneQuery ($request);
+			return SupplierServices::getPhoneQuery ( $request );
 
 		}
 
@@ -108,59 +111,65 @@
 		public function getDateQuery (Request $request)
 		{
 
-			return SupplierServices::getDateQuery($request);
+			return SupplierServices::getDateQuery ( $request );
 
 		}
 
-//		public function get_user_date ()
-//		{
-//			return $this->get_user_date ();
-//		}
 
 		public function getSuppliersSingleDate (Request $request)
 		{
-			return SupplierServices::getSuppliersSingleDate($request);
+			return SupplierServices::getSuppliersSingleDate ( $request );
 		}
 
 		public function login ()
 		{
 			if ( Auth::attempt ( ['email' => request ( 'email' ) , 'password' => request ( 'password' )] ) ) {
-				$user = Auth::user ();
+				$userObject = Auth::user ();
 
 				if ( Auth::user ()->type == 1 ) {
 
-					$this->content['token'] = $user->createToken ( 'Noventapp' )->accessToken;
-					$user_i = SupplierModel::all ()->where ( 'email' , request ( 'email' ) )->first ()->toArray ();
+					$this->content['token'] = $userObject->createToken ( 'Noventapp' )->accessToken;
+					$userInfo = SupplierModel::all ()->where ( 'email' , request ( 'email' ) )->first ()->toArray ();
 
-					if ( $user_i['status'] == 1 )
-						$user_i = $this->return_r ( $user_i , $this->content );
+					if ( $userInfo['status'] == 1 )
+						$userInfo = $this->return_r ( $userInfo , $this->content );
 					else {
-						return $this->respondWithError ( 'ACCOUNT IS SUSPENDED || الحساب مقفل' , self::fail );
+//						return $this->respondWithError ( 'ACCOUNT IS SUSPENDED || الحساب مقفل' , self::fail );
+						$objResponse = new ResponseDisplay( ResponseMassage::$FAIL_Deactivated_Supplier_Error_en , ResponseStatus::$fail ,
+							ResponseCode::$HTTP_UNAUTHORIZED );
 
+						return $objResponse->returnWithOutData ();
 					}
-				} else
-					return $this->respondWithError
-					( 'the user trying to login is not a SupplierModel || المستخدم الذي يحاول تسجيل الدخول ليس من نوع موزع' , self::fail );
+				} else {
+					$objResponse = new ResponseDisplay( ResponseMassage::$FAIL_NOT_Supplier_Error_en , ResponseStatus::$fail ,
+						ResponseCode::$HTTP_UNAUTHORIZED );
 
-				return $this->responedFound200ForOneUser
-				( 'SupplierModel login success ' , self::success , $user_i );
+					return $objResponse->returnWithOutData ();
+
+				}
+
+				$objResponse = new ResponseDisplay( ResponseMassage::$SUCCESS_Login_en , ResponseStatus::$success ,
+					ResponseCode::$HTTP_OK );
+
+				return $objResponse->returnWithData ( $userInfo );
 
 			} else {
-				return $this->respondWithError
-				( 'wrong email or password || البريد الالكتروني او كلمة المرور غير صحيحة' , self::fail );
+				$objResponse = new ResponseDisplay( ResponseMassage::$FAILED_LOGIN_USER_EMAIL_PASSWORD , ResponseStatus::$fail ,
+					ResponseCode::$HTTP_BAD_REQUEST );
 
+				return $objResponse->returnWithOutData ();
 
 			}
 
 		}
 
-		private function return_r ($x , $y)
+		private function return_r ($supplierID , $token)
 		{
 			//to spacifay and get the needed result
 			//$x for supplier $y for token
 			return [
-				'supplier_id' => $x['id'] ,
-				'token' => $y['token']
+				'supplier_id' => $supplierID['id'] ,
+				'token' => $token['token']
 			];
 
 		}
@@ -178,33 +187,40 @@
 
 //			Auth::guard ()->logout();
 
-			if ( Auth::check () )
-				return $this->respondWithError ( 'logout fail' , self::fail );
-			else
-				return $this->responedCreated200 ( 'logout success' , self::success );
+			if ( Auth::check () ) {
+				$objResponse = new ResponseDisplay( ResponseMassage::$fail_logout_en , ResponseStatus::$fail ,
+					ResponseCode::$HTTP_BAD_REQUEST );
+
+				return $objResponse->returnWithOutData ();
+			} else {
+				$objResponse = new ResponseDisplay( ResponseMassage::$SUCCESS_logout_en , ResponseStatus::$success ,
+					ResponseCode::$HTTP_OK );
+
+				return $objResponse->returnWithOutData ();
+			}
 //				return dd ( 'logout success' );
 		}
 
 		public function getSupplierByEmail (Request $request)
 		{
 
-			return SupplierServices::getSupplierByEmail ($request);
+			return SupplierServices::getSupplierByEmail ( $request );
 
 		}
 
 		public function getSupplierEmailPhoneNum (Request $request)
 		{
-			return SupplierServices::getSupplierEmailPhoneNum($request);
+			return SupplierServices::getSupplierEmailPhoneNum ( $request );
 		}
 
 		public function getInactiveSuppliers (Request $request)
 		{
-			return SupplierServices::getInactiveSuppliers ($request);
+			return SupplierServices::getInactiveSuppliers ( $request );
 		}
-			/*suppliers_services_id_s not updated yet  */
-		public function suppliers_services_id_s (Request $request)
+
+		public function getSupplierByServiceId (Request $request)
 		{
-//			dd('suppler services');
-			return SupplierServices::getSupplierByServiceId($request);
+
+			return SupplierServices::getSupplierByServiceId ( $request );
 		}
 	}

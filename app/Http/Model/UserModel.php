@@ -32,7 +32,7 @@
 
 		public function address ()
 		{
-//			dd('add');
+
 			return $this->belongsToMany  (adressModel::class,'address_user');
 		}
 
@@ -76,23 +76,22 @@
 
 		public function getUserByID ($id)
 		{
-//			dd('asdasdq1');
+
 			$userObject = UserModel::where ( 'id' , $id )->first ();
-//dd($userObject);
+
 			return $userObject;
 
 		}
 
 		public function getUsersByStatus ($status)
 		{
-//			$listUsers = UserModel::where ( 'status' , $status )->get ();
+
 			$listUsers = UserModel::with ('address')->get ();
-//			dd($listUsers->toArray ());.
+
 			return $listUsers;
 		}
 
-//		protected $dates = ['created_at'];
-//		const CREATED_AT = 'created_at';
+
 
 		public function getUserByPhoneNum ($phone)
 		{
@@ -134,14 +133,10 @@
 
 			return $userObject;
 		}
-		//getUserByID
-		//getUserByStatus
-		//getUserByPhoneNumber
-		//getUser
 
 		public function getInActiveUsers ($request)
 		{
-//			$status = ;
+
 			$listUsers = UserModel::where ( 'status' , $request->input ( 'status' ) )->get ();
 
 			return $listUsers;

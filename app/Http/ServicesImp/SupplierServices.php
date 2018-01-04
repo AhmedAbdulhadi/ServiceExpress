@@ -11,6 +11,9 @@
 	use CommonValidation;
 	use Illuminate\Http\Request;
 	use SupplierInte;
+	use Unit\Transformers\Services_suppliersTrans;
+	use Unit\Transformers\servicesTransform;
+	use Unit\Transformers\supplier_servicesTrans;
 	use Unit\Transformers\SupplierTransform;
 	use Validator;
 
@@ -409,33 +412,48 @@
 
 		public static function getSupplierByServiceId (Request $request)
 		{
-			// to get services with supplier info
+			/* GET  SERVICES SUPPLIERS BY SERVICE ID*/
+
 			$serviceID = $request->input ( 'service_id' );
 			if ( $serviceID ) {
-//check it
-				$serviceList = ServicesModel::with ( 'suppliers' )
-					->where ( 'id' , $serviceID )->where ( 'status' , 1 )->get ();
+				/* GET  SERVICES SUPPLIERS BY SERVICE ID*/
+				$serviceList = ServicesModel::getSupplierWithServicesID ($serviceID);
+				if($serviceList->first ()) {
+					$objTransform = new Services_suppliersTrans();
 
+					$objResponse = new ResponseDisplay( ResponseMassage::$Success_Found_en , ResponseStatus::$success , ResponseCode::$HTTP_OK );
+
+					return $objResponse->returnWithData ( $objTransform->transformCollection ( $serviceList->toArray () ) );
+				}
+				else
+				{/* RETURN ERROR MASSAGE*/
+					$objResponse = new ResponseDisplay( ResponseMassage::$FAIL_Not_Found_en , ResponseStatus::$fail, ResponseCode::$HTTP_BAD_REQUEST);
+
+					return $objResponse->returnWithOutData ();
+				}
 			}
 			else
 			{
+				/* RETURN ERROR MASSAGE*/
+				$objResponse = new ResponseDisplay( ResponseMassage::$FAIL_ServiceID_Required_en , ResponseStatus::$fail, ResponseCode::$HTTP_BAD_REQUEST);
 
+				return $objResponse->returnWithOutData ();
 			}
 
 		}
 
-		private function return_r ($supplierObject , $token)
-		{
-
-			//to spacifay and get the needed result
-			//to spacifay and get the needed result
-			//$x for user $y for token
-			return [
-				'supplier_id' => $supplierObject ,
-				'token' => $token['token']
-			];
-
-		}
+//		private function return_r ($supplierObject , $token)
+//		{
+//
+//			//to spacifay and get the needed result
+//			//to spacifay and get the needed result
+//			//$x for user $y for token
+//			return [
+//				'supplier_id' => $supplierObject ,
+//				'token' => $token['token']
+//			];
+//
+//		}
 
 
 	}

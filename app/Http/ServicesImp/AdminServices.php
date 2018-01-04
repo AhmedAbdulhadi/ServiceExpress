@@ -23,7 +23,7 @@
 	use Unit\Transformers\AdminTransfom;
 	use \Validator;
 
-	class AdminServices  implements AdminIntr
+	class AdminServices implements AdminIntr
 	{
 
 		public static function getAllAdmin ()
@@ -68,7 +68,7 @@
 		public static function createAdmin (Request $request)
 		{
 			//to create admin
-//			$type = '2';
+
 			$requestErrorAdmin = CommonValidation::checkActorModel ( $request );
 			if ( !$requestErrorAdmin ) {
 				/* CREATE USER MODEL */
@@ -161,9 +161,7 @@
 			$loginObject = $loginObject->getUserByEmail ( $adminObject->getEmail () );
 			$adminObjectNotEmail = $loginObject->getUserByEmail ( $request->input ( 'email' ) );
 
-
 			$requestErrorAdmin = CommonValidation::checkActorModelForUpdatedActor ( $request );
-
 
 			if ( !$adminObject ) {
 				/*  SUPPLIER MODEL NOT EXISTS */
@@ -173,7 +171,6 @@
 			} elseif ( !$requestErrorAdmin ) {
 
 				/* UPDATE SUPPLIER MODEL IF EXISTS */
-
 
 				if ( $request->has ( 'email' ) ) {
 					if ( $loginObject->getEmail () == $request->input ( 'email' ) or $adminObjectNotEmail == null ) {

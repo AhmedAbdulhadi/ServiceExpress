@@ -19,7 +19,6 @@
 				'email' => $user['email'],
 				'phone' => $user['phone'],
 				'role' => $user['role'],
-
 				'status' => (boolean)$user['status'],
 				'created_at' =>  date('Y-m-d', strtotime($user['created_at'])) ,
 				//	'active' => (boolean)$user['is_active'],

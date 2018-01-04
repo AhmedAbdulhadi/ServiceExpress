@@ -20,12 +20,12 @@
 		public static function getUserById ($userID)
 		{
 
-//			dd($arr['adressModel']);
+
 			$userObject = new UserModel();
 			$userObject = $userObject->getUserByID ( $userID );
 			$addressObject['address'] = $userObject->address ()->get ()->toArray ();
-//			dd();
-//			dd($userObject);
+
+
 			$addressUserObject = array_merge ( $userObject->toArray () , $addressObject );
 
 			return $addressUserObject;
@@ -172,7 +172,7 @@
 
 		public function getOrdersByStatus ($status)
 		{
-			$listOrders = OrderModel::where ( 'status' , $status )->get ();
+			$listOrders = OrderModel::all();
 
 			return $listOrders;
 		}

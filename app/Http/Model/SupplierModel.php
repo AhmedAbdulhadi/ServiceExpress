@@ -149,7 +149,7 @@
 		}
 		public function getSupplierByID ($id)
 		{
-//			dd('asdasdq1');
+
 			$supplierObject = SupplierModel::where ( 'id' , $id )->first ();
 
 			return $supplierObject;
@@ -157,12 +157,10 @@
 		}
 		public function getSupplierServicesInSectionByID ($id,$sectionID)
 		{
-//			dd('asdasdq1');
+
 			$supplierObject = SupplierModel::find ($id)->services ;
 			$supplierObject=$supplierObject->where('section_model_id',$sectionID);
-//			$supplierObject = $supplierObject->getSupplierByID ( $supplierID );
-//			$servicesSupplierList = $supplierObject->services;
-//			$supplierObject=	$supplierObject-> services ()->wherePivot ('section_model_id',$sectionID)->;
+
 			return $supplierObject ;
 
 		}
@@ -224,7 +222,7 @@
 
 		public function getInActiveSupplier ($request)
 		{
-//			$status = ;
+
 			$listSupplier = SupplierModel::where ( 'status' , $request->input ( 'status' ) )->get ();
 
 			return $listSupplier;

@@ -3,6 +3,10 @@
 	namespace App\Http\Controllers\api;
 
 //use App\Http\Controllers\Controller;
+	use App\Http\Controllers\ResponseCode;
+	use App\Http\Controllers\ResponseDisplay;
+	use App\Http\Controllers\ResponseMassage;
+	use App\Http\Controllers\ResponseStatus;
 	use App\Http\Controllers\UserServices;
 	use App\OrderModel;
 	use App\SectionModel;
@@ -30,8 +34,10 @@
 
 			$all = $this->return_r ( $users , $supp , $orders , $services , $section );
 
-			return $this->responedFound200ForOneUser ( 'registration for today' , self::success , $all );
+//			return $this->responedFound200ForOneUser ( 'registration for today' , self::success , $all );
+			$objResponse = new ResponseDisplay( ResponseMassage::$SUCCESS_Reg_en , ResponseStatus::$success , ResponseCode::$HTTP_OK );
 
+			return $objResponse->returnWithData ($all) ;
 
 		}
 
@@ -95,6 +101,7 @@
 
 
 		}
+
 		public function respondwithErrorMessage ($status , $data)
 		{
 			$splitName = explode ( '||' , $data , 2 );
@@ -118,6 +125,7 @@
 
 				] );
 		}
+
 		public function all (Request $request)
 		{
 			if ( $request->input ( 'all' ) == true ) {

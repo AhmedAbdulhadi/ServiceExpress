@@ -45,7 +45,8 @@
 
 		public static function getAllServices ()
 		{
-//get all services
+			/*  GET ALL SERVICES WITH STATUS TRUE*/
+
 			$listServices = new ServicesModel();
 			$listServices = $listServices->getServicesByStatus ( true );
 			if ( $listServices->first () ) {
@@ -54,14 +55,13 @@
 
 				return $objResponse->returnWithData ( $objTransform->transformCollection ( $listServices->all () ) );
 			} else {
+				/* NOT FOUND  */
 				$objResponse = new ResponseDisplay( ResponseMassage::$FAIL_Not_Found_en , ResponseStatus::$fail ,
 					ResponseCode::$HTTP_BAD_REQUEST );
 
 				return $objResponse->returnWithOutData ();
 			}
 
-//			$section = ServicesModel::with ( 'sections' )->where ( 'status' , '=' , '1' )->get ();
-//			$services = SectionModel::with ( 'services' )->where ( 'status' , '=' , '1' )->get ();
 
 
 		}
@@ -69,7 +69,8 @@
 
 		public static function getServicesById ($id = null)
 		{
-			// get one services
+
+			/* GET SERVICES BY ID */
 			$serviceObject = new ServicesModel();
 			$serviceObject = $serviceObject->getServicesById ( $id );
 
@@ -88,7 +89,6 @@
 				return $objResponse->returnWithData ( $objTransform->transform ( $serviceObject ) );
 			}
 
-//			return $this->responedFound200ForOneUser ( 'Service found' , self::success , $this->userTrans->transform ( $Service ) );
 
 		}
 
@@ -100,6 +100,7 @@
 		 */
 		public static function createServices (Request $request)
 		{
+			/* CREATE SERVICES */
 			$requestErrorService = CommonValidation::createServiceValidation ( $request );
 
 			$tsCurrentDate = Carbon::now ( "GMT+2" );
@@ -162,6 +163,7 @@
 //done
 		public static function updateServices (Request $request , $id)
 		{
+			/* UPDATE  SERVICES BY ID */
 			$requestErrorService = CommonValidation::updateServicesValidation ( $request );
 			$serviceObject = new ServicesModel();
 			$serviceObject = $serviceObject->getServicesById ( $id );
@@ -188,12 +190,9 @@
 
 							$image_path = $serviceObject->image;
 
-//						DB::table ( 'services' )
-//							->where ( 'id' , $id )
-//							->update ( ['image' => $image_path , 'updated_at' => $now] );
 
 					}
-//					dd($request->input ('name_en'));
+
 					$objTransformer = new servicesTransform();
 					$serviceObject->update ( $request->all () );
 					$serviceObject->image = $image_path;
@@ -213,12 +212,13 @@
 //done
 		public static function deleteServices ($id)
 		{
-			// delete services
+			/* DELETE SERVICES BY ID */
 			$tsCurrentDate = Carbon::now ( 'GMT+2' );
 			$serviceObject = new ServicesModel();
 			$serviceObject = $serviceObject->getServicesById ( $id );
 			if ( !$serviceObject ) {
 				{
+					/* NOT FOUND SERVICES BY ID */
 					$objResponse = new ResponseDisplay( ResponseMassage::$FAIL_Not_Found_en , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
 
 					return $objResponse->returnWithOutData ();
@@ -241,7 +241,7 @@
 		public static function getOneServicesBySectionId (Request $request)
 		{
 			//get services by section id
-
+			/* GET  SERVICES BY SECTION ID */
 			$requestErrorServicesSectionID = CommonValidation::sectionIdValidation ( $request );
 
 			$sectionObject = new SectionModel();
@@ -255,6 +255,7 @@
 
 				return $objResponse->returnWithData ( $objTransformer->transformCollection ( $sectionObject->all () ) );
 			} elseif ( !$sectionObject ) {
+				/* SECTION NOT FOUND  */
 				$objResponse = new ResponseDisplay( ResponseMassage::$FAIL_Not_Found_en , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
 
 				return $objResponse->returnWithOutData ();
@@ -266,15 +267,14 @@
 //done
 		public static function getServicesWithSupplierId (Request $request)
 		{
-//			dd('asdq1');
-			// get services with supplier id
+			/* GET SERVICES BY SUPPLIER ID */
+
 			$supplierId = $request->input ( 'supplier_id' );
 
 			$supplierObject = new SupplierModel();
 			$supplierObject = $supplierObject->getSupplierByID ( $supplierId );
 			$servicesList = $supplierObject->services;
-//			return $supplierObject;
-//dd($supplierObject->toArray ());
+
 			$objTransformer = new supplier_servicesTrans();
 			$objResponse = new ResponseDisplay( ResponseMassage::$Success_Found_en , ResponseStatus::$success , ResponseCode::$HTTP_OK );
 
@@ -285,7 +285,7 @@
 //done
 		public static function getServicesSuppliers (Request $request)
 		{
-			// get services  with supppliers = true
+			/* GET SERVICES BY SUPPLIER WITH REQUSET TRUE */
 			if ( $request->input ( 'suppliers' ) == 1 or $request->input ( 'suppliers' ) == 'true' ) {
 				$supplierServices = new SupplierModel();
 				$supplierServices = $supplierServices->getServicesForAllSupplier ( true );
@@ -297,6 +297,7 @@
 				return $objResponse->returnWithData ( $objTransform->transformCollection ( $supplierServices->all () ) );
 
 			} else {
+				/* NOT FOUND*/
 				$objResponse = new ResponseDisplay( ResponseMassage::$FAIL_Not_Found_en , ResponseStatus::$fail ,
 					ResponseCode::$HTTP_BAD_REQUEST );
 
@@ -314,6 +315,7 @@
 		 */
 		public static function getServicesSectionIdSupplierId (Request $request)
 		{
+			/* GET  SERVICES BY SECTION AND SUPPLIER ID */
 			$sectionID = $request->input ( 'section_id' );
 			$supplierID = $request->input ( 'supplier_id' );
 
@@ -327,8 +329,7 @@
 				$sectionObject = $sectionObject->getSectionByID ( $sectionID );
 				$serviceSectionList = $sectionObject->services;
 
-//				$activeList = [];
-//				$nonActiveList = [];
+
 				if ( $sectionObject['services']->first () ) {
 					foreach ($sectionObject['services'] as $key => $serviceSection)
 						foreach ($supplierObject as $key2 => $serviceSupp) {
@@ -368,7 +369,7 @@
 //done
 		public static function assignServices (Request $request)
 		{
-			//assign services to supplier
+			/* ASSIGN  SERVICES TO SUPPLIER BY ID */
 			$service_id = $request->input ( 'service_id' );
 			$supplier_id = $request->input ( 'supplier_id' );
 
@@ -376,26 +377,15 @@
 
 			if ( !$requestErrorAssign ) {
 
-//				$serviceObject = new SectionModel();
-//				$serviceObject = $serviceObject->getSectionByID ( $service_id );
-
 				$supplierObject = new SupplierModel();
 				$supplierObject = $supplierObject->getSupplierByID ( $supplier_id );
 
 
-//				$supplierObject->services () ->attach ( $service_id );
-//
-//				$objResponse = new ResponseDisplay( ResponseMassage::$Success_Created_en , ResponseStatus::$success , ResponseCode::$HTTP_CREATED );
-//
-//				return $objResponse->returnWithOutData ();
-
-
 				try {
 					$supplierObject->services ()->attach ( $service_id );
-//
+
 					$objResponse = new ResponseDisplay( ResponseMassage::$Success_Created_en , ResponseStatus::$success , ResponseCode::$HTTP_CREATED );
 
-//
 					return $objResponse->returnWithOutData ();
 
 				} catch (QueryException $e) {
@@ -403,7 +393,6 @@
 						$objResponse = new ResponseDisplay
 						( ResponseMassage::$FAILED_Create_Duplicate_Massages_en , ResponseStatus::$fail , ResponseCode::$HTTP_INTERNAL_SERVER_ERROR );
 
-//
 						return $objResponse->returnWithOutData ();
 					}
 				}
@@ -416,7 +405,7 @@
 //done
 		public static function unAssignServices (Request $request)
 		{
-			//			unAssign_services
+			/* unAssignServices SERVICE AND SUPPLIER ID  */
 			$service_id = $request->input ( 'service_id' );
 			$supplier_id = $request->input ( 'supplier_id' );
 
@@ -440,6 +429,3 @@
 			}
 		}
 	}
-
-
-

@@ -24,16 +24,16 @@
 	use Illuminate\Support\Facades\DB;
 	use App\OrderModel;
 
-//use Illuminate\Http\Request;
+
 
 	class OrderServices implements OrderIntr
 	{
 
 
-//done
+
 		public static function createOrder (Request $request)
 		{
-// create order
+				/*CREATE ORDER */
 
 			$userID = $request->input ( 'user_id' );
 			$supplierID = $request->input ( 'supplier_id' );
@@ -54,7 +54,7 @@
 
 				$serviceObjectWithStatus = new ServicesModel();
 				$serviceObjectWithStatus = $serviceObjectWithStatus->getServicesByIdWithStatus ( $serviceID , true );
-//				dd($serviceObjectWithStatus->toArray ());
+
 
 				if ( !$serviceObjectWithStatus ) {
 
@@ -106,21 +106,16 @@
 			}
 		}
 
-//done
+
 		public static function updateOrder (Request $request , $id)
 		{
-			//update 1 order
-			/*
-		=================================================================================
-			don't forget to change  services_id in db to service_id
-		=================================================================================
+			/* UPDATE ORDER OBJECT */
 
-			*/
 			$requestErrorOrder = CommonValidation::updateOrderValidation ( $request );
 			if ( !$requestErrorOrder ) {
 				$orderObject = new OrderModel();
 				$orderObject = $orderObject->getOrderById ( $id );
-//			dd($orderObject->toArray ());
+
 				$tsCurrentDate = Carbon::now ( 'GMT+2' );
 
 				$status = $request->input ( 'status' );
@@ -128,7 +123,7 @@
 				$is_rated = $request->input ( 'is_rated' );
 
 				$image = $request->input ( 'image' );
-//dd($orderObject->toArray ());
+
 				if ( !$orderObject ) {
 					$responseObject = new ResponseDisplay( ResponseMassage::$FAIL_Not_Found_en , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
 
@@ -152,7 +147,7 @@
 					} else {
 						$path = $orderObject->path;
 					}
-//dd($path);
+
 					if ( $orderObject->status !== $status and $status !== null )
 						if ( $status == 0 or $status == 1
 							or $status == 2 or $status == 3 ) {
@@ -185,15 +180,15 @@
 							//update is rated
 							$orderObject->is_rated = true;
 						}
-//					dd($orderObject->toArray ());
-//dd($request->all ());
+
+
 					$orderObject->update ( $request->except ( 'image' ) );
 					$orderObject->path = $path;
-//				$orderObject->is_rated;
+
 					$orderObject->updated_at = $tsCurrentDate;
 					$orderObject->timestamps = false;
 					$orderObject->save ();
-//				dd($orderObject->toArray ());
+
 					$objTransformer = new orderTransOneC();
 					$objResponse = new ResponseDisplay( ResponseMassage::$SUCCESS_Update_en , ResponseStatus::$success , ResponseCode::$HTTP_OK );
 
@@ -203,15 +198,15 @@
 			} else {
 				return $requestErrorOrder;
 			}
-//			$data = OrderModel::find ( $id );
+
 
 
 		}
 
-//done
+
 		public static function deleteOrder ($id)
 		{
-//delete order
+				/* DELETE ORDER */
 			$orderObject = new OrderModel();
 			$orderObject = $orderObject->getOrderById ( $id );
 			if ( !$orderObject ) {
@@ -233,10 +228,10 @@
 
 		}
 
-//done
+
 		public static function getAllOrder ()
 		{
-			//get all order
+			/* GET ALL ORDER */
 			$ordersList = new OrderModel();
 			$ordersList = $ordersList->getOrdersByStatus ( true );
 
@@ -252,10 +247,10 @@
 			return $objResponse->returnWithData ( $objTransformer->transformCollection ( $ordersList->toArray () ) );
 		}
 
-//done
+
 		public static function getOneOrder ($id)
 		{
-			//get order by id
+			/* GET ORDER BY ID */
 			$orderObject = new OrderModel();
 			$orderObject = $orderObject->getOrderById ( $id );
 
@@ -276,7 +271,8 @@
 
 		public static function getOrderSupplierId (Request $request)
 		{
-			// get order with supplier_id and active 1 or 0
+			/*  GET ORDER BY SUPPLIER ID WITH ACTIVE IF 1 NOT DELIVERED  0 DELIVERED */
+
 			$supplierId = $request->input ( 'supplier_id' );
 			$active = $request->input ( 'active' );
 
@@ -284,6 +280,7 @@
 			$nonActiveList = [];
 
 			if ( $active == 1 ) {
+				/* FOR NOT DELIVERED */
 				$orderList = OrderModel::getOrderBySupplierIdWithStatusNotDelivered ( $supplierId );
 
 				foreach ($orderList as $orderObject) {
@@ -309,6 +306,7 @@
 				}
 			}
 			if ( $active == 0 ) {
+				/* FOR  DELIVERED */
 				$orderList = OrderModel::getOrderBySupplierIdWithStatusDelivered ( $supplierId );
 
 				foreach ($orderList as $orderObject) {
@@ -337,13 +335,15 @@
 
 		public static function getOrderUserId (Request $request)
 		{
-			// get order with user_id and active 1 or 0
+			/* GET ORDER BY USER ID WITH ACTIVE  IF 0 DELIVERED IF 1 NOT DELIVERED */
+
 			$userID = $request->input ( 'user_id' );
 			$active = $request->input ( 'active' );
 
 			$activeList = [];
 			$nonActiveList = [];
 			if ( $active == 1 ) {
+				/* FOR NOT DELIVERED */
 				$orderList = OrderModel::getOrderByUserIdWithStatusNotDelivered ( $userID );
 				foreach ($orderList as $orderObject) {
 					$userObject = OrderModel::getUserById ( $userID );
@@ -368,6 +368,7 @@
 				}
 			}
 			if ( $active == 0 ) {
+				/* FOR  DELIVERED */
 				$orderList = OrderModel:: getOrderByUserIdWithStatusDelivered ( $userID );
 				foreach ($orderList as $orderObject) {
 

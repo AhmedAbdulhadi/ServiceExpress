@@ -29,7 +29,7 @@
 
 		public function show ($id)
 		{
-			return OrderServices::getOneOrder ($id);
+			return OrderServices::getOneOrder ( $id );
 		}
 
 		public function update (Request $request , $id)
@@ -40,12 +40,12 @@
 
 		public function getOrderSupplierId (Request $request)
 		{
-			return OrderServices::getOrderSupplierId ($request);
+			return OrderServices::getOrderSupplierId ( $request );
 		}
 
 		public function getOrderUserId (Request $request)
 		{
-			return OrderServices::getOrderUserId ($request);
+			return OrderServices::getOrderUserId ( $request );
 		}
 
 		public function destroy ($id)

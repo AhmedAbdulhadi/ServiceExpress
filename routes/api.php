@@ -15,8 +15,6 @@
 	*/
 
 
-
-
 	/*	Route::middleware ('auth:api')->get ('/supplier', function (Request $request) {
 			return $request->user ();
 		});*/
@@ -69,7 +67,7 @@
 			Route::get ( 'v1/suppliers' , 'SupplierController@getInactiveSuppliers' );
 
 		else if ( Input::has ( 'service_id' ) )
-			Route::get ( 'v1/suppliers' , 'SupplierController@suppliers_services_id_s' );
+			Route::get ( 'v1/suppliers' , 'SupplierController@getSupplierByServiceId' );
 		else
 			Route::resource ( 'v1/suppliers' , 'SupplierController' );
 
@@ -120,13 +118,13 @@
 
 		//		Route::post ('users/details', 'UserController@details');
 
-		if ( Input::has ( 'services' )  )
+		if ( Input::has ( 'services' ) )
 			Route::get ( 'v1/section/{id}' , 'SectionController@get_section_id' );
 
 		else if ( Input::has ( 'service' ) )
 			Route::get ( 'v1/section' , 'SectionController@section_with_service' );
-else
-		Route::resource ( 'v1/section' , 'SectionController' );
+		else
+			Route::resource ( 'v1/section' , 'SectionController' );
 
 		Route::resource ( 'v1/orders' , 'OrderController' );
 		if ( Input::has ( 'supplier_id' ) and Input::has ( 'active' ) )

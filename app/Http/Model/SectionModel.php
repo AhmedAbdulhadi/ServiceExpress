@@ -68,8 +68,7 @@
 
 		public function getSectionByID ($id)
 		{
-//			dd('asdasdq1');
-//			$sectionObject = SectionModel::where ( 'id' , $id )->where ( 'status' , true )->first ();
+
 			$sectionObject = SectionModel::where ( 'id' , $id )->first ();
 
 			return $sectionObject;

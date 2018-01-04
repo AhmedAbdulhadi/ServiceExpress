@@ -1,5 +1,5 @@
 <?php
-//namespace App;
+
 	namespace App\Http\Controllers;
 	class ResponseMassage
 	{
@@ -10,6 +10,7 @@
 		public static $SUCCESS_Update_en = "Updated";
 		public static $SUCCESS_Deleted_en = "Deleted";
 		public static $SUCCESS_Login_en = "logged on success";
+		public static $SUCCESS_Reg_en = 'registration for today';
 
 		//success Massages en
 		public static $Success_Found_ar = 'موجود';
@@ -22,6 +23,10 @@
 		public static $FAILED_Not_Found_Massages_en = "Not Found";
 		public static $FAILED_Deleted_Massages_en = "User Deleted";
 		public static $FAILED_Login_Massages_en = "Login Fail";
+		public static $FAILED_Method_not_allowed_Massages_en = 'Method Not Allowed';
+		public static $FAILED_invalid_Massages_en = 'Invalid Url';
+		public static $FAILED_Unauthorized_Massages_en = 'Unauthorized';
+
 		//date error
 		public static $FAILED_Date_Format_Massages_en = "Invalid Date Format must be 2017-05-05";
 		public static $FAILED_Date_Required_Massages_en = "Date Is Required";
@@ -59,6 +64,8 @@
 		public static $FAIL_Error_en = "Unexpected Error !";
 		public static $FAIL_Not_Found_en = "Not Found";
 		public static $FAIL_Deleted_en = "Item Was Deleted";
+		public static $SUCCESS_logout_en = "logout success";
+		public static $fail_logout_en = "logout fail";
 
 
 		// Validation Error for name en

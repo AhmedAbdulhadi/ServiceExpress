@@ -1,19 +1,19 @@
 <?php
 	/**
 	 * Created by PhpStorm.
-	 * User: dark-
+	 * UserModel: dark-
 	 * Date: 9/16/2017
 	 * Time: 3:17 PM
 	 */
 
 	//namespace Novent\Transfroers;
-	namespace Novent\Transformers;
-	class SupplierTransform extends Transfomer
+	namespace Unit\Transformers;
+	class SupplierTranformD extends Transfomer
 	{
 
 		public function transform ($user)
 		{
-//			dd($user['created_at']);
+
 
 			if ( !$user['updated_at'] )
 				$up = "";
@@ -30,11 +30,8 @@
 			else
 				$exp_year = $user['exp_year'];
 
+//dd($user);
 
-			if ( !$user['deleted_at'] )
-				$del = "";
-			else
-				$del = date ( 'Y-m-d' , strtotime ( $user['deleted_at'] ) );
 			return [
 				'supplier_id' => $user['id'] ,
 				'name' => $user['name'] ,
@@ -45,9 +42,9 @@
 				'bio' => $bio ,
 				'exp_year' => $exp_year ,
 				'status' => (boolean)$user['status'] ,
-				'created_at' => date ( 'Y-m-d' , strtotime ( $user['updated_at'] ) ) ,
+				'created_at' => date ( 'Y-m-d' , strtotime ( $user['created_at'] ) ) ,
 				'updated_at' => $up ,
-				'deleted_at'=>$del
+
 				//	'active' => (boolean)$user['is_active'],
 			];
 

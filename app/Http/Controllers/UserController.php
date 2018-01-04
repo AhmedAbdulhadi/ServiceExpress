@@ -22,18 +22,9 @@
 
 	class UserController extends Controller
 	{
-		/**
-		 * @var  Unit\Transformers\userTransfomer
-		 */
-		protected $userTrans;
 
-		/**
-		 * UserController constructor.
-		 * @param userTransfomer $userTrans
-		 */
-		public function __construct (userTransfomer $userTrans)
+		public function __construct ()
 		{
-			$this->userTrans = $userTrans;
 
 			$this->content = array ();
 
@@ -57,11 +48,7 @@
 		 */
 		public function show ($id = null)
 		{
-//				$userObj= new UserServices();
-//			 return	$userObj->getUserById ($id);
 			return UserServices::getUserById ( $id );
-//			return $this->getOneUser ( $id );
-
 		}
 
 		/**
@@ -71,7 +58,6 @@
 		public function store (Request $request)
 		{
 
-//			return $this->createUser ( $request );
 			return UserServices::createUser ( $request );
 		}
 
@@ -83,7 +69,6 @@
 		public function destroy ($id)
 		{
 
-//			return $this->deleteUser ( $id );
 			return UserServices::deleteUser ( $id );
 		}
 
@@ -94,7 +79,6 @@
 		 */
 		public function update (Request $request , $id)
 		{
-//			return $this->updateUser ( $request , $id );
 			return UserServices::updateUser ( $request , $id );
 		}
 
@@ -104,8 +88,6 @@
 		 */
 		public function getUserByPhone (Request $request)
 		{
-//				if($request->has ('phone'))
-//			return $this->getPhoneQuery ( $request );
 			return UserServices::getPhoneQuery ( $request );
 		}
 
@@ -117,7 +99,7 @@
 		public function getUserByFlightDate (Request $request)
 		{
 			return UserServices::getDateQuery ( $request );
-//			return $this->getDateQuery ( $request );
+
 
 		}
 
@@ -128,7 +110,6 @@
 		 */
 		public function getUserBySingleDate (Request $request)
 		{
-//			return $this->getOneUserDate ( $request );
 			return UserServices::getUserSingleDate ( $request );
 		}
 
@@ -139,40 +120,41 @@
 		{
 			if ( Auth::attempt ( ['email' => request ( 'email' ) , 'password' => request ( 'password' )] ) ) {
 
-//				dd(Auth::user ()->type);
-
-				$user = Auth::user ();
-				$path='com.example.novapp_tasneem.serviceexpress.userFragments.userProfileFragment';
-				$this->content['token'] = $user->createToken ( 'Noventapp' )->accessToken;
+				$userObject = Auth::user ();
+				$path = 'com.example.novapp_tasneem.serviceexpress.userFragments.userProfileFragment';
+				$this->content['token'] = $userObject->createToken ( 'Noventapp' )->accessToken;
 				if ( Auth::user ()->type == 0 ) {
-					$user_i = UserModel::all ()->where ( 'email' , request ( 'email' ) )->first ()->toArray ();
-				/*
-						$address= UserModel::find ( $user_i['id'] )->address ()->get ()->first ();
-					if($address)
-						$path='com.example.novapp_tasneem.serviceexpress.userFragments.userCategoryFragment';
-					elseif (!$address)
-						$path='com.example.novapp_tasneem.serviceexpress.userFragments.userProfileFragment';*/
+					$userInfo = UserModel::all ()->where ( 'email' , request ( 'email' ) )->first ()->toArray ();
 
-						if ( $user_i['status'] == 1 )
-						$user_i = $this->return_r ( $user_i , $this->content , $path );//,$path );
+					$address = UserModel::find ( $userInfo['id'] )->address ()->get ()->first ();
+					if ( $address )
+						$path = 'com.example.novapp_tasneem.serviceexpress.userFragments.userCategoryFragment';
+					elseif ( !$address )
+						$path = 'com.example.novapp_tasneem.serviceexpress.userFragments.userProfileFragment';
+
+					if ( $userInfo['status'] == 1 )
+						$userInfo = $this->return_r ( $userInfo , $this->content , $path );//,$path );
 					else {
-//						return $this->respondWithError ( 'ACCOUNT IS SUSPENDED || الحساب مقفل' , self::fail );
-						$objResponse = new ResponseDisplay( ResponseMassage::$FAIL_Deactivated_User_Error_en , ResponseStatus::$fail , ResponseCode::$HTTP_UNAUTHORIZED );
+
+						$objResponse = new ResponseDisplay( ResponseMassage::$FAIL_Deactivated_User_Error_en , ResponseStatus::$fail
+							, ResponseCode::$HTTP_UNAUTHORIZED );
+
 						return $objResponse->returnWithOutData ();
 
 					}
-//				dd($user_i);
-				} //dd($user->getRememberToken ('Noventapp')->accessToken);
-				else
-				{
+
+				} else {
 					$objResponse = new ResponseDisplay( ResponseMassage::$FAIL_NOT_User_Error_en , ResponseStatus::$fail , ResponseCode::$HTTP_UNAUTHORIZED );
+
 					return $objResponse->returnWithOutData ();
 				}
 
-				$objResponse = new ResponseDisplay( ResponseMassage::$SUCCESS_Login_en , ResponseStatus::$success , ResponseCode::$HTTP_OK);
-				return $objResponse->returnWithData ($user_i);
+				$objResponse = new ResponseDisplay( ResponseMassage::$SUCCESS_Login_en , ResponseStatus::$success , ResponseCode::$HTTP_OK );
+
+				return $objResponse->returnWithData ( $userInfo );
 			} else {
-				$objResponse = new ResponseDisplay( ResponseMassage::$FAILED_LOGIN_USER_EMAIL_PASSWORD , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST);
+				$objResponse = new ResponseDisplay( ResponseMassage::$FAILED_LOGIN_USER_EMAIL_PASSWORD , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
+
 				return $objResponse->returnWithOutData ();
 			}
 
@@ -183,7 +165,6 @@
 		 * @param $userToken
 		 * @param $path
 		 * @return array
-
 		 */
 		private function return_r ($userObject , $userToken , $path)
 		{
@@ -202,7 +183,7 @@
 		 */
 		public function logout (Request $request)
 		{
-//			dd('asd');
+
 			$value = $request->bearerToken ();
 			$id = (new Parser())->parse ( $value )->getHeader ( 'jti' );
 
@@ -211,12 +192,16 @@
 				->update ( ['revoked' => true] );
 
 
-//			Auth::guard ()->logout();
+			if ( Auth::check () ) {
+				$objResponse = new ResponseDisplay( ResponseMassage::$fail_logout_en , ResponseStatus::$fail , ResponseCode::$HTTP_OK );
 
-			if ( Auth::check () )
-				return $this->respondWithError ( 'logout fail' , self::fail );
-			else
-				return $this->responedCreated200 ( 'logout success ' , self::success );
+				return $objResponse->returnWithOutData ();
+			} else {
+				$objResponse = new ResponseDisplay( ResponseMassage::$SUCCESS_logout_en , ResponseStatus::$success
+					, ResponseCode::$HTTP_OK );
+
+				return $objResponse->returnWithOutData ();
+			}
 		}
 
 
@@ -227,7 +212,6 @@
 		public function getUserByEmailAddress (Request $request)
 		{
 
-//			return $this->getUserByEmail ( $request );
 			return UserServices::getUserByEmail ( $request );
 
 		}
@@ -238,7 +222,7 @@
 		 */
 		public function getUserByPhoneAndEmailAddress (Request $request)
 		{
-//			return $this->getUserEmailPhoneNum ( $request );
+
 			return UserServices::getUserEmailPhoneNum ( $request );
 		}
 
@@ -249,7 +233,7 @@
 		public function getInactiveUsers (Request $request)
 		{
 			return UserServices::getInactiveUsers ( $request );
-//			return $this->getInactiveUsers ( $request );
+
 		}
 
 	}

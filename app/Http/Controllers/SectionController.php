@@ -14,14 +14,10 @@
 	class SectionController extends Controller
 	{
 
-		/**
-		 * @var  Unit\Transformers\userTransfomer
-		 */
-		protected $userTrans;
 
-		public function __construct (sectionTransform $userTrans)
+		public function __construct ()
 		{
-			$this->userTrans = $userTrans;
+
 
 			$this->content = array ();
 			$this->middleware ( 'auth:api' );
@@ -32,37 +28,37 @@
 
 		public function index ()
 		{
-			return SectionServices::getAllSection () ;
+			return SectionServices::getAllSection ();
 		}
 
 		public function store (Request $request)
 		{
-			return SectionServices::createSection ($request);
+			return SectionServices::createSection ( $request );
 		}
 
 		public function update (Request $request , $id)
 		{
-			return SectionServices::updateSection  ($request,$id);
+			return SectionServices::updateSection ( $request , $id );
 
 		}
 
 		public function destroy ($id)
 		{
-			return SectionServices::deleteSection ($id);
+			return SectionServices::deleteSection ( $id );
 		}
 
 		public function get_section_id (Request $request , $id)
 		{
 //			dd('section_id');
-			return SectionServices::getSectionWithServices  ($request,$id);
+			return SectionServices::getSectionWithServices ( $request , $id );
 
 		}
 
-		public function show ($id )
+		public function show ($id)
 		{
 
 //			dd('id');
-			return SectionServices::getOneSectionById  ( $id  );
+			return SectionServices::getOneSectionById ( $id );
 
 
 		}
@@ -71,6 +67,6 @@
 		public function section_with_service (Request $request)
 		{
 //			dd('asd');
-			return SectionServices::getSectionWithServicesStatus($request);
+			return SectionServices::getSectionWithServicesStatus ( $request );
 		}
 	}

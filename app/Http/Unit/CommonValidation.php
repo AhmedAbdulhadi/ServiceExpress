@@ -1104,99 +1104,92 @@
 				return $resp->returnWithOutData ();
 			}
 		}
-public static function updateAddressValidation(Request $request)
-{$rules = array (
-	'longitude' => 'numeric' ,
-	'latitude' => 'numeric' ,
-	'city' => 'string' ,
-	'street' => 'string' ,
-	'country' => 'string' ,
-	'neighborhood' => 'string' ,
-	'building_number' => 'integer' ,
-	'apartment_number' => 'integer' ,
-	'floor' => 'integer' ,
-);
-	$messages = array (
-		'longitude.numeric' => ResponseMassage::$FAIL_ADDRESS_Longitude_FORMATE,
 
-		'latitude.numeric' => ResponseMassage::$FAILED_latitude_FORMAT ,
-
-		'city.string' =>  ResponseMassage::$FAIL_ADDRESS_city_FORMATE,
-
-		'street.string' => ResponseMassage::$FAIL_ADDRESS_street_FORMATE ,
-
-		'country.string' => ResponseMassage::$FAIL_ADDRESS_country_FORMATE ,
-
-		'neighborhood.string' => ResponseMassage::$FAIL_ADDRESS_neighborhood_FORMATE ,
-
-		'building_number.integer' => ResponseMassage::$FAIL_ADDRESS_building_number_FORMATE ,
-
-		'apartment_number.integer' =>  ResponseMassage::$FAIL_ADDRESS_apartment_number_FORMATE,
-
-		'floor.integer' =>  ResponseMassage::$FAIL_ADDRESS_floor_FORMATE,
-	);
-
-	$validator = Validator::make ( $request->all () , $rules , $messages );
-	//			$errors= $validator;
-	$errors = $validator->errors ();
-
-
-	if ( $validator->fails () )
-
-		if ( $errors->first ( 'longitude' ) )
+		public static function updateAddressValidation (Request $request)
 		{
-			$resp = new ResponseDisplay( $errors->first ( 'longitude' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
+			$rules = array (
+				'longitude' => 'numeric' ,
+				'latitude' => 'numeric' ,
+				'city' => 'string' ,
+				'street' => 'string' ,
+				'country' => 'string' ,
+				'neighborhood' => 'string' ,
+				'building_number' => 'integer' ,
+				'apartment_number' => 'integer' ,
+				'floor' => 'integer' ,
+			);
+			$messages = array (
+				'longitude.numeric' => ResponseMassage::$FAIL_ADDRESS_Longitude_FORMATE ,
 
-			return $resp->returnWithOutData ();
+				'latitude.numeric' => ResponseMassage::$FAILED_latitude_FORMAT ,
+
+				'city.string' => ResponseMassage::$FAIL_ADDRESS_city_FORMATE ,
+
+				'street.string' => ResponseMassage::$FAIL_ADDRESS_street_FORMATE ,
+
+				'country.string' => ResponseMassage::$FAIL_ADDRESS_country_FORMATE ,
+
+				'neighborhood.string' => ResponseMassage::$FAIL_ADDRESS_neighborhood_FORMATE ,
+
+				'building_number.integer' => ResponseMassage::$FAIL_ADDRESS_building_number_FORMATE ,
+
+				'apartment_number.integer' => ResponseMassage::$FAIL_ADDRESS_apartment_number_FORMATE ,
+
+				'floor.integer' => ResponseMassage::$FAIL_ADDRESS_floor_FORMATE ,
+			);
+
+			$validator = Validator::make ( $request->all () , $rules , $messages );
+			//			$errors= $validator;
+			$errors = $validator->errors ();
+
+
+			if ( $validator->fails () )
+
+				if ( $errors->first ( 'longitude' ) ) {
+					$resp = new ResponseDisplay( $errors->first ( 'longitude' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
+
+					return $resp->returnWithOutData ();
+				}
+			if ( $errors->first ( 'latitude' ) ) {
+				$resp = new ResponseDisplay( $errors->first ( 'latitude' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
+
+				return $resp->returnWithOutData ();
+			}
+			if ( $errors->first ( 'city' ) ) {
+				$resp = new ResponseDisplay( $errors->first ( 'city' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
+
+				return $resp->returnWithOutData ();
+			}
+			if ( $errors->first ( 'street' ) ) {
+				$resp = new ResponseDisplay( $errors->first ( 'street' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
+
+				return $resp->returnWithOutData ();
+			}
+			if ( $errors->first ( 'country' ) ) {
+				$resp = new ResponseDisplay( $errors->first ( 'country' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
+
+				return $resp->returnWithOutData ();
+			}
+			if ( $errors->first ( 'neighborhood' ) ) {
+				$resp = new ResponseDisplay( $errors->first ( 'neighborhood' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
+
+				return $resp->returnWithOutData ();
+			}
+			if ( $errors->first ( 'building_number' ) ) {
+				$resp = new ResponseDisplay( $errors->first ( 'building_number' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
+
+				return $resp->returnWithOutData ();
+			}
+			if ( $errors->first ( 'apartment_number' ) ) {
+				$resp = new ResponseDisplay( $errors->first ( 'apartment_number' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
+
+				return $resp->returnWithOutData ();
+			}
+			if ( $errors->first ( 'floor' ) ) {
+				$resp = new ResponseDisplay( $errors->first ( 'floor' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
+
+				return $resp->returnWithOutData ();
+			}
 		}
-	if ( $errors->first ( 'latitude' ) )
-	{
-		$resp = new ResponseDisplay( $errors->first ( 'latitude' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
-
-		return $resp->returnWithOutData ();
-	}
-	if ( $errors->first ( 'city' ) )
-	{
-		$resp = new ResponseDisplay( $errors->first ( 'city' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
-
-		return $resp->returnWithOutData ();
-	}
-	if ( $errors->first ( 'street' ) )
-	{
-		$resp = new ResponseDisplay( $errors->first ( 'street' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
-
-		return $resp->returnWithOutData ();
-	}
-	if ( $errors->first ( 'country' ) )
-	{
-		$resp = new ResponseDisplay( $errors->first ( 'country' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
-
-		return $resp->returnWithOutData ();
-	}
-	if ( $errors->first ( 'neighborhood' ) )
-	{
-		$resp = new ResponseDisplay( $errors->first ( 'neighborhood' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
-
-		return $resp->returnWithOutData ();
-	}
-	if ( $errors->first ( 'building_number' ) )
-	{
-		$resp = new ResponseDisplay( $errors->first ( 'building_number' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
-
-		return $resp->returnWithOutData ();
-	}
-	if ( $errors->first ( 'apartment_number' ) )
-	{
-		$resp = new ResponseDisplay( $errors->first ( 'apartment_number' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
-
-		return $resp->returnWithOutData ();
-	}
-	if ( $errors->first ( 'floor' ) )
-	{
-		$resp = new ResponseDisplay( $errors->first ( 'floor' ) , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
-
-		return $resp->returnWithOutData ();
-	}
-}
 
 	}

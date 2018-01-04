@@ -1,108 +1,112 @@
 <?php
 
-namespace App;
+	namespace App;
 
-use App\Http\Controllers\ServicesSer;
-use App\Http\Controllers\UserServices;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\DB;
+	use App\Http\Controllers\ServicesSer;
+	use App\Http\Controllers\UserServices;
+	use Illuminate\Database\Eloquent\Model;
+	use Illuminate\Notifications\Notifiable;
+	use Illuminate\Support\Facades\DB;
 
-class ServicesModel extends Model
-{
-	use Notifiable;
-	public $table = "services";
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = [
-		'name_ar','name_en','desc_ar','desc_en','section_id','service_id','image','status','services_model_id','supplier_model_id'
-	];
-	protected $hidden=[];
-
-	public function sections ()
+	class ServicesModel extends Model
 	{
-		return $this->belongsTo(SectionModel::class);
+		use Notifiable;
+		public $table = "services";
+		/**
+		 * The attributes that are mass assignable.
+		 *
+		 * @var array
+		 */
+		protected $fillable = [
+			'name_ar' , 'name_en' , 'desc_ar' , 'desc_en' , 'section_id' , 'service_id' ,
+			'image' , 'status' , 'services_model_id' , 'supplier_model_id'
+		];
+		protected $hidden = [];
 
-	}
+		public static function getSupplierWithServicesID ($serviceID)
+		{
+			/* GET  SERVICES SUPPLIERS BY SERVICE ID*/
+			$servicesList = ServicesModel::with ( 'suppliers' )
+				->where ( 'id' , $serviceID )->where ( 'status' , 1 )->get ();
 
-	public function suppliers()
-	{
+			return $servicesList;
 
-		return $this->belongsToMany (SupplierModel::class,'services_suppliers')->withTimestamps ();
+		}
 
-	}
+		public function sections ()
+		{
+			return $this->belongsTo ( SectionModel::class );
 
-	public function getCreatedAt ()
-	{
-		return $this->created_at;
+		}
 
-	}
+		public function suppliers ()
+		{
 
-	public function getUpdatedAt ()
-	{
-		return $this->updated_at;
+			return $this->belongsToMany ( SupplierModel::class , 'services_suppliers' )->withTimestamps ();
 
-	}
+		}
 
-	public function getNameEN ()
-	{
-		return $this->name_en;
+		public function getCreatedAt ()
+		{
+			return $this->created_at;
 
-	}
-	public function getNameAr ()
-	{
-		return $this->name_ar;
+		}
 
-	}
+		public function getUpdatedAt ()
+		{
+			return $this->updated_at;
 
-	public function getDesc_En ()
-	{
-		return $this->desc_en;
-	}
+		}
 
-	public function getDescAr ()
-	{
-		return $this->desc_ar;
-	}
+		public function getNameEN ()
+		{
+			return $this->name_en;
 
-	public function getImage ()
-	{
-		return $this->image;
-	}
+		}
 
-	public function getStatus ()
-	{
-		return $this->status;
-	}
+		public function getNameAr ()
+		{
+			return $this->name_ar;
 
-	public function getServicesById ($id)
-	{
-//			dd('asdasdq1');
-//			$sectionObject = SectionModel::where ( 'id' , $id )->where ( 'status' , true )->first ();
-		$serviceObject = ServicesModel::where ( 'id' , $id )->first ();
+		}
 
-		return $serviceObject;
+		public function getDesc_En ()
+		{
+			return $this->desc_en;
+		}
 
-	}
-	public function getServicesByIdWithStatus ($id,$status)
-	{
-//			dd('asdasdq1');
-//			$sectionObject = SectionModel::where ( 'id' , $id )->where ( 'status' , true )->first ();
-		$serviceObject = ServicesModel::where ( 'id' , $id )->where  ('status',$status)->first ();
+		public function getDescAr ()
+		{
+			return $this->desc_ar;
+		}
 
-		return $serviceObject;
+		public function getImage ()
+		{
+			return $this->image;
+		}
 
-	}
+		public function getStatus ()
+		{
+			return $this->status;
+		}
 
-	public function getServicesByStatus ($status )
-	{
-		$listServices = ServicesModel::where ( 'status' , $status )->get ();
+		public function getServicesById ($id)
+		{
 
-		return $listServices;
-	}
+			$serviceObject = ServicesModel::where ( 'id' , $id )->first ();
+
+			return $serviceObject;
+
+		}
+
+		public function getServicesByIdWithStatus ($id , $status)
+		{
+
+			$serviceObject = ServicesModel::where ( 'id' , $id )->where ( 'status' , $status )->first ();
+
+			return $serviceObject;
+
+		}
 
 //		protected $dates = ['created_at'];
 //		const CREATED_AT = 'created_at';
@@ -144,48 +148,52 @@ class ServicesModel extends Model
 //			$userObject = UserModel::where ( 'phone' , $request->input ( 'phone' ) )->where ( 'email' , $request->input ( 'email' ) )->get ();
 //			return $userObject;
 //		}
-	//getUserByID
-	//getUserByStatus
-	//getUserByPhoneNumber
-	//getUser
+		//getUserByID
+		//getUserByStatus
+		//getUserByPhoneNumber
+		//getUser
 
+		public function getServicesByStatus ($status)
+		{
+			$listServices = ServicesModel::where ( 'status' , $status )->get ();
 
+			return $listServices;
+		}
 
-	private function setNameEn ($value)
-	{
-		$this->attributes['name_en'] = $value;
+		public function setCreatedAt ($value)
+		{
+			$this->attributes['created_at'] = $value;
+		}
+
+		public function setUpdatedAt ($value)
+		{
+			$this->attributes['updated_at'] = $value;
+		}
+
+		private function setNameEn ($value)
+		{
+			$this->attributes['name_en'] = $value;
+
+		}
+
+		private function setNameAr ($value)
+		{
+			$this->attributes['name_ar'] = $value;
+		}
+
+		private function setDescAr ($value)
+		{
+			$this->attributes['desc_ar'] = $value;
+		}
+
+		private function setDescEn ($value)
+		{
+			$this->attributes['desc_en'] = $value;
+		}
+
+		private function setStatus ($value)
+		{
+			$this->attributes['status'] = $value;
+		}
 
 	}
-
-	private function setNameAr ($value)
-	{
-		$this->attributes['name_ar'] = $value;
-	}
-
-	private function setDescAr ($value)
-	{
-		$this->attributes['desc_ar'] = $value;
-	}
-
-	private function setDescEn ($value)
-	{
-		$this->attributes['desc_en'] = $value;
-	}
-
-	private function setStatus ($value)
-	{
-		$this->attributes['status'] = $value;
-	}
-
-	public function setCreatedAt ($value)
-	{
-		$this->attributes['created_at'] = $value;
-	}
-
-	public function setUpdatedAt($value)
-	{
-		$this->attributes['updated_at'] = $value;
-	}
-
-
-}

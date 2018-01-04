@@ -13,7 +13,7 @@ class section_services extends Model
 
 	public function section_serv ()
 	{
-//		return $this->belongsToMany (SectionModel::class,'section_services')->withTimestamps ();
+
 		return $this->belongsToMany (SectionModel::class,'section_services')->withTimestamps ();
 	}
 }

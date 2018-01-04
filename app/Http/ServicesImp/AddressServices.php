@@ -18,15 +18,14 @@
 	use \Validator;
 	use Illuminate\Support\Facades\DB;
 
-//use Illuminate\Http\Request;
+
 	class AddressServices implements AddressIntr
 	{
 
 
-
 		public static function getAllAddress ()
 		{
-			// get all adressModel
+			/* GET ALL ADDRESS*/
 			$addressList = adressModel::getAllAddress ();
 
 			$objUserTransformer = new  addressTrans();
@@ -40,22 +39,22 @@
 
 		public static function addAddress (Request $request)
 		{
-
+			/* CREATE ADDRESS WITH USER ID */
 			$requestError = CommonValidation::addressCreateValidation ( $request );
 			$userID = $request->input ( 'user_id' );
 
-//to create adressModel
+
 			$type0 = adressModel::getAddressByUserIdAddressType ( $userID , $request->input ( 'address_type' ) );
 			$type1 = adressModel::getAddressByUserIdAddressType ( $userID , $request->input ( 'address_type' ) );
 //			$type2 = adressModel::getAddressByUserIdAddressType ($userID,2);
 
-//dd($type0);
+
 			if ( $type0 !== null and $request->input ( 'address_type' ) == '0' ) {
 				$resp = new ResponseDisplay( ResponseMassage::$FAIL_ADDRESS_TYPE_EXISTS_0 , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
 
 				return $resp->returnWithOutData ();
 			} else if ( $type1 !== null and $request->input ( 'address_type' ) == '1' ) {
-//				dd('asd');
+
 				$resp = new ResponseDisplay( ResponseMassage::$FAIL_ADDRESS_TYPE_EXISTS_1 , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
 
 				return $resp->returnWithOutData ();
@@ -95,7 +94,7 @@
 
 		public static function updateAddress (Request $request , $id)
 		{
-			// to update adressModel
+			/* UPDATE ADDRESS  */
 			$requestError = CommonValidation::updateAddressValidation ( $request );
 
 			$addressObject = adressModel::getAddressByID ( $id );
@@ -105,6 +104,7 @@
 			if ( !$requestError ) {
 				if ( !$addressObject ) {
 					$objResponse = new ResponseDisplay( ResponseMassage::$FAIL_Not_Found_en , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
+
 					return $objResponse->returnWithOutData ();
 				} else {
 					$objUserTransformer = new addressTrans();
@@ -114,10 +114,10 @@
 					$addressObject->save ();
 
 					$objResponse = new ResponseDisplay( ResponseMassage::$SUCCESS_Update_en , ResponseStatus::$success , ResponseCode::$HTTP_OK );
+
 					return $objResponse->returnWithData ( $objUserTransformer->transform ( $addressObject ) );
 				}
-			}
-			else {
+			} else {
 				return $requestError;
 			}
 

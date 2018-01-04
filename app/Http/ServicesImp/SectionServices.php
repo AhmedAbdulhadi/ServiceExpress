@@ -33,7 +33,6 @@
 	class SectionServices implements SectionIntr
 	{
 
-//		protected $statusCode = 200;
 
 //		public function __construct (sectionTransform $userTrans , section_servicesTra $use)
 //		{
@@ -45,6 +44,7 @@
 
 		public static function getOneSectionById ($id = null)
 		{
+
 			//get section with id to apply on services class
 			$sectionObject = new SectionModel();
 			$sectionObject = $sectionObject->getSectionByID ( $id );
@@ -65,7 +65,8 @@
 
 		public static function getAllSection ()
 		{
-			//get all section with status true
+
+			/* GET ALL SECTION WITH STATUS TRUE  */
 			$listSection = new SectionModel();
 			$objTransformer = new sectionTransform();
 			$listSection = $listSection->getSectionByStatus ( true );
@@ -83,26 +84,9 @@
 		}
 
 
-// cheack it if project crushed
-//		public function get_one_services ($id = null)
-//		{
-////
-//			$SectionModel = SectionModel::where ( 'id' , $id )->where ( 'status' , true )->first ();
-//
-//
-//			if ( !$SectionModel ) {
-//				return $this->respondNotFound ( 'SectionModel dose not found' );
-//
-//			}
-//
-//
-//			return $this->responedFound200ForOneUser ( 'Service found' , self::success , $this->userTrans->transform ( $SectionModel ) );
-//
-//			//				]);
-//		}
-
 		public static function createSection (Request $request)
 		{
+			/* CREATE SECTION */
 			$admin_id = $request->input ( 'admin_id' );
 			$adminObject = new AdminModel();
 			$adminObject = $adminObject->getAdminByID ( $admin_id );
@@ -135,7 +119,6 @@
 					$sectionObject->created_at = $tsCurrentDate;
 					$sectionObject->timestamps = false;
 
-//					$sectionObject->save ();
 
 					$adminObject->sections ()->save ( $sectionObject );
 
@@ -156,7 +139,7 @@
 
 		public static function deleteSection ($id)
 		{
-			// delete section with response
+			/* DELETE SECTION */
 			$tsCurrentDate = Carbon::now ( 'GMT+2' );
 
 			$sectionObject = new SectionModel();
@@ -184,9 +167,10 @@
 
 		public static function updateSection (Request $request , $id)
 		{
-			// update section info
+			/* UPDATE  SECTION BY ID  */
+
 			$requestErrorSection = CommonValidation::updateSectionValidation ( $request );
-//dd('need update icon');
+
 			$sectionObject = new SectionModel();
 			$sectionObject = $sectionObject->getSectionByID ( $id );
 			$tsCurrentDate = Carbon::now ( 'GMT+2' );
@@ -234,13 +218,13 @@
 
 		public static function getSectionWithServices (Request $request , $id = null)
 		{
-//			dd('asdqd');
-			//to get section with services
+			/* GET  SECTION WITH SERVICES  */
+
 			$sectionObject = new SectionModel();
 			$sectionObject = $sectionObject->getSectionByID ( $id );
-//			dd($servicesList);
+
 			if ( $sectionObject ) {
-//				$servicesList = $sectionObject->services;
+
 				$objTrans = new SectionServicesTrans();
 
 				$objResponse = new ResponseDisplay( ResponseMassage::$Success_Found_en , ResponseStatus::$success , ResponseCode::$HTTP_OK );
@@ -293,7 +277,7 @@
 
 		public static function getSectionWithServicesStatus (Request $request)
 		{
-			//get all sections with services
+			/* GET ALL  SECTION  WITH SERVICES*/
 			$serviceRequest = $request->input ( 'service' );
 
 
@@ -301,17 +285,17 @@
 			$sectionList = $sectionList->getSectionByStatuswithRelation ( $serviceRequest );
 
 
-			if($sectionList->first ())
-			{
+			if ( $sectionList->first () ) {
 				$objTrans = new SectionServicesTrans();
 
 				$objResponse = new ResponseDisplay( ResponseMassage::$Success_Found_en , ResponseStatus::$success , ResponseCode::$HTTP_OK );
 
-				return $objResponse->returnWithData ( $objTrans->transformCollection ( $sectionList->all () ) );}
-			else
-			{$objResponse = new ResponseDisplay( ResponseMassage::$FAIL_Not_Found_en , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
+				return $objResponse->returnWithData ( $objTrans->transformCollection ( $sectionList->all () ) );
+			} else {
+				$objResponse = new ResponseDisplay( ResponseMassage::$FAIL_Not_Found_en , ResponseStatus::$fail , ResponseCode::$HTTP_BAD_REQUEST );
 
-				return $objResponse->returnWithOutData ();}
+				return $objResponse->returnWithOutData ();
+			}
 		}
 
 

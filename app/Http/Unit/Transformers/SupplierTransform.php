@@ -30,11 +30,11 @@
 			else
 				$exp_year = $user['exp_year'];
 
-
-			if ( !$user['deleted_at'] )
-				$del = "";
-			else
+//dd($user);
+			if ( $user['deleted_at'] )
 				$del = date ( 'Y-m-d' , strtotime ( $user['deleted_at'] ) );
+			else
+			$del = "";
 			return [
 				'supplier_id' => $user['id'] ,
 				'name' => $user['name'] ,
@@ -47,7 +47,7 @@
 				'status' => (boolean)$user['status'] ,
 				'created_at' => date ( 'Y-m-d' , strtotime ( $user['created_at'] ) ) ,
 				'updated_at' => $up ,
-				'deleted_at'=>$del
+				'deleted_at'=>$del,
 				//	'active' => (boolean)$user['is_active'],
 			];
 

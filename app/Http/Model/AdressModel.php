@@ -29,11 +29,10 @@
 
 		public static function getAddressByUserIdAddressType ($userID,$addressType)
 		{
-//		$addressObject=	DB::table ( 'address_user' )->where ( 'user_model_id' , $userID)->where ( 'address_type' , $addressType)->first ();
 			$addressObject= new UserModel();
 			$addressObject=$addressObject->find ($userID)->address ()->wherePivot ('address_type',$addressType)->first ();
-//			$addressObject->address()->wherePivot  ('address_type',$addressType)->first () ;
-//		dd($addressObject->toArray());
+
+
 		return $addressObject;
 		}
 

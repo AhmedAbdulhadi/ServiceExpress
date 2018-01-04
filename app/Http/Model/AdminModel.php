@@ -21,8 +21,7 @@
 
 		protected $fillable = [
 			'name' , 'email' , 'password' , 'phone' , 'status' , 'created_at' , 'start_date' , 'end_date','role' ,'admin_id'];
-//		const CREATED_AT = 'CREATED_AT';
-//		const UPDATED_AT = 'UPDATED_AT';
+
 		/**
 		 * The attributes that should be hidden for arrays.
 		 *
@@ -74,7 +73,7 @@
 
 		public function getAdminByID ($id)
 		{
-//			dd('asdasdq1');
+
 			$adminObject = AdminModel::where ( 'id' , $id )->first ();
 
 			return $adminObject;
@@ -88,8 +87,7 @@
 			return $listAdmins;
 		}
 
-//		protected $dates = ['created_at'];
-//		const CREATED_AT = 'created_at';
+
 
 		public function getAdminByPhoneNum ($phone)
 		{

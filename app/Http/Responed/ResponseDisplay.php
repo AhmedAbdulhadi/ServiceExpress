@@ -21,11 +21,6 @@
 			$this->setMessage ($msg) ;
 		}
 
-		public function returnAll()
-		{
-			$aResponse = ['status' => $this->getStatus () , 'message' => $this->getMessage ()];
-			return  ($aResponse);
-		}
 
 
 		public function returnWithOutData()
@@ -68,10 +63,7 @@
 		}
 
 
-		public function respondInternalError ($massage = 'Internal Error')
-		{
-			return $this->setStatusCode ( self::HTTP_INTERNAL_SERVER_ERROR )->respondWithError ( $massage );
-		}
+
 
 		public function setMessage($msg){
 
